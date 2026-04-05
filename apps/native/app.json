@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "scheme": "ultimate-ts-starter",
+    "userInterfaceStyle": "automatic",
+    "orientation": "default",
+    "web": {
+      "bundler": "metro"
+    },
+    "name": "ultimate-ts-starter",
+    "slug": "ultimate-ts-starter",
+    "plugins": ["expo-font"],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

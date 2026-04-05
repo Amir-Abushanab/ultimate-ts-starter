@@ -1,0 +1,31 @@
+// Better-T-Stack
+//
+// Website: https://www.better-t-stack.dev/
+// Stack Builder: https://www.better-t-stack.dev/new
+// Analytics: https://www.better-t-stack.dev/analytics
+// Showcase: https://www.better-t-stack.dev/showcase
+// Sponsor: https://github.com/sponsors/AmanVarshney01
+//
+// Add new addons with: pnpm dlx create-better-t-stack add
+// This file is safe to delete
+
+{
+  "$schema": "https://r2.better-t-stack.dev/schema.json",
+  "version": "3.27.0",
+  "createdAt": "2026-04-05T21:28:07.568Z",
+  "reproducibleCommand": "pnpm create better-t-stack@latest ultimate-ts-starter --frontend tanstack-start native-uniwind --backend hono --runtime workers --database postgres --orm drizzle --api orpc --auth better-auth --payments polar --addons mcp opentui oxlint skills tauri ultracite wxt --examples none --db-setup none --web-deploy none --server-deploy cloudflare --git --package-manager pnpm --install",
+  "database": "postgres",
+  "orm": "drizzle",
+  "backend": "hono",
+  "runtime": "workers",
+  "frontend": ["tanstack-start", "native-uniwind"],
+  "addons": ["mcp", "opentui", "oxlint", "skills", "tauri", "ultracite", "wxt"],
+  "examples": [],
+  "auth": "better-auth",
+  "payments": "polar",
+  "packageManager": "pnpm",
+  "dbSetup": "none",
+  "api": "orpc",
+  "webDeploy": "none",
+  "serverDeploy": "cloudflare",
+}

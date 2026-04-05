@@ -1,0 +1,41 @@
+{
+  "name": "ultimate-ts-starter",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm -r dev",
+    "build": "pnpm -r build",
+    "check-types": "pnpm -r check-types",
+    "dev:native": "pnpm --filter native dev",
+    "dev:web": "pnpm --filter web dev",
+    "dev:tui": "pnpm --filter tui dev",
+    "dev:server": "pnpm --filter server dev",
+    "db:push": "pnpm --filter @ultimate-ts-starter/db db:push",
+    "db:studio": "pnpm --filter @ultimate-ts-starter/db db:studio",
+    "db:generate": "pnpm --filter @ultimate-ts-starter/db db:generate",
+    "db:migrate": "pnpm --filter @ultimate-ts-starter/db db:migrate",
+    "deploy": "pnpm --filter @ultimate-ts-starter/infra deploy",
+    "destroy": "pnpm --filter @ultimate-ts-starter/infra destroy",
+    "check": "ultracite check",
+    "fix": "ultracite fix"
+  },
+  "dependencies": {
+    "@ultimate-ts-starter/env": "workspace:*",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "catalog:",
+    "@types/node": "^22.13.14",
+    "@ultimate-ts-starter/config": "workspace:*",
+    "oxfmt": "latest",
+    "oxlint": "latest",
+    "typescript": "^5",
+    "ultracite": "7.4.3"
+  },
+  "packageManager": "pnpm@10.9.0"
+}

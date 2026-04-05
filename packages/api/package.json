@@ -1,0 +1,29 @@
+{
+  "name": "@ultimate-ts-starter/api",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@orpc/client": "catalog:",
+    "@orpc/openapi": "catalog:",
+    "@orpc/server": "catalog:",
+    "@orpc/zod": "catalog:",
+    "@ultimate-ts-starter/auth": "workspace:*",
+    "@ultimate-ts-starter/db": "workspace:*",
+    "@ultimate-ts-starter/env": "workspace:*",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@ultimate-ts-starter/config": "workspace:*",
+    "hono": "catalog:",
+    "typescript": "^5"
+  }
+}
