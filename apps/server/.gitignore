@@ -16,7 +16,6 @@ dist/
 .idea/usage.statistics.xml
 .idea/shelf
 .wrangler
-.alchemy
 /.next/
 .vercel
 prisma/generated/

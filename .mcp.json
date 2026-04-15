@@ -1,9 +1,5 @@
 {
   "mcpServers": {
-    "better-t-stack": {
-      "command": "pnpm",
-      "args": ["dlx", "create-better-t-stack@latest", "mcp"]
-    },
     "context7": {
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp"]

@@ -7,10 +7,14 @@ node_modules
 dist
 build
 *.tsbuildinfo
+.content-collections
 
 # Environment variables
 .env
 .env*.local
+
+# Local AI settings
+.claude/settings.local.json
 
 # IDEs and editors
 .vscode/*
@@ -37,8 +41,8 @@ lerna-debug.log*
 .turbo
 .nx
 
-# Better-T-Stack
-.alchemy
+# Generated (Paraglide i18n)
+packages/i18n/src/paraglide/
 
 # Testing
 coverage

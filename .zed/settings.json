@@ -72,12 +72,6 @@
     }
   },
   "context_servers": {
-    "better-t-stack": {
-      "source": "custom",
-      "command": "pnpm",
-      "args": ["dlx", "create-better-t-stack@latest", "mcp"],
-      "env": {}
-    },
     "context7": {
       "source": "custom",
       "command": "npx",

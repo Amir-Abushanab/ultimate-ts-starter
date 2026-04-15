@@ -26,7 +26,6 @@
 .vercel
 .netlify
 .wrangler
-.alchemy
 
 # Environment & local files
 .env*

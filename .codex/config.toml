@@ -1,7 +1,3 @@
-[mcp_servers.better-t-stack]
-command = "pnpm"
-args = ["dlx", "create-better-t-stack@latest", "mcp"]
-
 [mcp_servers.context7]
 command = "npx"
 args = ["-y", "@upstash/context7-mcp"]

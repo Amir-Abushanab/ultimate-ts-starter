@@ -1,11 +1,5 @@
 {
   "mcp": {
-    "better-t-stack": {
-      "type": "local",
-      "command": ["pnpm", "dlx", "create-better-t-stack@latest", "mcp"],
-      "enabled": true,
-      "environment": {}
-    },
     "context7": {
       "type": "local",
       "command": ["npx", "-y", "@upstash/context7-mcp"],
