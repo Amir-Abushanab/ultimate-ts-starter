@@ -3,18 +3,23 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsdown",
+    "build": "vp pack",
     "check-types": "tsc -b",
-    "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server"
+    "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
+    "@ultimate-ts-starter/analytics": "workspace:*",
     "@ultimate-ts-starter/api": "workspace:*",
     "@ultimate-ts-starter/auth": "workspace:*",
     "@ultimate-ts-starter/db": "workspace:*",
     "@ultimate-ts-starter/env": "workspace:*",
+    "@ultimate-ts-starter/events": "workspace:*",
+    "@ultimate-ts-starter/logging": "workspace:*",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "hono": "catalog:",
@@ -22,11 +27,10 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
-    "@types/node": "^22.13.14",
+    "@types/node": "^25.6.0",
     "@ultimate-ts-starter/config": "workspace:*",
-    "alchemy": "catalog:",
-    "tsdown": "^0.16.5",
-    "typescript": "^5",
-    "wrangler": "^4.77.0"
+    "typescript": "^6",
+    "vite-plus": "catalog:",
+    "wrangler": "^4.84.1"
   }
 }

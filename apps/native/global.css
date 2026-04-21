@@ -1,5 +1,77 @@
 @import "tailwindcss";
 @import "uniwind";
 @import "heroui-native/styles";
+@import "@ultimate-ts-starter/theme/tokens.css";
 
 @source './node_modules/heroui-native/lib';
+
+/*
+ * ─── shadcn-compatible aliases ───────────────────
+ * Maps shadcn token names → HeroUI equivalents so that
+ * cross-platform utility classes (bg-primary, bg-card, etc.)
+ * resolve correctly on native.
+ *
+ * HeroUI already defines: --accent, --surface, --overlay,
+ * --success, --warning, --danger, --default, --muted, --focus, etc.
+ *
+ * These aliases add the shadcn names pointing at HeroUI values:
+ *   --primary      → --accent        (brand action color)
+ *   --secondary    → --default        (subtle background)
+ *   --destructive  → --danger         (error / destructive action)
+ *   --card         → --surface        (elevated container)
+ *   --popover      → --overlay        (floating container)
+ *   --input        → --field-background
+ *   --ring         → --focus          (focus ring)
+ */
+
+:root {
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-foreground);
+  --secondary: var(--default);
+  --secondary-foreground: var(--default-foreground);
+  --destructive: var(--danger);
+  --card: var(--surface);
+  --card-foreground: var(--surface-foreground);
+  --popover: var(--overlay);
+  --popover-foreground: var(--overlay-foreground);
+  --input: var(--field-background, var(--default));
+  --ring: var(--focus);
+}
+
+/*
+ * ─── Tailwind registration ───────────────────────
+ * Registers shadcn aliases + chart tokens as utility classes.
+ * HeroUI tokens (bg-accent, bg-success, etc.) are already
+ * registered by heroui-native/styles — only shadcn extras here.
+ */
+
+@theme inline {
+  /* Brand */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-ring: var(--ring);
+
+  /* Surfaces */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  /* Subtle backgrounds */
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted);
+
+  /* Status */
+  --color-destructive: var(--destructive);
+
+  /* Inputs */
+  --color-input: var(--input);
+
+  /* Chart */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+}

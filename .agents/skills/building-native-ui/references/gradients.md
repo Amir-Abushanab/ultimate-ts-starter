@@ -97,7 +97,8 @@ Stack multiple gradients by comma-separating them:
 ```tsx
 <Pressable
   style={{
-    experimental_backgroundImage: "linear-gradient(to bottom, #4CAF50 0%, #388E3C 100%)",
+    experimental_backgroundImage:
+      "linear-gradient(to bottom, #4CAF50 0%, #388E3C 100%)",
     padding: 16,
     borderRadius: 8,
   }}

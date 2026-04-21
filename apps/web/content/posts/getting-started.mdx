@@ -1,0 +1,60 @@
+---
+title: "Getting Started with Ultimate TS Starter"
+description: "Everything you need to know to get up and running with the Ultimate TypeScript Starter kit."
+author: "Ultimate TS Team"
+tags: ["guide", "typescript", "setup"]
+publishedAt: "2026-04-01"
+featured: true
+---
+
+Welcome to the **Ultimate TS Starter**! This guide walks you through the essentials of getting your project up and running.
+
+## Prerequisites
+
+Before you begin, make sure you have the following installed:
+
+| Tool       | Version | Purpose            |
+| ---------- | ------- | ------------------ |
+| Node.js    | >= 24   | JavaScript runtime |
+| pnpm       | >= 10   | Package manager    |
+| PostgreSQL | >= 16   | Database           |
+
+<Callout variant="info" title="Quick tip">
+  Run `pnpm bootstrap` to install dependencies, run migrations, seed the
+  database, and start the dev server all in one command.
+</Callout>
+
+## Step-by-step setup
+
+<Step number={1} title="Clone the repository">
+  Fork or clone the repo and install dependencies with `pnpm install`.
+</Step>
+
+<Step number={2} title="Configure your environment">
+  Copy `.env.example` to `.env` and fill in your database URL and auth secrets.
+</Step>
+
+<Step number={3} title="Start developing">
+  Run `pnpm dev` to start the web app, API server, and file watchers
+  concurrently.
+</Step>
+
+## Project structure
+
+The monorepo is organized into **apps** and **packages**:
+
+- `apps/web` — TanStack Start frontend
+- `apps/server` — Hono API server
+- `apps/native` — Expo mobile app
+- `packages/ui` — Shared UI components
+- `packages/db` — Drizzle ORM schema and migrations
+- `packages/auth` — Better Auth configuration
+
+<Callout variant="warning" title="Important">
+  Always run `pnpm db:migrate` after pulling changes that include new migration
+  files.
+</Callout>
+
+## Next steps
+
+Once you're up and running, explore the dashboard, check out the example routes, and start building your features. Happy coding!

@@ -33,7 +33,9 @@ function Profile() {
 import { View as RNView } from "react-native";
 
 // ideal: pick the props you will actually use to control implementation
-export function View(props: Pick<React.ComponentProps<typeof RNView>, "style" | "children">) {
+export function View(
+  props: Pick<React.ComponentProps<typeof RNView>, "style" | "children">
+) {
   return <RNView {...props} />;
 }
 ```

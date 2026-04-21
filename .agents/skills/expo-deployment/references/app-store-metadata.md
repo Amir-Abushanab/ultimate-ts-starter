@@ -269,7 +269,9 @@ module.exports = async () => {
   const baseConfig = require("./store.config.json");
 
   // Fetch translations from CMS/localization service
-  const translations = await fetch("https://api.example.com/app-store-copy").then((r) => r.json());
+  const translations = await fetch(
+    "https://api.example.com/app-store-copy"
+  ).then((r) => r.json());
 
   return {
     ...baseConfig,

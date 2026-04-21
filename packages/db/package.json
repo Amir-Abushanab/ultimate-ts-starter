@@ -13,19 +13,21 @@
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:studio": "drizzle-kit studio",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx src/seed.ts"
   },
   "dependencies": {
     "@ultimate-ts-starter/env": "workspace:*",
     "dotenv": "catalog:",
-    "drizzle-orm": "^0.45.1",
-    "pg": "^8.17.1",
+    "drizzle-orm": "^0.45.2",
+    "pg": "^8.20.0",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@types/pg": "^8.16.0",
+    "@types/pg": "^8.20.0",
     "@ultimate-ts-starter/config": "workspace:*",
-    "drizzle-kit": "^0.31.8",
-    "typescript": "^5"
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.21.0",
+    "typescript": "^6"
   }
 }

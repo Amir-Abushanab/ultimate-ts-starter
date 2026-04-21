@@ -8,14 +8,14 @@ import { useAppTheme } from "@/contexts/app-theme-context";
 
 const StyledIonicons = withUniwind(Ionicons);
 
-export function ThemeToggle() {
+export const ThemeToggle = () => {
   const { toggleTheme, isLight } = useAppTheme();
 
   return (
     <Pressable
       onPress={() => {
         if (Platform.OS === "ios") {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         }
         toggleTheme();
       }}
@@ -32,4 +32,4 @@ export function ThemeToggle() {
       )}
     </Pressable>
   );
-}
+};

@@ -1,14 +1,17 @@
-# Ultracite Code Standards
+<!-- SOURCE OF TRUTH: Edit this file. AGENTS.md and GEMINI.md are auto-generated copies (pnpm sync-rules). -->
+<!-- Conditional rules live in .claude/rules/*.md (animation, design, testing, shared-ui). -->
 
-This project uses **Ultracite**, a zero-config preset that enforces strict code quality standards through automated formatting and linting.
+# Code Standards
+
+This project uses **Vite+** with **oxlint + oxfmt** for linting and formatting. All rules are defined in `vite.config.ts`.
 
 ## Quick Reference
 
-- **Format code**: `pnpm dlx ultracite fix`
-- **Check for issues**: `pnpm dlx ultracite check`
-- **Diagnose setup**: `pnpm dlx ultracite doctor`
+- **Check for issues**: `pnpm check` (or `vp check`)
+- **Auto-fix**: `pnpm fix` (or `vp check --fix`)
+- **Typecheck**: `pnpm check-types` (uses tsgo for 10x speed)
 
-Oxlint + Oxfmt (the underlying engine) provides robust linting and formatting. Most issues are automatically fixable.
+Most issues are automatically fixable. Pre-commit hooks run `vp check --fix` on staged files.
 
 ---
 
@@ -83,23 +86,12 @@ Write code that is **accessible, performant, type-safe, and maintainable**. Focu
 - Use top-level regex literals instead of creating them in loops
 - Prefer specific imports over namespace imports
 - Avoid barrel files (index files that re-export everything)
-- Use proper image components (e.g., Next.js `<Image>`) over `<img>` tags
 
 ### Framework-Specific Guidance
-
-**Next.js:**
-
-- Use Next.js `<Image>` component for images
-- Use `next/head` or App Router metadata API for head elements
-- Use Server Components for async data fetching instead of async Client Components
 
 **React 19+:**
 
 - Use ref as a prop instead of `React.forwardRef`
-
-**Solid/Svelte/Vue/Qwik:**
-
-- Use `class` and `for` attributes (not `className` or `htmlFor`)
 
 ---
 
@@ -110,17 +102,16 @@ Write code that is **accessible, performant, type-safe, and maintainable**. Focu
 - Don't use `.only` or `.skip` in committed code
 - Keep test suites reasonably flat - avoid excessive `describe` nesting
 
-## When Oxlint + Oxfmt Can't Help
+## What the Linter Can't Catch
 
-Oxlint + Oxfmt's linter will catch most issues automatically. Focus your attention on:
+Focus your attention on:
 
-1. **Business logic correctness** - Oxlint + Oxfmt can't validate your algorithms
-2. **Meaningful naming** - Use descriptive names for functions, variables, and types
-3. **Architecture decisions** - Component structure, data flow, and API design
-4. **Edge cases** - Handle boundary conditions and error states
-5. **User experience** - Accessibility, performance, and usability considerations
-6. **Documentation** - Add comments for complex logic, but prefer self-documenting code
+1. **Business logic correctness** - the linter can't validate your algorithms
+2. **Meaningful naming** - use descriptive names for functions, variables, and types
+3. **Architecture decisions** - component structure, data flow, and API design
+4. **Edge cases** - handle boundary conditions and error states
+5. **User experience** - accessibility, performance, and usability considerations
 
 ---
 
-Most formatting and common issues are automatically fixed by Oxlint + Oxfmt. Run `pnpm dlx ultracite fix` before committing to ensure compliance.
+Run `pnpm fix` before committing to auto-fix formatting and lint issues.

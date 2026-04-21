@@ -1,0 +1,24 @@
+{
+  "name": "@ultimate-ts-starter/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./messages": {
+      "types": "./src/paraglide/messages.d.ts",
+      "default": "./src/paraglide/messages.js"
+    },
+    "./runtime": {
+      "types": "./src/paraglide/runtime.d.ts",
+      "default": "./src/paraglide/runtime.js"
+    }
+  },
+  "scripts": {
+    "build": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --emit-ts-declarations"
+  },
+  "devDependencies": {
+    "@inlang/paraglide-js": "^2.16.0",
+    "@ultimate-ts-starter/config": "workspace:*",
+    "typescript": "^6"
+  }
+}

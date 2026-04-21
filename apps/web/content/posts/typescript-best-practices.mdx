@@ -1,0 +1,87 @@
+---
+title: "TypeScript Best Practices for 2026"
+description: "A roundup of modern TypeScript patterns and practices to write safer, cleaner code."
+author: "Ultimate TS Team"
+tags: ["typescript", "best-practices"]
+publishedAt: "2026-04-05"
+---
+
+TypeScript has come a long way. Here are the patterns we use across this starter and recommend for any production codebase.
+
+## Prefer `unknown` over `any`
+
+When you truly don't know a type, reach for `unknown` instead of `any`. It forces you to narrow before use:
+
+```ts
+function processInput(input: unknown) {
+  if (typeof input === "string") {
+    return input.toUpperCase();
+  }
+  throw new Error("Expected a string");
+}
+```
+
+<Callout variant="error" title="Avoid this">
+  Using `any` silences the compiler entirely. Bugs slip through because
+  TypeScript can't check anything downstream of an `any` value.
+</Callout>
+
+## Use `satisfies` for type-safe object literals
+
+The `satisfies` operator validates a value matches a type without widening it:
+
+```ts
+const config = {
+  port: 3000,
+  host: "localhost",
+} satisfies ServerConfig;
+```
+
+This keeps the inferred literal types (`3000`, `"localhost"`) while still checking against `ServerConfig`.
+
+## Const assertions for immutable data
+
+Use `as const` to lock down object shapes and array contents:
+
+```ts
+const ROLES = ["admin", "editor", "viewer"] as const;
+type Role = (typeof ROLES)[number]; // "admin" | "editor" | "viewer"
+```
+
+## Discriminated unions for state
+
+Model state machines with discriminated unions rather than optional fields:
+
+```ts
+type AsyncState<T> =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; data: T }
+  | { status: "error"; error: Error };
+```
+
+<Callout variant="success" title="Why this works">
+  TypeScript narrows the type automatically when you check the `status` field.
+  No more `data!` or `error as Error`.
+</Callout>
+
+## Template literal types
+
+Leverage template literals for strongly-typed string patterns:
+
+```ts
+type EventName = `on${Capitalize<string>}`;
+type CSSUnit = `${number}${"px" | "rem" | "em" | "%"}`;
+```
+
+## Summary
+
+| Practice          | Instead of      | Use                    |
+| ----------------- | --------------- | ---------------------- |
+| Unknown types     | `any`           | `unknown`              |
+| Object validation | type assertion  | `satisfies`            |
+| Immutable data    | mutable arrays  | `as const`             |
+| State modeling    | optional fields | discriminated unions   |
+| String patterns   | plain `string`  | template literal types |
+
+Write code that helps the compiler help you.

@@ -3,27 +3,23 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { orpc } from "@/utils/orpc";
 
-export const Route = createFileRoute("/")({
-  component: HomeComponent,
-});
-
 const TITLE_TEXT = `
- ██████╗ ███████╗████████╗████████╗███████╗██████╗
- ██╔══██╗██╔════╝╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗
- ██████╔╝█████╗     ██║      ██║   █████╗  ██████╔╝
- ██╔══██╗██╔══╝     ██║      ██║   ██╔══╝  ██╔══██╗
- ██████╔╝███████╗   ██║      ██║   ███████╗██║  ██║
- ╚═════╝ ╚══════╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝
+ ██╗   ██╗██╗  ████████╗██╗███╗   ███╗ █████╗ ████████╗███████╗
+ ██║   ██║██║  ╚══██╔══╝██║████╗ ████║██╔══██╗╚══██╔══╝██╔════╝
+ ██║   ██║██║     ██║   ██║██╔████╔██║███████║   ██║   █████╗
+ ██║   ██║██║     ██║   ██║██║╚██╔╝██║██╔══██║   ██║   ██╔══╝
+ ╚██████╔╝███████╗██║   ██║██║ ╚═╝ ██║██║  ██║   ██║   ███████╗
+  ╚═════╝ ╚══════╝╚═╝   ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝
 
- ████████╗    ███████╗████████╗ █████╗  ██████╗██╗  ██╗
- ╚══██╔══╝    ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
-    ██║       ███████╗   ██║   ███████║██║     █████╔╝
-    ██║       ╚════██║   ██║   ██╔══██║██║     ██╔═██╗
-    ██║       ███████║   ██║   ██║  ██║╚██████╗██║  ██╗
-    ╚═╝       ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
+ ████████╗███████╗    ███████╗████████╗ █████╗ ██████╗ ████████╗███████╗██████╗
+ ╚══██╔══╝██╔════╝    ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝██╔════╝██╔══██╗
+    ██║   ███████╗    ███████╗   ██║   ███████║██████╔╝   ██║   █████╗  ██████╔╝
+    ██║   ╚════██║    ╚════██║   ██║   ██╔══██║██╔══██╗   ██║   ██╔══╝  ██╔══██╗
+    ██║   ███████║    ███████║   ██║   ██║  ██║██║  ██║   ██║   ███████╗██║  ██║
+    ╚═╝   ╚══════╝    ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
  `;
 
-function HomeComponent() {
+const HomeComponent = () => {
   const healthCheck = useQuery(orpc.healthCheck.queryOptions());
 
   return (
@@ -34,18 +30,20 @@ function HomeComponent() {
           <h2 className="mb-2 font-medium">API Status</h2>
           <div className="flex items-center gap-2">
             <div
-              className={`h-2 w-2 rounded-full ${healthCheck.data ? "bg-green-500" : "bg-red-500"}`}
+              className={`h-2 w-2 rounded-full ${healthCheck.data === undefined ? "bg-red-500" : "bg-green-500"}`}
             />
             <span className="text-muted-foreground text-sm">
-              {healthCheck.isLoading
-                ? "Checking..."
-                : healthCheck.data
-                  ? "Connected"
-                  : "Disconnected"}
+              {healthCheck.isLoading && "Checking..."}
+              {!healthCheck.isLoading &&
+                (healthCheck.data === undefined ? "Disconnected" : "Connected")}
             </span>
           </div>
         </section>
       </div>
     </div>
   );
-}
+};
+
+export const Route = createFileRoute("/")({
+  component: HomeComponent,
+});

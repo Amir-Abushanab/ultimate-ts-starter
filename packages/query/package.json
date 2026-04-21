@@ -1,0 +1,25 @@
+{
+  "name": "@ultimate-ts-starter/query",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@orpc/client": "catalog:",
+    "@orpc/tanstack-query": "catalog:",
+    "@ultimate-ts-starter/api": "workspace:*",
+    "@ultimate-ts-starter/events": "workspace:*"
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "^5.99.0",
+    "@ultimate-ts-starter/config": "workspace:*",
+    "typescript": "^6"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": ">=5"
+  }
+}

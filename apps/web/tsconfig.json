@@ -20,10 +20,10 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@ultimate-ts-starter/ui/*": ["../../packages/ui/src/*"]
+      "@ultimate-ts-starter/ui/*": ["../../packages/ui/src/*"],
+      "content-collections": ["./.content-collections/generated"]
     }
   }
 }

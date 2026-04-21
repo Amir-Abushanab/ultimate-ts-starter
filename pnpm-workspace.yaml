@@ -2,21 +2,34 @@ packages:
   - apps/*
   - packages/*
 catalog:
-  dotenv: ^17.2.2
-  zod: ^4.1.13
-  "@cloudflare/workers-types": ^4.20251213.0
-  hono: ^4.8.2
-  "@orpc/server": ^1.12.2
+  "@better-auth/expo": 1.5.6
+  "@cloudflare/workers-types": ^4.20260415.1
+  "@orpc/client": ^1.12.2
   "@orpc/openapi": ^1.12.2
+  "@orpc/server": ^1.12.2
+  "@orpc/tanstack-query": ^1.13.6
   "@orpc/zod": ^1.12.2
-  better-auth: 1.5.5
-  alchemy: ^0.90.0
+  "@polar-sh/better-auth": ^1.8.3
+  "@tanstack/react-form": ^1.28.0
+  "@types/react-dom": ^19.2.3
+  "@typescript/native-preview": 7.0.0-dev.20260415.1
+  better-auth: 1.5.6
+  dotenv: ^17.4.2
+  hono: ^4.8.2
   lucide-react: ^0.546.0
   next-themes: ^0.4.6
   sonner: ^2.0.5
-  "@orpc/tanstack-query": ^1.13.6
-  "@orpc/client": ^1.12.2
-  "@tanstack/react-form": ^1.28.0
-  "@polar-sh/better-auth": ^1.8.3
-  "@types/react-dom": ^19.2.3
-  "@better-auth/expo": 1.5.5
+  vite: npm:@voidzero-dev/vite-plus-core@latest
+  vite-plus: ^0.1.18
+  vitest: npm:@voidzero-dev/vite-plus-test@latest
+  zod: ^4.3.6
+overrides:
+  vite: "catalog:"
+  vitest: "catalog:"
+peerDependencyRules:
+  allowAny:
+    - vite
+    - vitest
+  allowedVersions:
+    vite: "*"
+    vitest: "*"

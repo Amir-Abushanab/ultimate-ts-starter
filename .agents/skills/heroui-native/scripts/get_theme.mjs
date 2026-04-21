@@ -9,7 +9,8 @@
  *   Theme variables organized by light/dark with HSL color format
  */
 
-const API_BASE = process.env.HEROUI_NATIVE_API_BASE || "https://native-mcp-api.heroui.com";
+const API_BASE =
+  process.env.HEROUI_NATIVE_API_BASE ?? "https://native-mcp-api.heroui.com";
 const APP_PARAM = "app=native-skills";
 
 // Fallback theme reference when API is unavailable
@@ -109,7 +110,7 @@ async function fetchApi(endpoint) {
   try {
     const response = await fetch(url, {
       headers: { "User-Agent": "HeroUI-Native-Skill/1.0" },
-      signal: AbortSignal.timeout(30000),
+      signal: AbortSignal.timeout(30_000),
     });
 
     if (!response.ok) {
@@ -133,21 +134,21 @@ function formatColors(colors) {
   const grouped = {};
 
   for (const color of colors) {
-    const category = color.category || "semantic";
+    const category = color.category ?? "semantic";
 
-    if (!grouped[category]) {
-      grouped[category] = [];
-    }
+    grouped[category] ??= [];
     grouped[category].push(color);
   }
 
   const lines = [];
 
   for (const [category, tokens] of Object.entries(grouped)) {
-    lines.push(`  /* ${category.charAt(0).toUpperCase() + category.slice(1)} Colors */`);
+    lines.push(
+      `  /* ${category.charAt(0).toUpperCase() + category.slice(1)} Colors */`
+    );
     for (const token of tokens) {
-      const name = token.name || "";
-      const value = token.value || "";
+      const name = token.name ?? "";
+      const value = token.value ?? "";
 
       lines.push(`  ${name}: ${value};`);
     }
@@ -175,12 +176,12 @@ async function main() {
   } else {
     // Handle API response format
     data = rawData;
-    version = rawData.latestVersion || "unknown";
+    version = rawData.latestVersion ?? "unknown";
   }
 
   // Output as formatted structure for readability
   console.log("/* HeroUI Native Theme Variables */");
-  console.log(`/* Theme: ${data.theme || "default"} */`);
+  console.log(`/* Theme: ${data.theme ?? "default"} */`);
   console.log(`/* Version: ${version} */`);
   console.log();
 
@@ -216,7 +217,7 @@ async function main() {
 
   // Also output raw JSON to stderr for programmatic use
   console.error("\n# Raw JSON output:");
-  console.error(JSON.stringify(rawData || data, null, 2));
+  console.error(JSON.stringify(rawData ?? data, null, 2));
 }
 
 main();

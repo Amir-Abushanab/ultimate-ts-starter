@@ -1,0 +1,19 @@
+{
+  "name": "@ultimate-ts-starter/logging",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "devDependencies": {
+    "@ultimate-ts-starter/config": "workspace:*",
+    "hono": "catalog:",
+    "typescript": "^6"
+  },
+  "peerDependencies": {
+    "hono": ">=4"
+  }
+}

@@ -121,7 +121,13 @@ interface CommonProps {
     | "space-around"
     | "space-evenly";
   alignItems?: "flex-start" | "flex-end" | "center" | "stretch" | "baseline";
-  alignSelf?: "auto" | "flex-start" | "flex-end" | "center" | "stretch" | "baseline";
+  alignSelf?:
+    | "auto"
+    | "flex-start"
+    | "flex-end"
+    | "center"
+    | "stretch"
+    | "baseline";
   alignContent?:
     | "flex-start"
     | "flex-end"
@@ -170,7 +176,14 @@ renderable.emit(event, ...args); // Emit event
 Display styled text content.
 
 ```typescript
-import { TextRenderable, TextAttributes, t, bold, fg, underline } from "@opentui/core";
+import {
+  TextRenderable,
+  TextAttributes,
+  t,
+  bold,
+  fg,
+  underline,
+} from "@opentui/core";
 
 const text = new TextRenderable(renderer, {
   id: "text",
@@ -347,7 +360,7 @@ for (let i = 0; i < 100; i++) {
     new TextRenderable(renderer, {
       id: `line-${i}`,
       content: `Line ${i}`,
-    }),
+    })
   );
 }
 
@@ -399,7 +412,7 @@ import { Text, Box, Input, Select, instantiate, delegate } from "@opentui/core";
 const ui = Box(
   { border: true, padding: 1 },
   Text({ content: "Hello" }),
-  Input({ placeholder: "Type here..." }),
+  Input({ placeholder: "Type here..." })
 );
 
 // Instantiate onto renderer
@@ -411,8 +424,8 @@ const form = delegate(
   Box(
     {},
     Text({ content: "Email:" }),
-    Input({ id: "email-input", placeholder: "you@example.com" }),
-  ),
+    Input({ id: "email-input", placeholder: "you@example.com" })
+  )
 );
 form.focus(); // Focuses the input, not the box
 ```
@@ -540,7 +553,7 @@ timeline.add(
     onUpdate: (anim) => {
       box.setWidth(anim.targets[0].width);
     },
-  },
+  }
 );
 
 engine.attach(renderer);

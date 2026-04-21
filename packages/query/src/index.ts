@@ -1,0 +1,49 @@
+import { createORPCClient } from "@orpc/client";
+import { RPCLink } from "@orpc/client/fetch";
+import { createTanstackQueryUtils } from "@orpc/tanstack-query";
+import { QueryCache, QueryClient } from "@tanstack/react-query";
+import type {
+  AppRouter,
+  AppRouterClient,
+} from "@ultimate-ts-starter/api/routers/index";
+
+export interface QueryConfig {
+  /** Server base URL (e.g. env.VITE_SERVER_URL) */
+  serverUrl: string;
+  /** Error handler for failed queries */
+  onError?: (error: Error, query: unknown) => void;
+  /** Fetch credentials mode (default: "include") */
+  credentials?: "include" | "omit" | "same-origin";
+  /** Custom headers — called per-request (e.g. for manual cookie forwarding) */
+  headers?: () => Record<string, string> | Promise<Record<string, string>>;
+}
+
+export const createAppQueryClient = (config: QueryConfig) => {
+  const credentials = config.credentials ?? "include";
+
+  const queryClient = new QueryClient({
+    queryCache: new QueryCache({
+      // eslint-disable-next-line typescript/no-unsafe-type-assertion -- QueryCache onError type mismatch
+      onError: config.onError as QueryCache["config"]["onError"],
+    }),
+  });
+
+  const link = new RPCLink({
+    // eslint-disable-next-line typescript/no-unsafe-type-assertion, typescript/no-unsafe-call, typescript/no-unsafe-assignment -- RPCLink fetch type mismatch; globalThis.fetch unresolved in lint env
+    fetch: ((request: Request, init?: RequestInit) =>
+      globalThis.fetch(request, {
+        ...init,
+        credentials,
+      })) as RPCLink["fetch"],
+    headers: config.headers,
+    url: `${config.serverUrl}/rpc`,
+  });
+
+  const client: AppRouterClient = createORPCClient(link);
+  const orpc = createTanstackQueryUtils(client);
+
+  return { client, orpc, queryClient };
+};
+
+export { useRealtime, useEventStream } from "./use-event-stream.js";
+export type { AppRouter, AppRouterClient };

@@ -1,4 +1,5 @@
 import { useForm } from "@tanstack/react-form";
+import { signUpSchema } from "@ultimate-ts-starter/validation/auth";
 import {
   Button,
   FieldError,
@@ -10,20 +11,16 @@ import {
   useToast,
 } from "heroui-native";
 import { useRef } from "react";
-import { Text, TextInput, View } from "react-native";
-import z from "zod";
+import type { TextInput } from "react-native";
+import { Text, View } from "react-native";
 
 import { authClient } from "@/lib/auth-client";
 import { queryClient } from "@/utils/orpc";
 
-const signUpSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").min(2, "Name must be at least 2 characters"),
-  email: z.string().trim().min(1, "Email is required").email("Enter a valid email address"),
-  password: z.string().min(1, "Password is required").min(8, "Use at least 8 characters"),
-});
-
-function getErrorMessage(error: unknown): string | null {
-  if (!error) return null;
+const getErrorMessage = (error: unknown): string | null => {
+  if (error === null || error === undefined) {
+    return null;
+  }
 
   if (typeof error === "string") {
     return error;
@@ -32,7 +29,7 @@ function getErrorMessage(error: unknown): string | null {
   if (Array.isArray(error)) {
     for (const issue of error) {
       const message = getErrorMessage(issue);
-      if (message) {
+      if (message !== null) {
         return message;
       }
     }
@@ -47,46 +44,46 @@ function getErrorMessage(error: unknown): string | null {
   }
 
   return null;
-}
+};
 
-export function SignUp() {
+export const SignUp = () => {
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
   const { toast } = useToast();
 
   const form = useForm({
     defaultValues: {
-      name: "",
       email: "",
+      name: "",
       password: "",
-    },
-    validators: {
-      onSubmit: signUpSchema,
     },
     onSubmit: async ({ value, formApi }) => {
       await authClient.signUp.email(
         {
-          name: value.name.trim(),
           email: value.email.trim(),
+          name: value.name.trim(),
           password: value.password,
         },
         {
           onError(error) {
             toast.show({
-              variant: "danger",
               label: error.error?.message || "Failed to sign up",
+              variant: "danger",
             });
           },
           onSuccess() {
             formApi.reset();
             toast.show({
-              variant: "success",
               label: "Account created successfully",
+              variant: "success",
             });
-            queryClient.refetchQueries();
+            void queryClient.refetchQueries();
           },
-        },
+        }
       );
+    },
+    validators: {
+      onSubmit: signUpSchema,
     },
   });
 
@@ -105,7 +102,7 @@ export function SignUp() {
 
           return (
             <>
-              <FieldError isInvalid={!!formError} className="mb-3">
+              <FieldError isInvalid={formError !== null} className="mb-3">
                 {formError}
               </FieldError>
 
@@ -122,7 +119,7 @@ export function SignUp() {
                         autoComplete="name"
                         textContentType="name"
                         returnKeyType="next"
-                        blurOnSubmit={false}
+                        submitBehavior="blurAndSubmit"
                         onSubmitEditing={() => {
                           emailInputRef.current?.focus();
                         }}
@@ -146,7 +143,7 @@ export function SignUp() {
                         autoComplete="email"
                         textContentType="emailAddress"
                         returnKeyType="next"
-                        blurOnSubmit={false}
+                        submitBehavior="blurAndSubmit"
                         onSubmitEditing={() => {
                           passwordInputRef.current?.focus();
                         }}
@@ -169,13 +166,21 @@ export function SignUp() {
                         autoComplete="new-password"
                         textContentType="newPassword"
                         returnKeyType="go"
-                        onSubmitEditing={form.handleSubmit}
+                        onSubmitEditing={() => {
+                          void form.handleSubmit();
+                        }}
                       />
                     </TextField>
                   )}
                 </form.Field>
 
-                <Button onPress={form.handleSubmit} isDisabled={isSubmitting} className="mt-1">
+                <Button
+                  onPress={() => {
+                    void form.handleSubmit();
+                  }}
+                  isDisabled={isSubmitting}
+                  className="mt-1"
+                >
                   {isSubmitting ? (
                     <Spinner size="sm" color="default" />
                   ) : (
@@ -189,4 +194,4 @@ export function SignUp() {
       </form.Subscribe>
     </Surface>
   );
-}
+};

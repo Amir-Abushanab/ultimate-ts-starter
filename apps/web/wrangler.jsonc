@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "web",
+  "compatibility_date": "2025-04-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "@tanstack/react-start/server-entry",
+  "observability": {
+    "enabled": true,
+  },
+  // Set build-time vars in the CI `Deploy web` step; runtime vars here.
+  // "vars": {},
+  // Routes / custom domains — configure in the Cloudflare dashboard or add here later.
+  // "routes": [{ "pattern": "example.com", "custom_domain": true }],
+}

@@ -16,7 +16,11 @@ JS thread round-trip for press animations.
 
 ```tsx
 import { Pressable } from "react-native";
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
 function AnimatedButton({ onPress }: { onPress: () => void }) {
   const scale = useSharedValue(1);
@@ -68,7 +72,9 @@ function AnimatedButton({ onPress }: { onPress: () => void }) {
 
   // Derive visual values from the state
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: interpolate(withTiming(pressed.get()), [0, 1], [1, 0.95]) }],
+    transform: [
+      { scale: interpolate(withTiming(pressed.get()), [0, 1], [1, 0.95]) },
+    ],
   }));
 
   return (

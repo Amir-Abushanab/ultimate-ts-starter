@@ -15,7 +15,12 @@ image component.
 **Incorrect (single component with conditionals):**
 
 ```tsx
-type Item = { id: string; text?: string; imageUrl?: string; isHeader?: boolean };
+type Item = {
+  id: string;
+  text?: string;
+  imageUrl?: string;
+  isHeader?: boolean;
+};
 
 function ListItem({ item }: { item: Item }) {
   if (item.isHeader) {
@@ -29,7 +34,11 @@ function ListItem({ item }: { item: Item }) {
 
 function Feed({ items }: { items: Item[] }) {
   return (
-    <LegendList data={items} renderItem={({ item }) => <ListItem item={item} />} recycleItems />
+    <LegendList
+      data={items}
+      renderItem={({ item }) => <ListItem item={item} />}
+      recycleItems
+    />
   );
 }
 ```

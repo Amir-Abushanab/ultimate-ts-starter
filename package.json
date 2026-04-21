@@ -1,5 +1,6 @@
 {
   "name": "ultimate-ts-starter",
+  "version": "0.1.0",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -7,21 +8,38 @@
   ],
   "type": "module",
   "scripts": {
-    "dev": "pnpm -r dev",
+    "bootstrap": "pnpm db:migrate && pnpm db:seed && pnpm dev",
+    "dev": "pnpm --filter server --filter web --filter extension --filter tui -r --stream dev",
     "build": "pnpm -r build",
-    "check-types": "pnpm -r check-types",
+    "build:analyze": "pnpm --filter web dlx vite-bundle-visualizer",
+    "check-types": "tsgo --noEmit -p apps/server/tsconfig.json & tsgo --noEmit -p apps/web/tsconfig.json & tsgo --noEmit -p apps/native/tsconfig.json & tsgo --noEmit -p apps/tui/tsconfig.json & tsgo --noEmit -p apps/extension/tsconfig.json & wait",
     "dev:native": "pnpm --filter native dev",
-    "dev:web": "pnpm --filter web dev",
+    "dev:web": "pnpm --filter server --filter web -r --stream dev",
     "dev:tui": "pnpm --filter tui dev",
     "dev:server": "pnpm --filter server dev",
     "db:push": "pnpm --filter @ultimate-ts-starter/db db:push",
     "db:studio": "pnpm --filter @ultimate-ts-starter/db db:studio",
-    "db:generate": "pnpm --filter @ultimate-ts-starter/db db:generate",
+    "db:generate": "pnpm --filter @ultimate-ts-starter/auth generate && pnpm --filter @ultimate-ts-starter/db db:generate",
     "db:migrate": "pnpm --filter @ultimate-ts-starter/db db:migrate",
-    "deploy": "pnpm --filter @ultimate-ts-starter/infra deploy",
-    "destroy": "pnpm --filter @ultimate-ts-starter/infra destroy",
-    "check": "ultracite check",
-    "fix": "ultracite fix"
+    "db:seed": "pnpm --filter @ultimate-ts-starter/db db:seed",
+    "deploy": "pnpm deploy:server && pnpm deploy:web",
+    "deploy:server": "pnpm --filter server deploy",
+    "deploy:web": "pnpm --filter web deploy",
+    "test": "pnpm --filter web test; pnpm -w exec vp test run --root packages",
+    "test:watch": "pnpm --filter web test:watch",
+    "test:coverage": "pnpm --filter web test:coverage",
+    "test:e2e": "pnpm --filter web test:e2e",
+    "check": "vp check",
+    "fix": "vp check --fix",
+    "lint:unused": "pnpm dlx knip",
+    "lint:deps": "pnpm dlx dependency-cruiser --config .dependency-cruiser.cjs apps packages",
+    "deps:check": "node scripts/check-deps.mjs",
+    "deps:update": "node scripts/check-deps.mjs --apply",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "changeset version && pnpm install --lockfile-only",
+    "sync-rules": "cp .claude/CLAUDE.md AGENTS.md && cp .claude/CLAUDE.md GEMINI.md",
+    "prepare": "vp config && pnpm --filter @ultimate-ts-starter/i18n build && pnpm sync-rules"
   },
   "dependencies": {
     "@ultimate-ts-starter/env": "workspace:*",
@@ -29,13 +47,19 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.6.0",
+    "@changesets/cli": "^2.30.0",
     "@cloudflare/workers-types": "catalog:",
-    "@types/node": "^22.13.14",
+    "@types/node": "^25.6.0",
+    "@typescript/native-preview": "catalog:",
     "@ultimate-ts-starter/config": "workspace:*",
-    "oxfmt": "latest",
-    "oxlint": "latest",
-    "typescript": "^5",
-    "ultracite": "7.4.3"
+    "@vitest/coverage-v8": "^4.1.4",
+    "typescript": "^6.0.2",
+    "vite-plus": "catalog:",
+    "vitest": "npm:@voidzero-dev/vite-plus-test@^0.1.18"
   },
-  "packageManager": "pnpm@10.9.0"
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@10.33.0"
 }

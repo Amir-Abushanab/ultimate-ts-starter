@@ -9,12 +9,16 @@
       "default": "./src/*.ts"
     }
   },
-  "scripts": {},
+  "scripts": {
+    "generate": "pnpx auth generate --output $PWD/../db/src/schema/auth.ts"
+  },
   "dependencies": {
     "@better-auth/expo": "catalog:",
+    "@better-auth/sso": "^1.6.4",
     "@polar-sh/better-auth": "catalog:",
-    "@polar-sh/sdk": "^0.42.2",
+    "@polar-sh/sdk": "^0.47.0",
     "@ultimate-ts-starter/db": "workspace:*",
+    "@ultimate-ts-starter/email": "workspace:*",
     "@ultimate-ts-starter/env": "workspace:*",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
@@ -22,6 +26,6 @@
   },
   "devDependencies": {
     "@ultimate-ts-starter/config": "workspace:*",
-    "typescript": "^5"
+    "typescript": "^6"
   }
 }

@@ -41,7 +41,7 @@ function Price({ amount }: { amount: number }) {
 ```tsx
 const dateFormatter = useMemo(
   () => new Intl.DateTimeFormat(locale, { dateStyle: "medium" }),
-  [locale],
+  [locale]
 );
 ```
 

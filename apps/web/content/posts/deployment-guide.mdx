@@ -1,0 +1,59 @@
+---
+title: "Deploying to Production"
+description: "A complete guide to deploying your app to Cloudflare Workers, with database migrations and environment setup."
+author: "Ultimate TS Team"
+tags: ["deployment", "cloudflare", "guide"]
+publishedAt: "2026-04-08"
+updatedAt: "2026-04-10"
+featured: true
+---
+
+Ready to ship? This guide covers everything from database migrations to deploying your API and frontend.
+
+## Deployment checklist
+
+<Step number={1} title="Run migrations">
+  Ensure your production database is up to date: `pnpm db:migrate`
+</Step>
+
+<Step number={2} title="Set environment variables">
+  Configure all required secrets in your deployment platform. At minimum you
+  need `DATABASE_URL`, `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL`.
+</Step>
+
+<Step number={3} title="Deploy the API">
+  Run `pnpm deploy` to push the Hono server to Cloudflare Workers.
+</Step>
+
+<Step number={4} title="Deploy the frontend">
+  Build and deploy the TanStack Start app to your hosting platform of choice.
+</Step>
+
+## Environment variables
+
+<Callout variant="warning" title="Security">
+  Never commit `.env` files. Use your platform's secret management instead.
+</Callout>
+
+| Variable             | Required | Description                  |
+| -------------------- | -------- | ---------------------------- |
+| `DATABASE_URL`       | Yes      | PostgreSQL connection string |
+| `BETTER_AUTH_SECRET` | Yes      | Auth signing secret          |
+| `BETTER_AUTH_URL`    | Yes      | Public URL of your app       |
+| `POSTHOG_KEY`        | No       | Analytics tracking key       |
+| `POLAR_ACCESS_TOKEN` | No       | Billing integration          |
+
+## Monitoring
+
+Once deployed, keep an eye on:
+
+- **Error rates** — Set up alerting for 5xx responses
+- **Latency** — Watch p95 response times
+- **Database** — Monitor connection pool usage
+
+<Callout variant="success" title="You're live!">
+  Once all steps are complete, your app is in production. Monitor your logs for
+  the first few hours to catch any issues early.
+</Callout>
+
+> "Ship early, ship often, and listen to your users." — Every startup ever

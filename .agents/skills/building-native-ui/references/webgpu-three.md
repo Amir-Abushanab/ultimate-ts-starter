@@ -48,7 +48,7 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
         mainFields: ["module"],
       },
       moduleName,
-      platform,
+      platform
     );
   }
   return context.resolveRequest(context, moduleName, platform);
@@ -104,7 +104,7 @@ export class ReactNativeCanvas {
 
 export const makeWebGPURenderer = (
   context: GPUCanvasContext,
-  { antialias = true }: { antialias?: boolean } = {},
+  { antialias = true }: { antialias?: boolean } = {}
 ) =>
   new THREE.WebGPURenderer({
     antialias,
@@ -120,12 +120,20 @@ export const makeWebGPURenderer = (
 import * as THREE from "three/webgpu";
 import React, { useEffect, useRef } from "react";
 import type { ReconcilerRoot, RootState } from "@react-three/fiber";
-import { extend, createRoot, unmountComponentAtNode, events } from "@react-three/fiber";
+import {
+  extend,
+  createRoot,
+  unmountComponentAtNode,
+  events,
+} from "@react-three/fiber";
 import type { ViewProps } from "react-native";
 import { PixelRatio } from "react-native";
 import { Canvas, type CanvasRef } from "react-native-wgpu";
 
-import { makeWebGPURenderer, ReactNativeCanvas } from "@/lib/make-webgpu-renderer";
+import {
+  makeWebGPURenderer,
+  ReactNativeCanvas,
+} from "@/lib/make-webgpu-renderer";
 
 // Extend THREE namespace for R3F - add all components you use
 extend({
@@ -157,7 +165,12 @@ interface FiberCanvasProps {
   scene?: THREE.Scene;
 }
 
-export const FiberCanvas = ({ children, style, scene, camera }: FiberCanvasProps) => {
+export const FiberCanvas = ({
+  children,
+  style,
+  scene,
+  camera,
+}: FiberCanvasProps) => {
   const root = useRef<ReconcilerRoot<OffscreenCanvas>>(null!);
   const canvasRef = useRef<CanvasRef>(null);
 
@@ -388,7 +401,10 @@ function Particles({ count = 500 }) {
   return (
     <points ref={ref}>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions.current, 3]} />
+        <bufferAttribute
+          attach="attributes-position"
+          args={[positions.current, 3]}
+        />
       </bufferGeometry>
       <pointsMaterial color="#ffffff" size={0.2} sizeAttenuation />
     </points>

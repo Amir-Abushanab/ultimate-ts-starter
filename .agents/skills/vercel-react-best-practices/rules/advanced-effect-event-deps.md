@@ -14,7 +14,13 @@ Effect Event functions do not have a stable identity. Their identity intentional
 ```tsx
 import { useEffect, useEffectEvent } from "react";
 
-function ChatRoom({ roomId, onConnected }: { roomId: string; onConnected: () => void }) {
+function ChatRoom({
+  roomId,
+  onConnected,
+}: {
+  roomId: string;
+  onConnected: () => void;
+}) {
   const handleConnected = useEffectEvent(onConnected);
 
   useEffect(() => {
@@ -34,7 +40,13 @@ Including the Effect Event in dependencies makes the effect re-run every render 
 ```tsx
 import { useEffect, useEffectEvent } from "react";
 
-function ChatRoom({ roomId, onConnected }: { roomId: string; onConnected: () => void }) {
+function ChatRoom({
+  roomId,
+  onConnected,
+}: {
+  roomId: string;
+  onConnected: () => void;
+}) {
   const handleConnected = useEffectEvent(onConnected);
 
   useEffect(() => {

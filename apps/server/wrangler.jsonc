@@ -1,0 +1,39 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "server",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-04-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "dev": {
+    "port": 3000,
+  },
+  // Non-secret vars — set values in .dev.vars for local dev
+  "vars": {
+    "NODE_ENV": "production",
+    "CORS_ORIGIN": "",
+    "BETTER_AUTH_URL": "",
+    "POLAR_SUCCESS_URL": "",
+  },
+  // Secrets (DATABASE_URL, BETTER_AUTH_SECRET, POLAR_ACCESS_TOKEN, RESEND_API_KEY)
+  // are set via `wrangler secret put <NAME>`
+
+  // Durable Objects — real-time WebSocket events per user
+  "durable_objects": {
+    "bindings": [{ "name": "USER_EVENTS", "class_name": "UserEvents" }],
+  },
+  "migrations": [{ "tag": "v1", "new_classes": ["UserEvents"] }],
+
+  // Hyperdrive — connection pooling for PostgreSQL in production
+  // Create with: wrangler hyperdrive create <NAME> --connection-string="postgres://..."
+  // Set CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=<your DATABASE_URL> in .dev.vars for local dev
+  // "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "your-hyperdrive-id" }],
+
+  // Uncomment to enable cron triggers:
+  // "triggers": { "crons": ["0 * * * *"] },
+
+  // Uncomment to enable R2 file uploads:
+  // "r2_buckets": [{ "binding": "R2_BUCKET", "bucket_name": "uploads" }],
+
+  // Uncomment to enable KV caching:
+  // "kv_namespaces": [{ "binding": "KV_CACHE", "id": "your-kv-namespace-id" }]
+}

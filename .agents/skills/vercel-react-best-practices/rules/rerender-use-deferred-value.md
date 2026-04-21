@@ -33,7 +33,7 @@ function Search({ items }: { items: Item[] }) {
   const deferredQuery = useDeferredValue(query);
   const filtered = useMemo(
     () => items.filter((item) => fuzzyMatch(item, deferredQuery)),
-    [items, deferredQuery],
+    [items, deferredQuery]
   );
   const isStale = query !== deferredQuery;
 

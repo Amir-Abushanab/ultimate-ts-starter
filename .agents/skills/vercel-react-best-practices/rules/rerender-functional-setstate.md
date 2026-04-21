@@ -20,7 +20,7 @@ function TodoList() {
     (newItems: Item[]) => {
       setItems([...items, ...newItems]);
     },
-    [items],
+    [items]
   ); // ❌ items dependency causes recreations
 
   // Risk of stale closure if dependency is forgotten

@@ -1,0 +1,87 @@
+/*
+ * Shared design tokens — single source of truth for all platforms.
+ *
+ * Uses HeroUI Native's colorful palette as the base.
+ * Each platform maps these primitives into its own semantic system
+ * (shadcn on web, HeroUI on native).
+ *
+ * Change a value here → both platforms update.
+ */
+
+:root {
+  /*
+   * ─── Base primitives ───────────────────────────
+   * Core extremes used by both platforms for text & backgrounds.
+   *   --white / --snow   → light backgrounds & light-on-dark text
+   *   --black / --eclipse → dark backgrounds & dark-on-light text
+   */
+  --white: oklch(100% 0 0);
+  --black: oklch(0% 0 0);
+  --snow: oklch(0.9911 0 0);
+  --eclipse: oklch(0.2103 0.0059 285.89);
+
+  /*
+   * ─── Brand / accent ────────────────────────────
+   * The primary action color across both platforms.
+   *   Web:    --primary, --ring, --focus, --sidebar-primary
+   *   Native: --accent, --focus
+   */
+  --blue: oklch(0.6204 0.195 253.83);
+
+  /*
+   * ─── Status colors ─────────────────────────────
+   * Semantic feedback colors. Each has a light-mode
+   * and dark-mode variant where the values differ.
+   *   Web:    --success/--warning/--danger + --destructive
+   *   Native: --success/--warning/--danger
+   */
+  --green: oklch(0.7329 0.1935 150.81);
+  --yellow: oklch(0.7819 0.1585 72.33);
+  --yellow-dark: oklch(0.8203 0.1388 76.34);
+  --red: oklch(0.6532 0.2328 25.74);
+  --red-dark: oklch(0.594 0.1967 24.63);
+
+  /*
+   * ─── Neutral spectrum ──────────────────────────
+   * Warm-tinted grays (HeroUI-inspired). Used for
+   * backgrounds, surfaces, borders, and muted text.
+   *
+   *   Light theme typically uses 50–400 for backgrounds/borders
+   *   and 500–600 for muted text.
+   *
+   *   Dark theme typically uses 700–900 for backgrounds/borders
+   *   and 500–600 for muted text.
+   *
+   *   Web:    --background, --card, --border, --muted, etc.
+   *   Native: --background, --surface, --border, --muted, etc.
+   */
+  --neutral-50: oklch(0.9702 0 0);
+  --neutral-100: oklch(0.9524 0.0013 286.37);
+  --neutral-200: oklch(0.9373 0.0013 286.37);
+  --neutral-300: oklch(0.94 0.001 286.375);
+  --neutral-400: oklch(0.9 0.004 286.32);
+  --neutral-500: oklch(0.74 0.004 286.32);
+  --neutral-600: oklch(0.5517 0.0138 285.94);
+  --neutral-700: oklch(0.4 0.006 286.033);
+  --neutral-800: oklch(0.274 0.006 286.033);
+  --neutral-850: oklch(0.257 0.0037 286.14);
+  --neutral-900: oklch(0.12 0.005 285.823);
+
+  /*
+   * ─── Chart palette ─────────────────────────────
+   * Sequential blue palette for data visualisation.
+   * Modify together if changing the chart color scheme.
+   */
+  --chart-1: oklch(0.809 0.105 251.81);
+  --chart-2: oklch(0.623 0.214 259.82);
+  --chart-3: oklch(0.546 0.245 262.88);
+  --chart-4: oklch(0.488 0.243 264.38);
+  --chart-5: oklch(0.424 0.199 265.64);
+
+  /*
+   * ─── Shape ─────────────────────────────────────
+   * Base border radius. Both platforms derive their
+   * radius scale (sm/md/lg/xl/…) from this value.
+   */
+  --radius: 0.5rem;
+}

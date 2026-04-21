@@ -1,0 +1,33 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": ["vite.config.ts"]
+    },
+    "apps/web": {
+      "entry": ["src/routes/**/*.tsx", "src/router.tsx"],
+      "ignoreDependencies": ["@ultimate-ts-starter/*"]
+    },
+    "apps/server": {
+      "entry": ["src/index.ts"],
+      "ignoreDependencies": ["@ultimate-ts-starter/*"]
+    },
+    "apps/native": {
+      "entry": ["app/**/*.tsx"],
+      "ignoreDependencies": ["@ultimate-ts-starter/*"]
+    },
+    "apps/tui": {
+      "entry": ["src/index.tsx"],
+      "ignoreDependencies": ["@ultimate-ts-starter/*"]
+    },
+    "apps/extension": {
+      "entry": ["src/**/*.tsx"],
+      "ignoreDependencies": ["@ultimate-ts-starter/*"]
+    },
+    "packages/*": {
+      "entry": ["src/index.ts", "src/**/*.ts"],
+      "ignoreDependencies": ["@ultimate-ts-starter/*"]
+    }
+  },
+  "ignore": ["**/*.d.ts", "**/*.gen.ts", ".claude/**", ".vite-hooks/**"]
+}

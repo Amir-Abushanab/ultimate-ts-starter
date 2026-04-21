@@ -37,7 +37,9 @@ function FlagsProvider({ children, flags }: Props) {
     }
   }, [flags.editorEnabled]);
 
-  return <FlagsContext.Provider value={flags}>{children}</FlagsContext.Provider>;
+  return (
+    <FlagsContext.Provider value={flags}>{children}</FlagsContext.Provider>
+  );
 }
 ```
 

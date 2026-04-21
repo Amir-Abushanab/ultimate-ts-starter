@@ -6,33 +6,37 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 
 import { AppThemeProvider } from "@/contexts/app-theme-context";
+import { initAnalytics } from "@/lib/analytics";
 import { queryClient } from "@/utils/orpc";
+
+initAnalytics();
 
 export const unstable_settings = {
   initialRouteName: "(drawer)",
 };
 
-function StackLayout() {
-  return (
-    <Stack screenOptions={{}}>
-      <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-      <Stack.Screen name="modal" options={{ title: "Modal", presentation: "modal" }} />
-    </Stack>
-  );
-}
+const StackLayout = () => (
+  <Stack screenOptions={{}}>
+    <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+    <Stack.Screen
+      name="modal"
+      options={{ presentation: "modal", title: "Modal" }}
+    />
+  </Stack>
+);
 
-export default function Layout() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <KeyboardProvider>
-          <AppThemeProvider>
-            <HeroUINativeProvider>
-              <StackLayout />
-            </HeroUINativeProvider>
-          </AppThemeProvider>
-        </KeyboardProvider>
-      </GestureHandlerRootView>
-    </QueryClientProvider>
-  );
-}
+const Layout = () => (
+  <QueryClientProvider client={queryClient}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <KeyboardProvider>
+        <AppThemeProvider>
+          <HeroUINativeProvider>
+            <StackLayout />
+          </HeroUINativeProvider>
+        </AppThemeProvider>
+      </KeyboardProvider>
+    </GestureHandlerRootView>
+  </QueryClientProvider>
+);
+
+export default Layout;

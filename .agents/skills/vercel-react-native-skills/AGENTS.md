@@ -364,7 +364,10 @@ function ProductRow({ id }: { id: string }) {
   const user = useContext(UserContext);
   const cart = useContext(CartContext);
   // Bad: expensive computation
-  const recommendations = useMemo(() => computeRecommendations(product), [product]);
+  const recommendations = useMemo(
+    () => computeRecommendations(product),
+    [product]
+  );
 
   return <View>{/* ... */}</View>;
 }
@@ -716,7 +719,10 @@ function ProductItem({ product }: { product: Product }) {
   return (
     <View>
       {/* 4000x3000 image loaded for a 100x100 thumbnail */}
-      <Image source={{ uri: product.imageUrl }} style={{ width: 100, height: 100 }} />
+      <Image
+        source={{ uri: product.imageUrl }}
+        style={{ width: 100, height: 100 }}
+      />
       <Text>{product.name}</Text>
     </View>
   );
@@ -766,7 +772,12 @@ image component.
 **Incorrect: single component with conditionals**
 
 ```tsx
-type Item = { id: string; text?: string; imageUrl?: string; isHeader?: boolean };
+type Item = {
+  id: string;
+  text?: string;
+  imageUrl?: string;
+  isHeader?: boolean;
+};
 
 function ListItem({ item }: { item: Item }) {
   if (item.isHeader) {
@@ -780,7 +791,11 @@ function ListItem({ item }: { item: Item }) {
 
 function Feed({ items }: { items: Item[] }) {
   return (
-    <LegendList data={items} renderItem={({ item }) => <ListItem item={item} />} recycleItems />
+    <LegendList
+      data={items}
+      renderItem={({ item }) => <ListItem item={item} />}
+      recycleItems
+    />
   );
 }
 ```
@@ -869,7 +884,10 @@ Avoid animating `width`, `height`, `top`, `left`, `margin`, or `padding`. These 
 **Incorrect: animates height, triggers layout every frame**
 
 ```tsx
-import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
 function CollapsiblePanel({ expanded }: { expanded: boolean }) {
   const animatedStyle = useAnimatedStyle(() => ({
@@ -884,7 +902,10 @@ function CollapsiblePanel({ expanded }: { expanded: boolean }) {
 **Correct: animates scaleY, GPU-accelerated**
 
 ```tsx
-import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
 function CollapsiblePanel({ expanded }: { expanded: boolean }) {
   const animatedStyle = useAnimatedStyle(() => ({
@@ -893,7 +914,9 @@ function CollapsiblePanel({ expanded }: { expanded: boolean }) {
   }));
 
   return (
-    <Animated.View style={[{ height: 200, transformOrigin: "top" }, animatedStyle]}>
+    <Animated.View
+      style={[{ height: 200, transformOrigin: "top" }, animatedStyle]}
+    >
       {children}
     </Animated.View>
   );
@@ -903,7 +926,10 @@ function CollapsiblePanel({ expanded }: { expanded: boolean }) {
 **Correct: animates translateY for slide animations**
 
 ```tsx
-import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
 function SlideIn({ visible }: { visible: boolean }) {
   const animatedStyle = useAnimatedStyle(() => ({
@@ -944,7 +970,7 @@ function MyComponent() {
     () => progress.value,
     (current) => {
       opacity.value = 1 - current;
-    },
+    }
   );
 
   // ...
@@ -987,7 +1013,11 @@ JS thread round-trip for press animations.
 
 ```tsx
 import { Pressable } from "react-native";
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
 function AnimatedButton({ onPress }: { onPress: () => void }) {
   const scale = useSharedValue(1);
@@ -1039,7 +1069,9 @@ function AnimatedButton({ onPress }: { onPress: () => void }) {
 
   // Derive visual values from the state
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: interpolate(withTiming(pressed.get()), [0, 1], [1, 0.95]) }],
+    transform: [
+      { scale: interpolate(withTiming(pressed.get()), [0, 1], [1, 0.95]) },
+    ],
   }));
 
   return (
@@ -1080,7 +1112,11 @@ for animations or a ref for non-reactive tracking.
 
 ```tsx
 import { useState } from "react";
-import { ScrollView, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import {
+  ScrollView,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from "react-native";
 
 function Feed() {
   const [scrollY, setScrollY] = useState(0);
@@ -1096,7 +1132,10 @@ function Feed() {
 **Correct: Reanimated for animations**
 
 ```tsx
-import Animated, { useSharedValue, useAnimatedScrollHandler } from "react-native-reanimated";
+import Animated, {
+  useSharedValue,
+  useAnimatedScrollHandler,
+} from "react-native-reanimated";
 
 function Feed() {
   const scrollY = useSharedValue(0);
@@ -1122,7 +1161,11 @@ function Feed() {
 
 ```tsx
 import { useRef } from "react";
-import { ScrollView, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import {
+  ScrollView,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from "react-native";
 
 function Feed() {
   const scrollY = useRef(0);
@@ -1928,7 +1971,9 @@ scroll area without re-rendering content.
 ```tsx
 function Feed({ bottomOffset }: { bottomOffset: number }) {
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: bottomOffset }}>{children}</ScrollView>
+    <ScrollView contentContainerStyle={{ paddingBottom: bottomOffset }}>
+      {children}
+    </ScrollView>
   );
 }
 // Changing bottomOffset triggers full layout recalculation
@@ -2056,7 +2101,12 @@ function Avatar({ url }: { url: string }) {
 **With priority and caching:**
 
 ```tsx
-<Image source={{ uri: url }} priority="high" cachePolicy="memory-disk" style={styles.hero} />
+<Image
+  source={{ uri: url }}
+  priority="high"
+  cachePolicy="memory-disk"
+  style={styles.hero}
+/>
 ```
 
 **Key props:**
@@ -2237,7 +2287,11 @@ function MyMenu() {
           <DropdownMenu.ItemTitle>Edit</DropdownMenu.ItemTitle>
         </DropdownMenu.Item>
 
-        <DropdownMenu.Item key="delete" destructive onSelect={() => console.log("delete")}>
+        <DropdownMenu.Item
+          key="delete"
+          destructive
+          onSelect={() => console.log("delete")}
+        >
           <DropdownMenu.ItemTitle>Delete</DropdownMenu.ItemTitle>
         </DropdownMenu.Item>
       </DropdownMenu.Content>
@@ -2770,7 +2824,7 @@ function Price({ amount }: { amount: number }) {
 ```tsx
 const dateFormatter = useMemo(
   () => new Intl.DateTimeFormat(locale, { dateStyle: "medium" }),
-  [locale],
+  [locale]
 );
 ```
 

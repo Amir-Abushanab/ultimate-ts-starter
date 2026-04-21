@@ -17,7 +17,9 @@ scroll area without re-rendering content.
 ```tsx
 function Feed({ bottomOffset }: { bottomOffset: number }) {
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: bottomOffset }}>{children}</ScrollView>
+    <ScrollView contentContainerStyle={{ paddingBottom: bottomOffset }}>
+      {children}
+    </ScrollView>
   );
 }
 // Changing bottomOffset triggers full layout recalculation

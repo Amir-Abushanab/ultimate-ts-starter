@@ -25,7 +25,7 @@ function MyComponent() {
     () => progress.value,
     (current) => {
       opacity.value = 1 - current;
-    },
+    }
   );
 
   // ...

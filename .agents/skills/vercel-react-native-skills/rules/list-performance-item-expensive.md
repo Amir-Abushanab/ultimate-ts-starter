@@ -22,7 +22,10 @@ function ProductRow({ id }: { id: string }) {
   const user = useContext(UserContext);
   const cart = useContext(CartContext);
   // Bad: expensive computation
-  const recommendations = useMemo(() => computeRecommendations(product), [product]);
+  const recommendations = useMemo(
+    () => computeRecommendations(product),
+    [product]
+  );
 
   return <View>{/* ... */}</View>;
 }

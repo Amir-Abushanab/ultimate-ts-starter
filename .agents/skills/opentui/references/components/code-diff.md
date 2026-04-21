@@ -47,7 +47,12 @@ OpenTUI uses Tree-sitter for syntax highlighting. Common languages:
 ### Styling
 
 ```tsx
-<code code={sourceCode} language="typescript" backgroundColor="#1a1a2e" showLineNumbers />
+<code
+  code={sourceCode}
+  language="typescript"
+  backgroundColor="#1a1a2e"
+  showLineNumbers
+/>
 ```
 
 ### onHighlight Callback
@@ -422,7 +427,7 @@ diffView.setLineColors(
   new Map([
     [1, "#2d4f2d"],
     [2, "#4f2d2d"],
-  ]),
+  ])
 );
 
 // Highlight a range

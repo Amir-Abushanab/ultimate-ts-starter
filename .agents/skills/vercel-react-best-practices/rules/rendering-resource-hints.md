@@ -38,7 +38,11 @@ import { preload, preinit } from "react-dom";
 
 export default function RootLayout({ children }) {
   // Preload font file
-  preload("/fonts/inter.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
+  preload("/fonts/inter.woff2", {
+    as: "font",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  });
 
   // Fetch and apply critical stylesheet immediately
   preinit("/styles/critical.css", { as: "style" });

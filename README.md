@@ -185,11 +185,13 @@ All `vp` commands work from the repo root across the entire monorepo. `pnpm chec
 
 ### Build & Deploy
 
-| Command              | What                                |
-| -------------------- | ----------------------------------- |
-| `pnpm build`         | Build all apps                      |
-| `pnpm build:analyze` | Bundle size treemap (web)           |
-| `pnpm deploy`        | Deploy server to Cloudflare Workers |
+| Command              | What                                    |
+| -------------------- | --------------------------------------- |
+| `pnpm build`         | Build all apps                          |
+| `pnpm build:analyze` | Bundle size treemap (web)               |
+| `pnpm deploy`        | Deploy web + server to Cloudflare       |
+| `pnpm deploy:server` | Deploy server only (Cloudflare Workers) |
+| `pnpm deploy:web`    | Deploy web only (Cloudflare Workers)    |
 
 ### Native
 
@@ -236,13 +238,35 @@ Animated wrappers add iOS-like micro-interactions (press feedback, hover lift, p
 
 ## Deployment
 
-### Server (Cloudflare Workers)
+### Coverage
 
-```bash
-pnpm deploy
-```
+| App                | Target             | Pipeline                                                            |
+| ------------------ | ------------------ | ------------------------------------------------------------------- |
+| `apps/server`      | Cloudflare Workers | CI/CD (this repo)                                                   |
+| `apps/web`         | Cloudflare Workers | CI/CD (this repo)                                                   |
+| `apps/native`      | Expo / EAS         | Not wired up — run EAS manually                                     |
+| `apps/tui`         | —                  | No deployment pipeline                                              |
+| `apps/extension`   | Chrome / Firefox   | No deployment pipeline — use `pnpm --filter extension zip` manually |
+| `apps/web` (Tauri) | Desktop binaries   | No deployment pipeline                                              |
 
-Set secrets via wrangler:
+Only web and server have automated CI/CD. The other apps build locally/on-demand; add pipelines for them as needed.
+
+### CI/CD
+
+CI runs on every PR and push to `master` (`.github/workflows/ci.yml`): lint, typecheck, unit/integration tests, Playwright E2E, and build checks for web + server.
+
+Releases are manual (`.github/workflows/release.yml` — run via **Actions → Release → Run workflow**):
+
+1. Pick a bump level (`patch`, `minor`, `major` — defaults to **minor**).
+2. If any changesets are pending in `.changeset/`, `changeset version` runs first and applies per-package bumps.
+3. The root `package.json` version is bumped by the selected level regardless, and the commit is tagged `vX.Y.Z`.
+4. Server + web are deployed to Cloudflare; a GitHub release is created with auto-generated notes.
+
+Required repo secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
+
+### Cloudflare setup
+
+**Server** — set runtime secrets once (persisted in Cloudflare):
 
 ```bash
 cd apps/server
@@ -254,18 +278,13 @@ wrangler secret put RESEND_API_KEY
 
 Enable optional bindings in `apps/server/wrangler.jsonc` (R2, KV, cron triggers).
 
-### Web
+**Web** — edit `apps/web/wrangler.jsonc` to add custom domains/routes or worker bindings. Build-time env vars (e.g. `VITE_POSTHOG_KEY`) should be added as GitHub secrets and passed into the `Deploy web` step of `release.yml`.
 
-Built with TanStack Start. Deploy to any Node.js-compatible host or configure for static export.
+### Native, TUI, Extension, Desktop
 
-### Native
+These apps don't have CI/CD pipelines — each has different tooling and release cadence:
 
-Uses Expo with EAS Build for iOS/Android. See [Expo deployment docs](https://docs.expo.dev/deploy/build-project/).
-
-### Desktop
-
-The web app supports Tauri for native desktop builds:
-
-```bash
-cd apps/web && pnpm desktop:dev
-```
+- **Native** — Expo with EAS Build for iOS/Android. See [Expo docs](https://docs.expo.dev/deploy/build-project/).
+- **TUI** — terminal app, distribute via `bun build --compile` or `npm publish`.
+- **Extension** — `pnpm --filter extension zip` produces a store-ready archive; upload manually.
+- **Desktop (Tauri)** — `cd apps/web && pnpm desktop:build` produces platform binaries.

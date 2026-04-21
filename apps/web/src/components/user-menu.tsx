@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
+import * as m from "@ultimate-ts-starter/i18n/messages";
 import { Button } from "@ultimate-ts-starter/ui/components/button";
 import {
   DropdownMenu,
@@ -10,10 +11,11 @@ import {
   DropdownMenuTrigger,
 } from "@ultimate-ts-starter/ui/components/dropdown-menu";
 import { Skeleton } from "@ultimate-ts-starter/ui/components/skeleton";
+import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
 
-export default function UserMenu() {
+const UserMenu = () => {
   const navigate = useNavigate();
   const { data: session, isPending } = authClient.useSession();
 
@@ -24,7 +26,7 @@ export default function UserMenu() {
   if (!session) {
     return (
       <Link to="/login">
-        <Button variant="outline">Sign In</Button>
+        <Button variant="outline">{m.nav_sign_in()}</Button>
       </Link>
     );
   }
@@ -42,21 +44,22 @@ export default function UserMenu() {
           <DropdownMenuItem
             variant="destructive"
             onClick={() => {
-              authClient.signOut({
+              void authClient.signOut({
                 fetchOptions: {
                   onSuccess: () => {
-                    navigate({
-                      to: "/",
-                    });
+                    toast.error("Signed out");
+                    void navigate({ to: "/" });
                   },
                 },
               });
             }}
           >
-            Sign Out
+            {m.nav_sign_out()}
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+};
+
+export default UserMenu;

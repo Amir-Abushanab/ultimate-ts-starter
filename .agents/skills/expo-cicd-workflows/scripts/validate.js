@@ -30,13 +30,13 @@ async function validateFile(validator, filePath) {
   let doc;
   try {
     doc = yaml.load(content);
-  } catch (e) {
-    return { valid: false, error: `YAML parse error: ${e.message}` };
+  } catch (error) {
+    return { error: `YAML parse error: ${error.message}`, valid: false };
   }
 
   const valid = validator(doc);
   if (!valid) {
-    return { valid: false, error: formatErrors(validator.errors) };
+    return { error: formatErrors(validator.errors), valid: false };
   }
 
   return { valid: true };
@@ -45,7 +45,7 @@ async function validateFile(validator, filePath) {
 function formatErrors(errors) {
   return errors
     .map((error) => {
-      const path = error.instancePath || "(root)";
+      const path = error.instancePath ?? "(root)";
       const allowed = error.params?.allowedValues?.join(", ");
       return `  ${path}: ${error.message}${allowed ? ` (allowed: ${allowed})` : ""}`;
     })

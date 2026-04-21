@@ -1,0 +1,21 @@
+{
+  "name": "@ultimate-ts-starter/analytics",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./server": {
+      "default": "./src/server.ts"
+    }
+  },
+  "dependencies": {
+    "posthog-node": "^5.29.2"
+  },
+  "devDependencies": {
+    "@ultimate-ts-starter/config": "workspace:*",
+    "typescript": "^6"
+  }
+}

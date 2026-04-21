@@ -14,7 +14,10 @@ export default function FoldersScreen() {
   return (
     <>
       {/* ScrollView must be the first child of the screen */}
-      <ScrollView style={{ flex: 1 }} contentInsetAdjustmentBehavior="automatic">
+      <ScrollView
+        style={{ flex: 1 }}
+        contentInsetAdjustmentBehavior="automatic"
+      >
         {/* Screen content */}
       </ScrollView>
       <Stack.Screen.Title large>Folders</Stack.Screen.Title>
@@ -28,7 +31,11 @@ export default function FoldersScreen() {
       {/* Bottom toolbar */}
       <Stack.Toolbar placement="bottom">
         <Stack.Toolbar.SearchBarSlot />
-        <Stack.Toolbar.Button icon="square.and.pencil" onPress={() => {}} separateBackground />
+        <Stack.Toolbar.Button
+          icon="square.and.pencil"
+          onPress={() => {}}
+          separateBackground
+        />
       </Stack.Toolbar>
     </>
   );
@@ -62,10 +69,14 @@ export default function InboxScreen() {
         <Stack.Toolbar.Menu icon="ellipsis">
           <Stack.Toolbar.Menu inline>
             <Stack.Toolbar.Menu inline title="Sort By">
-              <Stack.Toolbar.MenuAction isOn>Categories</Stack.Toolbar.MenuAction>
+              <Stack.Toolbar.MenuAction isOn>
+                Categories
+              </Stack.Toolbar.MenuAction>
               <Stack.Toolbar.MenuAction>List</Stack.Toolbar.MenuAction>
             </Stack.Toolbar.Menu>
-            <Stack.Toolbar.MenuAction icon="info.circle">About categories</Stack.Toolbar.MenuAction>
+            <Stack.Toolbar.MenuAction icon="info.circle">
+              About categories
+            </Stack.Toolbar.MenuAction>
           </Stack.Toolbar.Menu>
           <Stack.Toolbar.MenuAction icon="person.circle">
             Show Contact Photos
@@ -96,7 +107,11 @@ export default function InboxScreen() {
         </Stack.Toolbar.View>
         <Stack.Toolbar.Spacer />
         <Stack.Toolbar.SearchBarSlot />
-        <Stack.Toolbar.Button icon="square.and.pencil" onPress={() => {}} separateBackground />
+        <Stack.Toolbar.Button
+          icon="square.and.pencil"
+          onPress={() => {}}
+          separateBackground
+        />
       </Stack.Toolbar>
     </>
   );
@@ -126,7 +141,9 @@ Dropdown menu for grouping actions.
 <Stack.Toolbar.Menu icon="ellipsis">
   <Stack.Toolbar.Menu inline>
     <Stack.Toolbar.MenuAction>Sort by Recently Added</Stack.Toolbar.MenuAction>
-    <Stack.Toolbar.MenuAction isOn>Sort by Date Captured</Stack.Toolbar.MenuAction>
+    <Stack.Toolbar.MenuAction isOn>
+      Sort by Date Captured
+    </Stack.Toolbar.MenuAction>
   </Stack.Toolbar.Menu>
   <Stack.Toolbar.Menu title="Filter">
     <Stack.Toolbar.Menu inline>

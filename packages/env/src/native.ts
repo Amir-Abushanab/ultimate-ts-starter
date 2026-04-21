@@ -2,10 +2,12 @@ import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
 
 export const env = createEnv({
-  clientPrefix: "EXPO_PUBLIC_",
   client: {
+    EXPO_PUBLIC_POSTHOG_HOST: z.string().optional(),
+    EXPO_PUBLIC_POSTHOG_KEY: z.string().optional(),
     EXPO_PUBLIC_SERVER_URL: z.url(),
   },
-  runtimeEnv: process.env,
+  clientPrefix: "EXPO_PUBLIC_",
   emptyStringAsUndefined: true,
+  runtimeEnv: process.env,
 });

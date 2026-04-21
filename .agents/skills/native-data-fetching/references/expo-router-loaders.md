@@ -125,7 +125,10 @@ type Post = {
   body: string;
 };
 
-export const loader: LoaderFunction<{ post: Post }> = async (request, params) => {
+export const loader: LoaderFunction<{ post: Post }> = async (
+  request,
+  params
+) => {
   const id = params.id as string;
   const response = await fetch(`https://api.example.com/posts/${id}`);
 
@@ -179,7 +182,9 @@ Query parameters are available via the `request` object (server output mode only
 // app/search.tsx
 import { type LoaderFunction } from "expo-server";
 
-export const loader: LoaderFunction<{ results: any[]; query: string }> = async (request) => {
+export const loader: LoaderFunction<{ results: any[]; query: string }> = async (
+  request
+) => {
   // Assuming request.url is `/search?q=expo&page=2`
   const url = new URL(request!.url);
   const query = url.searchParams.get("q") ?? "";
@@ -198,17 +203,19 @@ Loaders run on the server, so you can access secrets and server-only resources d
 // app/dashboard.tsx
 import { type LoaderFunction } from "expo-server";
 
-export const loader: LoaderFunction<{ balance: any; isAuthenticated: boolean }> = async (
-  request,
-  params,
-) => {
+export const loader: LoaderFunction<{
+  balance: any;
+  isAuthenticated: boolean;
+}> = async (request, params) => {
   const data = await fetch("https://api.stripe.com/v1/balance", {
     headers: {
       Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,
     },
   });
 
-  const sessionToken = request?.headers.get("cookie")?.match(/session=([^;]+)/)?.[1];
+  const sessionToken = request?.headers
+    .get("cookie")
+    ?.match(/session=([^;]+)/)?.[1];
 
   const balance = await data.json();
   return { balance, isAuthenticated: !!sessionToken };
@@ -241,7 +248,10 @@ export async function loader() {
 // app/products/[id].tsx
 import { StatusError, type LoaderFunction } from "expo-server";
 
-export const loader: LoaderFunction<{ product: Product }> = async (request, params) => {
+export const loader: LoaderFunction<{ product: Product }> = async (
+  request,
+  params
+) => {
   const id = params.id as string;
   const product = await fetchProduct(id);
 
@@ -286,7 +296,9 @@ export default function Posts() {
   return (
     <Suspense
       fallback={
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
           <ActivityIndicator size="large" />
         </View>
       }

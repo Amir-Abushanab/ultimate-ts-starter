@@ -1,0 +1,18 @@
+{
+  "name": "@ultimate-ts-starter/flags",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@ultimate-ts-starter/analytics": "workspace:*"
+  },
+  "devDependencies": {
+    "@ultimate-ts-starter/config": "workspace:*",
+    "typescript": "^6"
+  }
+}

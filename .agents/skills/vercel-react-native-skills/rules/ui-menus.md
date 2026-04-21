@@ -59,7 +59,11 @@ function MyMenu() {
           <DropdownMenu.ItemTitle>Edit</DropdownMenu.ItemTitle>
         </DropdownMenu.Item>
 
-        <DropdownMenu.Item key="delete" destructive onSelect={() => console.log("delete")}>
+        <DropdownMenu.Item
+          key="delete"
+          destructive
+          onSelect={() => console.log("delete")}
+        >
           <DropdownMenu.ItemTitle>Delete</DropdownMenu.ItemTitle>
         </DropdownMenu.Item>
       </DropdownMenu.Content>

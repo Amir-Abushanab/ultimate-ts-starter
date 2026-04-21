@@ -73,7 +73,12 @@ import { useState } from "react";
 
 const [value, setValue] = useState(0.5);
 
-<Slider value={value} onValueChange={setValue} minimumValue={0} maximumValue={1} />;
+<Slider
+  value={value}
+  onValueChange={setValue}
+  minimumValue={0}
+  maximumValue={1}
+/>;
 ```
 
 ### Customization
@@ -94,7 +99,13 @@ const [value, setValue] = useState(0.5);
 ### Discrete Steps
 
 ```tsx
-<Slider value={value} onValueChange={setValue} minimumValue={0} maximumValue={10} step={1} />
+<Slider
+  value={value}
+  onValueChange={setValue}
+  minimumValue={0}
+  maximumValue={10}
+  step={1}
+/>
 ```
 
 ## Date/Time Picker
@@ -167,7 +178,12 @@ import { useState } from "react";
 
 const [count, setCount] = useState(0);
 
-<Stepper value={count} onValueChange={setCount} minimumValue={0} maximumValue={10} />;
+<Stepper
+  value={count}
+  onValueChange={setCount}
+  minimumValue={0}
+  maximumValue={10}
+/>;
 ```
 
 ## TextInput
@@ -214,7 +230,12 @@ import { TextInput } from "react-native";
 ### Multiline
 
 ```tsx
-<TextInput multiline numberOfLines={4} textAlignVertical="top" style={{ minHeight: 100 }} />
+<TextInput
+  multiline
+  numberOfLines={4}
+  textAlignVertical="top"
+  style={{ minHeight: 100 }}
+/>
 ```
 
 ## Picker (Wheel)

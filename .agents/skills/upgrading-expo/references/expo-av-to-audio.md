@@ -56,9 +56,12 @@ const [recording, setRecording] = useState<Audio.Recording>();
 
 async function startRecording() {
   await Audio.requestPermissionsAsync();
-  await Audio.setAudioModeAsync({ allowsRecordingIOS: true, playsInSilentModeIOS: true });
+  await Audio.setAudioModeAsync({
+    allowsRecordingIOS: true,
+    playsInSilentModeIOS: true,
+  });
   const { recording } = await Audio.Recording.createAsync(
-    Audio.RecordingOptionsPresets.HIGH_QUALITY,
+    Audio.RecordingOptionsPresets.HIGH_QUALITY
   );
   setRecording(recording);
 }
