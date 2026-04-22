@@ -253,7 +253,11 @@ Only web and server have automated CI/CD. The other apps build locally/on-demand
 
 ### CI/CD
 
-CI runs on every PR and push to `master` (`.github/workflows/ci.yml`): lint, typecheck, unit/integration tests, Playwright E2E, and build checks for web + server.
+CI runs on every PR and push to `master` (`.github/workflows/ci.yml`), scoped to **affected projects only**:
+
+- `detect` uses `pnpm --filter "...[base-ref]"` to compute which workspace packages (and their dependents) changed since the base.
+- `lint & format` — always runs (root lint config changes affect everything).
+- `typecheck`, `test`, `e2e`, `build` — gated on the affected flags. A PR that only touches `apps/tui` won't run Playwright or build the server. A PR that touches `packages/api` (depended on by web + server) will typecheck and build both.
 
 Releases are manual (`.github/workflows/release.yml` — run via **Actions → Release → Run workflow**):
 

@@ -11,14 +11,76 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check:
-    name: Lint, Typecheck, Test
+  detect:
+    name: Detect affected
     runs-on: ubuntu-latest
+    outputs:
+      any: ${{ steps.affected.outputs.any }}
+      web: ${{ steps.affected.outputs.web }}
+      server: ${{ steps.affected.outputs.server }}
+      native: ${{ steps.affected.outputs.native }}
+      tui: ${{ steps.affected.outputs.tui }}
+      extension: ${{ steps.affected.outputs.extension }}
+      packages: ${{ steps.affected.outputs.packages }}
+      base-ref: ${{ steps.base.outputs.ref }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Determine base ref
+        id: base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            REF="origin/${{ github.base_ref }}"
+          else
+            REF="${{ github.event.before }}"
+            if [ -z "$REF" ] || [ "$REF" = "0000000000000000000000000000000000000000" ] || ! git rev-parse "$REF" >/dev/null 2>&1; then
+              REF="HEAD~1"
+            fi
+          fi
+          echo "Base ref: $REF"
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+
+      - name: Compute affected packages
+        id: affected
+        run: |
+          set -euo pipefail
+          # pnpm prints "No projects matched..." to stdout when the filter returns empty,
+          # so filter to lines that look like absolute paths.
+          PATHS=$(pnpm --filter "...[${{ steps.base.outputs.ref }}]" --filter "!ultimate-ts-starter" exec pwd 2>/dev/null | grep "^/" || true)
+          echo "Affected workspace packages:"
+          echo "${PATHS:-(none)}"
+
+          set_flag() { echo "$1=$2" >> "$GITHUB_OUTPUT"; }
+
+          if [ -z "$PATHS" ]; then
+            for k in any web server native tui extension packages; do set_flag "$k" false; done
+            exit 0
+          fi
+
+          set_flag any true
+          for app in web server native tui extension; do
+            echo "$PATHS" | grep -qE "/apps/$app$" && set_flag "$app" true || set_flag "$app" false
+          done
+          echo "$PATHS" | grep -qE "/packages/" && set_flag packages true || set_flag packages false
+
+  lint:
+    name: Lint & format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -33,20 +95,80 @@ jobs:
       - name: Lint & format
         run: pnpm exec vp check
 
-      - name: Typecheck
-        run: pnpm check-types
-
-      - name: Unit & integration tests
-        run: pnpm test
-
-  e2e:
-    name: E2E
+  typecheck:
+    name: Typecheck
+    needs: detect
+    if: needs.detect.outputs.any == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
 
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build i18n messages
+        run: pnpm --filter @ultimate-ts-starter/i18n build
+
+      - name: Typecheck web
+        if: needs.detect.outputs.web == 'true'
+        run: pnpm --filter web exec tsgo --noEmit -p tsconfig.json
+
+      - name: Typecheck server
+        if: needs.detect.outputs.server == 'true'
+        run: pnpm --filter server exec tsgo --noEmit -p tsconfig.json
+
+      - name: Typecheck native
+        if: needs.detect.outputs.native == 'true'
+        run: pnpm --filter native exec tsgo --noEmit -p tsconfig.json
+
+      - name: Typecheck tui
+        if: needs.detect.outputs.tui == 'true'
+        run: pnpm --filter tui exec tsgo --noEmit -p tsconfig.json
+
+      - name: Typecheck extension
+        if: needs.detect.outputs.extension == 'true'
+        run: pnpm --filter extension exec tsgo --noEmit -p tsconfig.json
+
+  test:
+    name: Test
+    needs: detect
+    if: needs.detect.outputs.web == 'true' || needs.detect.outputs.packages == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build i18n messages
+        run: pnpm --filter @ultimate-ts-starter/i18n build
+
+      - name: Test web
+        if: needs.detect.outputs.web == 'true'
+        run: pnpm --filter web test
+
+      - name: Test packages
+        if: needs.detect.outputs.packages == 'true'
+        run: pnpm exec vp test run --root packages
+
+  e2e:
+    name: E2E
+    needs: detect
+    if: needs.detect.outputs.web == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -62,16 +184,16 @@ jobs:
         run: pnpm --filter web exec playwright install --with-deps chromium
 
       - name: Run E2E tests
-        run: pnpm test:e2e
+        run: pnpm --filter web test:e2e
 
   build:
-    name: Build (web + server)
+    name: Build
+    needs: detect
+    if: needs.detect.outputs.web == 'true' || needs.detect.outputs.server == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -84,7 +206,9 @@ jobs:
         run: pnpm --filter @ultimate-ts-starter/i18n build
 
       - name: Build web
+        if: needs.detect.outputs.web == 'true'
         run: pnpm --filter web build
 
       - name: Build server (dry run)
+        if: needs.detect.outputs.server == 'true'
         run: pnpm --filter server exec wrangler deploy --dry-run
