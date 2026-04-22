@@ -114,6 +114,10 @@ jobs:
       - name: Build i18n messages
         run: pnpm --filter @ultimate-ts-starter/i18n build
 
+      - name: Generate web content-collections
+        if: needs.detect.outputs.web == 'true'
+        run: pnpm --filter web build:content
+
       - name: Typecheck web
         if: needs.detect.outputs.web == 'true'
         run: pnpm --filter web exec tsgo --noEmit -p tsconfig.json

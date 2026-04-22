@@ -17,8 +17,9 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    // Web + server only — avoids spinning up native/tui/extension which aren't needed for E2E.
-    command: "pnpm dev:web",
+    // Just the web app — smoke tests exercise navigation, not APIs.
+    // Starting server would also require a real DB which isn't available in CI.
+    command: "pnpm --filter web dev",
     port: 3001,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

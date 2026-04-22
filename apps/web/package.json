@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "vp build",
+    "build:content": "content-collections build",
     "serve": "vp preview",
     "dev": "vp dev",
     "deploy": "pnpm build && wrangler deploy",
@@ -63,6 +64,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.33.1",
+    "@content-collections/cli": "^0.1.9",
     "@inlang/paraglide-js": "^2.16.0",
     "@playwright/test": "^1.59.1",
     "@tanstack/react-query-devtools": "^5.99.0",
