@@ -28,13 +28,15 @@ export const createAppQueryClient = (config: QueryConfig) => {
     }),
   });
 
+  // RPCLink expects a 5-arg fetch; we only need the first two. JS accepts extra args.
+  /* eslint-disable typescript/no-explicit-any, typescript/no-unsafe-assignment, typescript/no-unsafe-call, typescript/no-unsafe-type-assertion */
+  const wrappedFetch = ((request: Request, init?: RequestInit) =>
+    globalThis.fetch(request, { ...init, credentials })) as any;
+  /* eslint-enable typescript/no-explicit-any, typescript/no-unsafe-assignment, typescript/no-unsafe-call, typescript/no-unsafe-type-assertion */
+
   const link = new RPCLink({
-    // eslint-disable-next-line typescript/no-unsafe-type-assertion, typescript/no-unsafe-call, typescript/no-unsafe-assignment -- RPCLink fetch type mismatch; globalThis.fetch unresolved in lint env
-    fetch: ((request: Request, init?: RequestInit) =>
-      globalThis.fetch(request, {
-        ...init,
-        credentials,
-      })) as RPCLink["fetch"],
+    // eslint-disable-next-line typescript/no-unsafe-assignment -- see wrappedFetch above
+    fetch: wrappedFetch,
     headers: config.headers,
     url: `${config.serverUrl}/rpc`,
   });

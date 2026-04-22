@@ -17,9 +17,11 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    command: "pnpm dev",
+    // Web + server only — avoids spinning up native/tui/extension which aren't needed for E2E.
+    command: "pnpm dev:web",
     port: 3001,
     reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
   },
   workers: process.env.CI ? 1 : undefined,
 });

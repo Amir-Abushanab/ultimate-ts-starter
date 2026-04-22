@@ -2,6 +2,13 @@ import { PostHog } from "posthog-node";
 
 import type { AnalyticsClient } from "./index.js";
 
+const NOOP_UNDEFINED: string | boolean | undefined = undefined;
+const NOOP_FLAG_VALUE: Promise<string | boolean | undefined> =
+  Promise.resolve(NOOP_UNDEFINED);
+const NOOP_FLAG_ENABLED: Promise<boolean | undefined> = Promise.resolve(
+  NOOP_UNDEFINED as boolean | undefined
+);
+
 /**
  * Creates a server-side analytics client using posthog-node.
  * Returns a no-op client if apiKey is not provided.
@@ -16,14 +23,14 @@ export const createServerAnalytics = (options: {
         captureException() {
           /* noop */
         },
-        getFeatureFlag: () => Promise.resolve<string | boolean | undefined>(),
+        getFeatureFlag: () => NOOP_FLAG_VALUE,
         group() {
           /* noop */
         },
         identify() {
           /* noop */
         },
-        isFeatureEnabled: () => Promise.resolve<boolean | undefined>(),
+        isFeatureEnabled: () => NOOP_FLAG_ENABLED,
         page() {
           /* noop */
         },

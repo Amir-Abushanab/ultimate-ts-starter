@@ -6,7 +6,7 @@ import { authClient } from "@/lib/auth-client";
 
 export const { queryClient, client, orpc } = createAppQueryClient({
   credentials: Platform.OS === "web" ? "include" : "omit",
-  headers: () => {
+  headers: (): Record<string, string> => {
     if (Platform.OS === "web") {
       return {};
     }

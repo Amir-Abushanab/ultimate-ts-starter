@@ -1,3 +1,5 @@
+/// <reference types="@cloudflare/workers-types/experimental" />
+
 interface ImportMeta {
   readonly env: Record<string, string | undefined>;
 }

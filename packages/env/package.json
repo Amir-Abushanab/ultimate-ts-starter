@@ -14,6 +14,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "catalog:",
     "@types/node": "^25.6.0",
     "@ultimate-ts-starter/config": "workspace:*",
     "typescript": "^6"

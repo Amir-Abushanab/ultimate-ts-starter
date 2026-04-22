@@ -32,7 +32,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
 
       - name: Install
@@ -83,7 +83,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
 
       - name: Install
@@ -105,7 +105,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
 
       - name: Install
@@ -144,7 +144,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
 
       - name: Install
@@ -171,7 +171,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
 
       - name: Install
@@ -184,6 +184,14 @@ jobs:
         run: pnpm --filter web exec playwright install --with-deps chromium
 
       - name: Run E2E tests
+        env:
+          # Dummy values — smoke tests only exercise UI navigation, not real APIs.
+          VITE_SERVER_URL: http://localhost:3000
+          DATABASE_URL: postgresql://dummy:dummy@localhost:5432/dummy
+          BETTER_AUTH_SECRET: ci-dummy-secret-minimum-32-characters-long
+          BETTER_AUTH_URL: http://localhost:3000
+          CORS_ORIGIN: http://localhost:3001
+          NODE_ENV: test
         run: pnpm --filter web test:e2e
 
   build:
@@ -196,7 +204,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
 
       - name: Install

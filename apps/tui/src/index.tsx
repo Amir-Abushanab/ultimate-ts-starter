@@ -184,6 +184,9 @@ const App = () => {
             setInput(val);
           }}
           onSubmit={(val) => {
+            if (typeof val !== "string") {
+              return;
+            }
             if (screen === "login-email") {
               void handleEmailSubmit(val);
             } else if (screen === "login-otp") {
@@ -193,7 +196,6 @@ const App = () => {
             }
             setInput("");
           }}
-          autoFocus
         />
       </box>
     </box>

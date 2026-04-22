@@ -51,7 +51,8 @@ export const env: Env = new Proxy(rawEnv as Env, {
       }
 
       // Optional vars — warn if missing
-      const targetRecord: Record<string, unknown> = target;
+      // eslint-disable-next-line typescript/no-unsafe-type-assertion -- CloudflareEnv → Record for key iteration
+      const targetRecord = target as unknown as Record<string, unknown>;
       const missing = optionalKeys.filter(
         (key) => targetRecord[key] === undefined
       );

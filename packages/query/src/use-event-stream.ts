@@ -47,7 +47,7 @@ export const useRealtime = ({
   onEvent,
 }: UseRealtimeOptions) => {
   const [status, setStatus] = useState<ConnectionStatus>("disconnected");
-  const handlersRef = useRef<EventHandlers | undefined>(onEvent);
+  const handlersRef = useRef(onEvent);
   handlersRef.current = onEvent;
   const wsRef = useRef<WebSocket | null>(null);
 

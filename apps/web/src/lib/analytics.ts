@@ -40,14 +40,16 @@ export const initAnalytics = () => {
     captureException: (error, properties) => {
       posthog.captureException(error, { ...properties });
     },
-    getFeatureFlag: (key) => posthog.getFeatureFlag(key) ?? undefined,
+    getFeatureFlag: (key) =>
+      Promise.resolve(posthog.getFeatureFlag(key) ?? undefined),
     group: (type, id, traits) => {
       posthog.group(type, id, traits);
     },
     identify: (userId, traits) => {
       posthog.identify(userId, traits);
     },
-    isFeatureEnabled: (key) => posthog.isFeatureEnabled(key) ?? undefined,
+    isFeatureEnabled: (key) =>
+      Promise.resolve(posthog.isFeatureEnabled(key) ?? undefined),
     page: (name, properties) => {
       posthog.capture("$pageview", { ...properties, name });
     },

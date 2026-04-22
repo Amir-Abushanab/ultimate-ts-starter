@@ -27,7 +27,10 @@ export default defineConfig({
     __APP_VERSION__: JSON.stringify(appVersion),
   },
   plugins: [
-    cloudflare({ viteEnvironment: { name: "ssr" } }),
+    // Cloudflare plugin has a complex Plugin union that blows TS stack depth
+    // when combined with the others — cast it individually to keep inference shallow.
+    // eslint-disable-next-line typescript/no-unsafe-type-assertion, typescript/no-explicit-any, typescript/no-unsafe-assignment -- see above
+    cloudflare({ viteEnvironment: { name: "ssr" } }) as any,
     contentCollections(),
     tsconfigPaths(),
     paraglideVitePlugin({
@@ -36,11 +39,7 @@ export default defineConfig({
     }),
     tailwindcss(),
     tanstackStart(),
-    viteReact({
-      babel: {
-        plugins: [["babel-plugin-react-compiler", {}]],
-      },
-    }),
+    viteReact(),
   ],
   server: {
     port: 3001,

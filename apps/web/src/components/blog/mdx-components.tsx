@@ -145,7 +145,13 @@ export const mdxComponents = {
   hr: (props: ComponentPropsWithoutRef<"hr">) => (
     <hr className="my-8 border-border" {...props} />
   ),
-  img: ({ src, alt, ...props }: ComponentPropsWithoutRef<"img">) => (
+  img: ({
+    src,
+    alt,
+    width: _width,
+    height: _height,
+    ...props
+  }: ComponentPropsWithoutRef<"img">) => (
     <Image
       src={src ?? ""}
       alt={alt ?? ""}
