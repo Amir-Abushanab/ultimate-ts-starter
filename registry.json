@@ -1,0 +1,84 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "ultimate-ts-starter",
+  "homepage": "https://github.com/Amir-Abushanab/ultimate-ts-starter",
+  "items": [
+    {
+      "name": "animated",
+      "type": "registry:ui",
+      "title": "Animated Wrappers",
+      "description": "Composition wrappers for shadcn primitives (button press, card hover, page transitions, staggered lists). Respects prefers-reduced-motion.",
+      "dependencies": ["@base-ui/react", "class-variance-authority", "motion"],
+      "registryDependencies": ["button", "card"],
+      "files": [
+        {
+          "path": "packages/ui/src/components/animated.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/animated.tsx"
+        }
+      ]
+    },
+    {
+      "name": "animated-theme-toggler",
+      "type": "registry:ui",
+      "title": "Animated Theme Toggler",
+      "description": "Theme toggle with View Transitions API circular reveal — animates from the button position when switching modes.",
+      "dependencies": ["lucide-react", "next-themes"],
+      "files": [
+        {
+          "path": "packages/ui/src/components/animated-theme-toggler.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/animated-theme-toggler.tsx"
+        }
+      ]
+    },
+    {
+      "name": "resizable-panel",
+      "type": "registry:ui",
+      "title": "Resizable Panel",
+      "description": "Animated container that smoothly resizes its height when content changes. Use inside drawers, modals, multi-step flows.",
+      "dependencies": ["motion", "react-use-measure"],
+      "files": [
+        {
+          "path": "packages/ui/src/components/resizable-panel.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/resizable-panel.tsx"
+        }
+      ]
+    },
+    {
+      "name": "skeletons",
+      "type": "registry:ui",
+      "title": "Skeleton Patterns",
+      "description": "Pre-composed skeleton patterns (text, heading, avatar, card, list) layered on top of the base Skeleton primitive.",
+      "registryDependencies": ["skeleton"],
+      "files": [
+        {
+          "path": "packages/ui/src/components/skeletons.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/skeletons.tsx"
+        }
+      ]
+    },
+    {
+      "name": "status-button",
+      "type": "registry:ui",
+      "title": "Status Button",
+      "description": "Button with idle/loading/success/error state machine — animated icon swaps, auto-resets after 2s.",
+      "dependencies": [
+        "@base-ui/react",
+        "class-variance-authority",
+        "lucide-react",
+        "motion"
+      ],
+      "registryDependencies": ["button"],
+      "files": [
+        {
+          "path": "packages/ui/src/components/status-button.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/status-button.tsx"
+        }
+      ]
+    }
+  ]
+}

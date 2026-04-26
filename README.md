@@ -236,6 +236,40 @@ import {
 
 Animated wrappers add iOS-like micro-interactions (press feedback, hover lift, page transitions, staggered lists) on top of the base components. They respect `prefers-reduced-motion`.
 
+### Showcase route
+
+`/showcase` in the web app renders a live gallery of every shared component (buttons, inputs, cards, dropdowns, animated wrappers, the resizable panel, the status button…). Useful for design review and as a visual reference for fork users. Linked from the header. (Path is `/showcase` rather than `/components` to avoid colliding with the shadcn `components.json` config file.)
+
+### Custom shadcn registry
+
+This repo ships its own [shadcn registry](https://ui.shadcn.com/docs/registry) so the custom components — animated wrappers, theme toggler with View Transitions, resizable panel, status button, skeleton patterns — can be pulled into any other shadcn project:
+
+```bash
+# Once deployed (replace with your domain):
+npx shadcn@latest add https://your-domain.com/r/animated.json
+npx shadcn@latest add https://your-domain.com/r/status-button.json
+```
+
+Pieces:
+
+- `registry.json` — declarative source of truth (one entry per published component, with deps + aliases)
+- `scripts/build-registry.mjs` — copies sources from `packages/ui/src/components/`, rewrites `@ultimate-ts-starter/ui/...` imports into portable `@/lib/utils` and `@/components/ui/*` aliases, writes JSONs to `apps/web/public/r/`
+- `pnpm registry:build` — runs the build (the output dir is gitignored; rebuild before each deploy)
+
+The output is served as static files under `/r/*.json` from the web app, so consumers do `npx shadcn add https://<your-domain>/r/<name>.json`.
+
+### Removing the showcase + registry
+
+If your fork doesn't need either, delete:
+
+- `apps/web/src/routes/showcase.tsx`
+- `apps/web/public/r/` (and the `apps/web/public/r/` line in `.gitignore`)
+- `registry.json`
+- `scripts/build-registry.mjs`
+- The `Components` link in `apps/web/src/components/header.tsx`
+- The `registry:build` script in the root `package.json`
+- This section of the README
+
 ## Deployment
 
 ### Coverage

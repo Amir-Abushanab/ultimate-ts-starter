@@ -44,6 +44,9 @@ lerna-debug.log*
 # Generated (Paraglide i18n)
 packages/i18n/src/paraglide/
 
+# Generated (shadcn registry — built from registry.json)
+apps/web/public/r/
+
 # Testing
 coverage
 .nyc_output

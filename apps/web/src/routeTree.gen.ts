@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SuccessRouteImport } from './routes/success'
+import { Route as ShowcaseRouteImport } from './routes/showcase'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ExamplesRouteImport } from './routes/examples'
@@ -21,6 +22,11 @@ import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 const SuccessRoute = SuccessRouteImport.update({
   id: '/success',
   path: '/success',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShowcaseRoute = ShowcaseRouteImport.update({
+  id: '/showcase',
+  path: '/showcase',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/examples': typeof ExamplesRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
+  '/showcase': typeof ShowcaseRoute
   '/success': typeof SuccessRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/examples': typeof ExamplesRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
+  '/showcase': typeof ShowcaseRoute
   '/success': typeof SuccessRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/examples': typeof ExamplesRoute
   '/login': typeof LoginRoute
   '/settings': typeof SettingsRoute
+  '/showcase': typeof ShowcaseRoute
   '/success': typeof SuccessRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/examples'
     | '/login'
     | '/settings'
+    | '/showcase'
     | '/success'
     | '/blog/$slug'
     | '/blog/'
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/examples'
     | '/login'
     | '/settings'
+    | '/showcase'
     | '/success'
     | '/blog/$slug'
     | '/blog'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/examples'
     | '/login'
     | '/settings'
+    | '/showcase'
     | '/success'
     | '/blog/$slug'
     | '/blog/'
@@ -129,6 +141,7 @@ export interface RootRouteChildren {
   ExamplesRoute: typeof ExamplesRoute
   LoginRoute: typeof LoginRoute
   SettingsRoute: typeof SettingsRoute
+  ShowcaseRoute: typeof ShowcaseRoute
   SuccessRoute: typeof SuccessRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -141,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: '/success'
       fullPath: '/success'
       preLoaderRoute: typeof SuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/showcase': {
+      id: '/showcase'
+      path: '/showcase'
+      fullPath: '/showcase'
+      preLoaderRoute: typeof ShowcaseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -201,6 +221,7 @@ const rootRouteChildren: RootRouteChildren = {
   ExamplesRoute: ExamplesRoute,
   LoginRoute: LoginRoute,
   SettingsRoute: SettingsRoute,
+  ShowcaseRoute: ShowcaseRoute,
   SuccessRoute: SuccessRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,

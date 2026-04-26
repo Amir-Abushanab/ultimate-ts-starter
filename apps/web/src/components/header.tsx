@@ -12,6 +12,7 @@ export default function Header() {
     { label: m.nav_dashboard(), to: "/dashboard" },
     { label: m.nav_settings(), to: "/settings" },
     { label: "Examples", to: "/examples" },
+    { label: "Components", to: "/showcase" },
   ] as const;
 
   return (

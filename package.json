@@ -35,6 +35,7 @@
     "lint:deps": "pnpm dlx dependency-cruiser --config .dependency-cruiser.cjs apps packages",
     "deps:check": "node scripts/check-deps.mjs",
     "deps:update": "node scripts/check-deps.mjs --apply",
+    "registry:build": "node scripts/build-registry.mjs",
     "changeset": "changeset",
     "version": "changeset version",
     "release": "changeset version && pnpm install --lockfile-only",
