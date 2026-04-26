@@ -13,7 +13,11 @@ export default defineConfig({
       order: "asc",
     },
     experimentalSortPackageJson: true,
-    ignorePatterns: ["**/*.gen.*", "**/.content-collections/**"],
+    ignorePatterns: [
+      "**/*.gen.*",
+      "**/.content-collections/**",
+      "apps/web/public/r/**",
+    ],
     jsxSingleQuote: false,
     printWidth: 80,
     quoteProps: "as-needed",
@@ -284,6 +288,7 @@ export default defineConfig({
       ".goose/**",
       "packages/auth/Users/**",
       "**/.content-collections/**",
+      "apps/web/public/r/**",
     ],
     options: {
       typeAware: true,

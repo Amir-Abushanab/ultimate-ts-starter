@@ -254,9 +254,10 @@ Pieces:
 
 - `registry.json` — declarative source of truth (one entry per published component, with deps + aliases)
 - `scripts/build-registry.mjs` — copies sources from `packages/ui/src/components/`, rewrites `@ultimate-ts-starter/ui/...` imports into portable `@/lib/utils` and `@/components/ui/*` aliases, writes JSONs to `apps/web/public/r/`
-- `pnpm registry:build` — runs the build (the output dir is gitignored; rebuild before each deploy)
+- `pnpm registry:build` — runs the build (the output dir is gitignored)
+- `pnpm --filter web deploy` — chains `registry:build → vite build → wrangler deploy`, so the registry is always rebuilt before each deploy
 
-The output is served as static files under `/r/*.json` from the web app, so consumers do `npx shadcn add https://<your-domain>/r/<name>.json`.
+The output is served as static files under `/r/*.json` from the web app, so consumers do `npx shadcn add https://<your-domain>/r/<name>.json`. Until you point a custom domain at the worker, you can use the auto-assigned `*.workers.dev` URL printed by `wrangler deploy`.
 
 ### Removing the showcase + registry
 

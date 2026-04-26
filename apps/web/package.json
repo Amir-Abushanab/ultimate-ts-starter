@@ -7,7 +7,7 @@
     "build:content": "content-collections build",
     "serve": "vp preview",
     "dev": "vp dev",
-    "deploy": "pnpm build && wrangler deploy",
+    "deploy": "pnpm -w registry:build && pnpm build && wrangler deploy",
     "tauri": "tauri",
     "desktop:dev": "tauri dev",
     "desktop:build": "tauri build",
