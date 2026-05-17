@@ -27,17 +27,16 @@ pnpm bootstrap         # migrate DB, seed dev data, start everything
 
 Copy `.env.example` and fill in the required values. Minimum to get running locally:
 
-| Variable             | Required | Where to get it                                    |
-| -------------------- | -------- | -------------------------------------------------- |
-| `DATABASE_URL`       | Yes      | Your PostgreSQL connection string                  |
-| `BETTER_AUTH_SECRET` | Yes      | Any random string (`openssl rand -hex 32`)         |
-| `BETTER_AUTH_URL`    | Yes      | `http://localhost:3000` for dev                    |
-| `CORS_ORIGIN`        | Yes      | `http://localhost:3001` for dev                    |
-| `RESEND_API_KEY`     | Yes      | [resend.com/api-keys](https://resend.com/api-keys) |
-| `RESEND_FROM_EMAIL`  | Yes      | Your verified sender email                         |
-| `POLAR_ACCESS_TOKEN` | Yes      | [polar.sh/settings](https://polar.sh/settings)     |
-| `POLAR_PRODUCT_ID`   | Yes      | From your Polar product dashboard                  |
-| `POLAR_SUCCESS_URL`  | Yes      | `http://localhost:3001/success` for dev            |
+| Variable             | Required | Where to get it                                          |
+| -------------------- | -------- | -------------------------------------------------------- |
+| `DATABASE_URL`       | Yes      | Your PostgreSQL connection string                        |
+| `BETTER_AUTH_SECRET` | Yes      | Any random string (`openssl rand -hex 32`)               |
+| `BETTER_AUTH_URL`    | Yes      | `http://localhost:3000` for dev                          |
+| `CORS_ORIGIN`        | Yes      | `http://localhost:3001` for dev                          |
+| `EMAIL_FROM`         | Yes      | Sender on a domain onboarded to Cloudflare Email Service |
+| `POLAR_ACCESS_TOKEN` | Yes      | [polar.sh/settings](https://polar.sh/settings)           |
+| `POLAR_PRODUCT_ID`   | Yes      | From your Polar product dashboard                        |
+| `POLAR_SUCCESS_URL`  | Yes      | `http://localhost:3001/success` for dev                  |
 
 Optional (everything works without these):
 
@@ -65,7 +64,7 @@ ultimate-ts-starter/
 │   ├── auth/           # Better Auth (OTP, 2FA, SSO, admin, org, Polar)
 │   ├── config/         # Shared tsconfig
 │   ├── db/             # Drizzle ORM + PostgreSQL + seed
-│   ├── email/          # Resend transactional email
+│   ├── email/          # Cloudflare Email Service (send_email binding)
 │   ├── env/            # Validated env vars (Zod on all platforms)
 │   ├── flags/          # Feature flags (PostHog remote + local fallback)
 │   ├── i18n/           # Paraglide i18n (EN + AR, RTL)
@@ -176,12 +175,28 @@ All `vp` commands work from the repo root across the entire monorepo. `pnpm chec
 | `vp dev --root apps/web`   | Start a specific app via vp directly             |
 | `vp build --root apps/web` | Build a specific app via vp directly             |
 
+### Git Hooks
+
+Managed by Vite+ (`.vite-hooks/`, installed via `vp config` in `prepare`):
+
+| Hook         | Runs                                                                                           |
+| ------------ | ---------------------------------------------------------------------------------------------- |
+| `pre-commit` | `vp staged` → `vp check --fix` on staged files (config in `vite.config.ts` `staged:` block)    |
+| `pre-push`   | `pnpm check && pnpm check-types && pnpm test` (verify-only — fails the push if anything's off) |
+
+Skip for a single command with `VITE_GIT_HOOKS=0 git ...` (or `HUSKY=0`).
+
 ### Dependencies
 
-| Command            | What                                         |
-| ------------------ | -------------------------------------------- |
-| `pnpm deps:check`  | Show available updates (7-day safety filter) |
-| `pnpm deps:update` | Apply safe updates                           |
+| Command          | What                                            |
+| ---------------- | ----------------------------------------------- |
+| `pnpm ncu`       | Show available updates (config in `.ncurc.cjs`) |
+| `pnpm ncu -- -u` | Apply updates to package.json files             |
+
+Supply-chain defense runs in two layers:
+
+- **`.ncurc.cjs`** sets `cooldown: '7d'` on `ncu`, so proposed upgrades skip versions younger than 7 days.
+- **`pnpm-workspace.yaml`** sets `minimumReleaseAge: 10080` (7 days in minutes), so even a vanilla `pnpm install` refuses fresh versions — including transitive deps. An exclude list whitelists trusted publishers (`@cloudflare/*`, `tailwindcss`, `drizzle-*`, etc.) whose packages either release frequently or have registry metadata gaps.
 
 ### Build & Deploy
 
@@ -312,10 +327,18 @@ cd apps/server
 wrangler secret put DATABASE_URL
 wrangler secret put BETTER_AUTH_SECRET
 wrangler secret put POLAR_ACCESS_TOKEN
-wrangler secret put RESEND_API_KEY
 ```
 
 Enable optional bindings in `apps/server/wrangler.jsonc` (R2, KV, cron triggers).
+
+**Email** — outbound email uses [Cloudflare Email Service](https://developers.cloudflare.com/email-service/) via the `send_email` binding (configured as `EMAIL` in `wrangler.jsonc`). To enable:
+
+1. Onboard your domain at **dash.cloudflare.com → Compute & AI → Email Service** and add the SPF + DKIM DNS records.
+2. Set `EMAIL_FROM` in `wrangler.jsonc` (or via `wrangler secret put`) to a sender on that domain.
+
+Without onboarding, auth OTPs fall back to console logs in dev (`NODE_ENV !== "production"`) and throw in prod.
+
+> Cloudflare Email Service is in public beta as of April 2026 and requires the Workers Paid plan.
 
 **Web** — edit `apps/web/wrangler.jsonc` to add custom domains/routes or worker bindings. Build-time env vars (e.g. `VITE_POSTHOG_KEY`) should be added as GitHub secrets and passed into the `Deploy web` step of `release.yml`.
 

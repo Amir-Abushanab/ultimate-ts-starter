@@ -11,7 +11,16 @@ This project uses **Vite+** with **oxlint + oxfmt** for linting and formatting. 
 - **Auto-fix**: `pnpm fix` (or `vp check --fix`)
 - **Typecheck**: `pnpm check-types` (uses tsgo for 10x speed)
 
-Most issues are automatically fixable. Pre-commit hooks run `vp check --fix` on staged files.
+Most issues are automatically fixable.
+
+## Git Hooks
+
+Managed by Vite+ (`.vite-hooks/`, installed via `vp config` in `prepare`):
+
+- **pre-commit** — `vp staged` runs `vp check --fix` on staged files (config in `vite.config.ts` `staged:` block). Fixes are auto-restaged.
+- **pre-push** — `pnpm check && pnpm check-types && pnpm test`. Verify-only (no fixes). Fails the push if anything is off.
+
+Skip hooks for a single command with `VITE_GIT_HOOKS=0 git commit ...` (or `HUSKY=0`). Don't use `--no-verify` unless you understand why.
 
 ---
 

@@ -13,9 +13,15 @@
     "CORS_ORIGIN": "",
     "BETTER_AUTH_URL": "",
     "POLAR_SUCCESS_URL": "",
+    "EMAIL_FROM": "",
   },
-  // Secrets (DATABASE_URL, BETTER_AUTH_SECRET, POLAR_ACCESS_TOKEN, RESEND_API_KEY)
+  // Secrets (DATABASE_URL, BETTER_AUTH_SECRET, POLAR_ACCESS_TOKEN)
   // are set via `wrangler secret put <NAME>`
+
+  // Cloudflare Email Service — onboard your domain at dash.cloudflare.com →
+  // Compute & AI → Email Service, then add SPF + DKIM DNS records.
+  // `remote: true` lets `wrangler dev` send via the real Email Service API.
+  "send_email": [{ "name": "EMAIL", "remote": true }],
 
   // Durable Objects — real-time WebSocket events per user
   "durable_objects": {

@@ -21,8 +21,8 @@ const optionalKeys = [
   "POLAR_ACCESS_TOKEN",
   "POLAR_PRODUCT_ID",
   "POLAR_SUCCESS_URL",
-  "RESEND_API_KEY",
-  "RESEND_FROM_EMAIL",
+  "EMAIL",
+  "EMAIL_FROM",
   "POSTHOG_API_KEY",
   "POSTHOG_HOST",
 ] as const;

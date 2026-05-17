@@ -27,10 +27,10 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.6.2",
     "@ultimate-ts-starter/config": "workspace:*",
     "typescript": "^6",
     "vite-plus": "catalog:",
-    "wrangler": "^4.84.1"
+    "wrangler": "^4.90.0"
   }
 }

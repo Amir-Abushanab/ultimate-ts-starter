@@ -1,14 +1,5 @@
-import { Resend } from "resend";
-
-let resendInstance: Resend | null = null;
-
-const getResend = (apiKey: string): Resend => {
-  resendInstance ??= new Resend(apiKey);
-  return resendInstance;
-};
-
 export interface SendEmailOptions {
-  apiKey: string;
+  binding: SendEmail;
   from: string;
   to: string;
   subject: string;
@@ -16,24 +7,21 @@ export interface SendEmailOptions {
 }
 
 export const sendEmail = ({
-  apiKey,
+  binding,
   from,
   to,
   subject,
   html,
-}: SendEmailOptions) => {
-  const resend = getResend(apiKey);
-  return resend.emails.send({ from, html, subject, to: [to] });
-};
+}: SendEmailOptions) => binding.send({ from, html, subject, to });
 
 export const sendOtpEmail = ({
-  apiKey,
+  binding,
   from,
   to,
   otp,
   type,
 }: {
-  apiKey: string;
+  binding: SendEmail;
   from: string;
   to: string;
   otp: string;
@@ -47,7 +35,7 @@ export const sendOtpEmail = ({
   };
 
   return sendEmail({
-    apiKey,
+    binding,
     from,
     html: `
       <div style="font-family: sans-serif; max-width: 400px; margin: 0 auto; padding: 24px;">

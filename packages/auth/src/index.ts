@@ -46,16 +46,18 @@ export const createAuth = () => {
         expiresIn: 600,
         otpLength: 6,
         async sendVerificationOTP({ email, otp, type }) {
-          if (!env.RESEND_API_KEY) {
+          if (!env.EMAIL) {
             if (env.NODE_ENV === "production") {
-              throw new Error("RESEND_API_KEY is required in production");
+              throw new Error(
+                "EMAIL binding is required in production (configure send_email in wrangler.jsonc)"
+              );
             }
             console.log(`\n[auth] OTP for ${email}: ${otp}\n`);
             return;
           }
           await sendOtpEmail({
-            apiKey: env.RESEND_API_KEY,
-            from: env.RESEND_FROM_EMAIL,
+            binding: env.EMAIL,
+            from: env.EMAIL_FROM,
             otp,
             to: email,
             type,

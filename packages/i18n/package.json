@@ -17,7 +17,7 @@
     "build": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --emit-ts-declarations"
   },
   "devDependencies": {
-    "@inlang/paraglide-js": "^2.16.0",
+    "@inlang/paraglide-js": "^2.18.0",
     "@ultimate-ts-starter/config": "workspace:*",
     "typescript": "^6"
   }

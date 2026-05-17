@@ -9,8 +9,7 @@
     }
   },
   "dependencies": {
-    "@react-email/components": "^1.0.12",
-    "resend": "^6.11.0"
+    "@react-email/components": "^1.0.12"
   },
   "devDependencies": {
     "@ultimate-ts-starter/config": "workspace:*",

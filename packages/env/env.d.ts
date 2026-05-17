@@ -13,8 +13,8 @@ export interface CloudflareEnv {
   POLAR_ACCESS_TOKEN: string;
   POLAR_PRODUCT_ID: string;
   POLAR_SUCCESS_URL: string;
-  RESEND_API_KEY: string;
-  RESEND_FROM_EMAIL: string;
+  EMAIL?: SendEmail;
+  EMAIL_FROM: string;
   HYPERDRIVE?: Hyperdrive;
   R2_BUCKET: R2Bucket;
   KV_CACHE: KVNamespace;

@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.6.2",
     "@ultimate-ts-starter/config": "workspace:*",
     "typescript": "^6"
   }

@@ -15,8 +15,8 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
-    "react": "^19.0.4",
-    "react-dom": "^19.0.4"
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",
@@ -24,6 +24,6 @@
     "@wxt-dev/module-react": "^1.2.2",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "^6",
-    "wxt": "^0.20.20"
+    "wxt": "^0.21.0"
   }
 }

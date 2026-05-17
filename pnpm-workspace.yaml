@@ -33,3 +33,50 @@ peerDependencyRules:
   allowedVersions:
     vite: "*"
     vitest: "*"
+
+# Supply-chain defense: skip versions younger than N minutes (7 days = 10080).
+# Applies to every install (including transitive deps), not just upgrades.
+# Defense-in-depth alongside `cooldown: '7d'` in .ncurc.cjs.
+#
+# DISABLED FOR NOW — pnpm 11.0.9's `minimumReleaseAgeIgnoreMissingTime` only
+# skips packages with missing time metadata in *transitive* trees; for direct
+# deps (e.g. fresh `better-auth` releases) it still fails install with
+# ERR_PNPM_MISSING_TIME. Re-enable (set to 10080) once pnpm honors the
+# ignore-missing-time flag for direct deps too, or once the registry catches
+# up on time metadata for the packages we depend on directly.
+minimumReleaseAge: 0
+# Some registry packages omit publish-time metadata; bypass the cooldown
+# check for those rather than failing install. Currently only effective for
+# transitive deps in pnpm 11.0.9 — see note above.
+minimumReleaseAgeIgnoreMissingTime: true
+minimumReleaseAgeExclude:
+  # Cloudflare platform packages — trusted publisher, frequent releases.
+  - "@cloudflare/*"
+  - workerd
+  - wrangler
+  # Trusted infra publishers that release frequently.
+  - "@tailwindcss/*"
+  - tailwindcss
+  # react-scan + transitives have registry metadata gaps that slip past
+  # minimumReleaseAgeIgnoreMissingTime in some pnpm versions.
+  - react-scan
+  - "@react-grab/*"
+  - react-grab
+  - bippy
+  # Storybook scope — devDeps only, registry metadata gaps tripping the check.
+  - "@storybook/*"
+  # drizzle ships frequent patch releases; trusted publisher.
+  - drizzle-orm
+  - drizzle-kit
+# pnpm 11+ requires explicit per-package approval for install scripts.
+# Anything not listed here will silently skip its postinstall — fine for
+# analytics-only scripts, breaking for things that compile native bindings
+# (sharp, workerd, esbuild). Re-run `pnpm install` after adding new entries.
+allowBuilds:
+  core-js: true # ES feature polyfills, prints postinstall banner
+  esbuild: true # downloads native binary for the host platform
+  msw: true # generates mockServiceWorker.js for browser tests
+  protobufjs: true # builds long.js / protobuf bindings
+  sharp: true # native libvips bindings for image processing
+  spawn-sync: true # builds the sync-spawn helper (legacy transitive dep)
+  workerd: true # downloads the Cloudflare Workers runtime binary

@@ -15,10 +15,10 @@
     "@ultimate-ts-starter/events": "workspace:*"
   },
   "devDependencies": {
-    "@tanstack/react-query": "^5.99.0",
+    "@tanstack/react-query": "^5.100.9",
     "@types/react": "^19.2.14",
     "@ultimate-ts-starter/config": "workspace:*",
-    "react": "^19.2.5",
+    "react": "^19.2.6",
     "typescript": "^6"
   },
   "peerDependencies": {

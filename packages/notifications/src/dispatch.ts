@@ -8,10 +8,10 @@ export interface DispatchContext {
   email: string;
   /** User's notification preferences (null = use defaults) */
   preferences: Preferences | null;
-  /** Resend API key */
-  resendApiKey: string;
-  /** From email address */
-  resendFromEmail: string;
+  /** Cloudflare Email Service binding (configured via send_email in wrangler) */
+  emailBinding: SendEmail;
+  /** From email address (must be on a domain onboarded to Cloudflare Email Service) */
+  emailFrom: string;
   /** Optional: store in-app notification callback */
   storeInApp?: (notification: NotificationPayload) => Promise<void>;
   /** Optional: send push notification callback */
@@ -62,8 +62,8 @@ export const dispatch = async (
     tasks.push(
       (async () => {
         await sendEmail({
-          apiKey: ctx.resendApiKey,
-          from: ctx.resendFromEmail,
+          binding: ctx.emailBinding,
+          from: ctx.emailFrom,
           html: `
           <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
             <h2 style="margin: 0 0 12px;">${payload.title}</h2>
