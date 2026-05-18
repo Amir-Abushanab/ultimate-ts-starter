@@ -40,16 +40,19 @@ export const initAnalytics = () => {
     captureException: (error, properties) => {
       posthog.captureException(error, { ...properties });
     },
-    getFeatureFlag: (key) =>
-      Promise.resolve(posthog.getFeatureFlag(key) ?? undefined),
+    // posthog-js caches all flags locally — the snapshot is a thin sync wrapper.
+    // distinctId is implicit (the posthog instance tracks it via identify()).
+    getFlagsSnapshot: () =>
+      Promise.resolve({
+        getFlag: (key) => posthog.getFeatureFlag(key) ?? undefined,
+        isEnabled: (key) => posthog.isFeatureEnabled(key) ?? undefined,
+      }),
     group: (type, id, traits) => {
       posthog.group(type, id, traits);
     },
     identify: (userId, traits) => {
       posthog.identify(userId, traits);
     },
-    isFeatureEnabled: (key) =>
-      Promise.resolve(posthog.isFeatureEnabled(key) ?? undefined),
     page: (name, properties) => {
       posthog.capture("$pageview", { ...properties, name });
     },

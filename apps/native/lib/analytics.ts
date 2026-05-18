@@ -40,8 +40,13 @@ export const initAnalytics = () => {
         ...properties,
       } as never);
     },
-    getFeatureFlag: (key) =>
-      Promise.resolve(posthogInstance?.getFeatureFlag(key) ?? undefined),
+    // posthog-react-native caches all flags locally — thin sync wrapper.
+    // distinctId is implicit (the posthog instance tracks it via identify()).
+    getFlagsSnapshot: () =>
+      Promise.resolve({
+        getFlag: (key) => posthogInstance?.getFeatureFlag(key) ?? undefined,
+        isEnabled: (key) => posthogInstance?.isFeatureEnabled(key) ?? undefined,
+      }),
     group: (type, id, traits) => {
       // eslint-disable-next-line typescript/no-unsafe-type-assertion -- see captureException above
       posthogInstance?.group(type, id, traits as never);
@@ -50,8 +55,6 @@ export const initAnalytics = () => {
       // eslint-disable-next-line typescript/no-unsafe-type-assertion -- see captureException above
       posthogInstance?.identify(userId, traits as never);
     },
-    isFeatureEnabled: (key) =>
-      Promise.resolve(posthogInstance?.isFeatureEnabled(key) ?? undefined),
     page: (name, properties) => {
       // eslint-disable-next-line typescript/no-unsafe-type-assertion -- see captureException above
       void posthogInstance?.screen(name ?? "unknown", properties as never);

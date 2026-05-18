@@ -1,13 +1,16 @@
+import type { FeatureFlagEvaluations } from "posthog-node";
 import { PostHog } from "posthog-node";
 
-import type { AnalyticsClient } from "./index.js";
+import type { AnalyticsClient, FlagsSnapshot } from "./index.js";
 
-const NOOP_UNDEFINED: string | boolean | undefined = undefined;
-const NOOP_FLAG_VALUE: Promise<string | boolean | undefined> =
-  Promise.resolve(NOOP_UNDEFINED);
-const NOOP_FLAG_ENABLED: Promise<boolean | undefined> = Promise.resolve(
-  NOOP_UNDEFINED as boolean | undefined
-);
+const emptySnapshot: FlagsSnapshot = {
+  getFlag() {
+    /* noop — returns undefined for any key */
+  },
+  isEnabled() {
+    /* noop — returns undefined for any key */
+  },
+};
 
 /**
  * Creates a server-side analytics client using posthog-node.
@@ -23,14 +26,13 @@ export const createServerAnalytics = (options: {
         captureException() {
           /* noop */
         },
-        getFeatureFlag: () => NOOP_FLAG_VALUE,
+        getFlagsSnapshot: () => Promise.resolve(emptySnapshot),
         group() {
           /* noop */
         },
         identify() {
           /* noop */
         },
-        isFeatureEnabled: () => NOOP_FLAG_ENABLED,
         page() {
           /* noop */
         },
@@ -57,9 +59,11 @@ export const createServerAnalytics = (options: {
         properties
       );
     },
-    async getFeatureFlag(key) {
-      return (await posthog.getFeatureFlag(key, "server")) ?? undefined;
-    },
+    // posthog-node's FeatureFlagEvaluations already satisfies FlagsSnapshot
+    // structurally (sync getFlag/isEnabled). One /flags request per call —
+    // hold the returned snapshot for the lifetime of an incoming request.
+    getFlagsSnapshot: (distinctId) =>
+      posthog.evaluateFlags(distinctId ?? "server"),
     group(type, id, traits) {
       posthog.groupIdentify({
         groupKey: id,
@@ -70,20 +74,23 @@ export const createServerAnalytics = (options: {
     identify(userId, traits) {
       posthog.identify({ distinctId: userId, properties: traits });
     },
-    isFeatureEnabled(key) {
-      return posthog.isFeatureEnabled(key, "server");
-    },
     page() {
       /* noop */
     },
     reset() {
       /* noop */
     },
-    track(event, properties) {
+    track(event, properties, captureOptions) {
       posthog.capture({
         distinctId:
           typeof properties?.userId === "string" ? properties.userId : "server",
         event,
+        // `getFlagsSnapshot` above returns a FeatureFlagEvaluations directly,
+        // so a caller who passes it back here is handing us the same object.
+        // The interface fence (FlagsSnapshot) is just to keep posthog-node out
+        // of platform-neutral callers.
+        // eslint-disable-next-line typescript/no-unsafe-type-assertion -- see comment above
+        flags: captureOptions?.flags as FeatureFlagEvaluations | undefined,
         properties,
       });
     },

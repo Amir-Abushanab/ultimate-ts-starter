@@ -8,15 +8,57 @@
  * If PostHog is not configured, all calls are no-ops.
  */
 
+/**
+ * A point-in-time evaluation of all feature flags for a user.
+ *
+ * Branch on `isEnabled(key)` / `getFlag(key)` repeatedly without re-fetching —
+ * the snapshot is immutable, so every read sees the same values your code
+ * branched on. Pass the same snapshot back to event capture (where supported)
+ * so the captured event carries those exact values.
+ */
+export interface FlagsSnapshot {
+  /** True if the flag is enabled; undefined if the flag isn't defined remotely. */
+  isEnabled(key: string): boolean | undefined;
+  /** Multivariate flag value (string), boolean flag value, or undefined when unset. */
+  getFlag(key: string): string | boolean | undefined;
+}
+
+export interface CaptureOptions {
+  /**
+   * Attach a `FlagsSnapshot` (from `getFlagsSnapshot()`) to the captured event.
+   * The event will carry exactly the flag values your code branched on — no
+   * extra `/flags` request, no drift between branch-time and capture-time.
+   *
+   * Server-only: posthog-js and posthog-react-native auto-attach the currently
+   * loaded flag cache to every event, so this option is silently ignored
+   * client-side.
+   */
+  flags?: FlagsSnapshot;
+}
+
 export interface AnalyticsClient {
-  track(event: string, properties?: Record<string, unknown>): void;
+  track(
+    event: string,
+    properties?: Record<string, unknown>,
+    options?: CaptureOptions
+  ): void;
   identify(userId: string, traits?: Record<string, unknown>): void;
   page(name?: string, properties?: Record<string, unknown>): void;
   group(type: string, id: string, traits?: Record<string, unknown>): void;
   reset(): void;
   captureException(error: Error, properties?: Record<string, unknown>): void;
-  isFeatureEnabled(key: string): Promise<boolean | undefined>;
-  getFeatureFlag(key: string): Promise<string | boolean | undefined>;
+  /**
+   * Evaluate all feature flags for a user and return a reusable snapshot.
+   *
+   * On the server, this issues exactly one `/flags` request per call — hold
+   * the returned snapshot for the lifetime of an incoming request and branch
+   * on it as many times as needed.
+   *
+   * On the browser / native SDKs, flags are already loaded locally; the
+   * snapshot is a thin sync wrapper and `distinctId` is ignored (the SDK
+   * tracks it implicitly via `identify`).
+   */
+  getFlagsSnapshot(distinctId?: string): Promise<FlagsSnapshot>;
 }
 
 /**
@@ -48,21 +90,25 @@ export interface AnalyticsEvents {
 
 export type AnalyticsEvent = keyof AnalyticsEvents;
 
+const emptySnapshot: FlagsSnapshot = {
+  getFlag() {
+    /* noop — returns undefined for any key */
+  },
+  isEnabled() {
+    /* noop — returns undefined for any key */
+  },
+};
+
 const noop: AnalyticsClient = {
   captureException() {
     /* noop */
   },
-  getFeatureFlag: async () => {
-    await Promise.resolve();
-  },
+  getFlagsSnapshot: () => Promise.resolve(emptySnapshot),
   group() {
     /* noop */
   },
   identify() {
     /* noop */
-  },
-  isFeatureEnabled: async () => {
-    await Promise.resolve();
   },
   page() {
     /* noop */
