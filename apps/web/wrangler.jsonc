@@ -4,8 +4,15 @@
   "compatibility_date": "2025-04-01",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  // Workers Observability — logs + traces in the Cloudflare dashboard.
+  // Traces need their own opt-in (`enabled: true` alone is logs-only).
+  // Lower `head_sampling_rate` on high-traffic Workers to manage volume:
+  // https://developers.cloudflare.com/workers/observability/logs/workers-logs/#head-based-sampling
   "observability": {
     "enabled": true,
+    "head_sampling_rate": 1,
+    "logs": { "invocation_logs": true },
+    "traces": { "enabled": true, "head_sampling_rate": 0.05 },
   },
   // Set build-time vars in the CI `Deploy web` step; runtime vars here.
   // "vars": {},

@@ -8,8 +8,8 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@opentui/core": "^0.2.6",
-    "@opentui/react": "^0.2.6",
+    "@opentui/core": "^0.2.10",
+    "@opentui/react": "^0.2.10",
     "react": "^19.2.6"
   },
   "devDependencies": {

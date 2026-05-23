@@ -18,7 +18,7 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
-    "@better-auth/sso": "^1.6.10",
+    "@better-auth/sso": "^1.6.11",
     "@content-collections/core": "^0.15.0",
     "@content-collections/mdx": "^0.2.2",
     "@content-collections/vite": "^0.3.0",
@@ -26,7 +26,7 @@
     "@posthog/react": "^1.9.0",
     "@tailwindcss/vite": "^4.3.0",
     "@tanstack/react-form": "catalog:",
-    "@tanstack/react-query": "^5.100.9",
+    "@tanstack/react-query": "^5.100.10",
     "@tanstack/react-router": "^1.169.2",
     "@tanstack/react-router-with-query": "^1.130.17",
     "@tanstack/react-start": "^1.167.65",
@@ -50,7 +50,7 @@
     "nanoid": "^5.1.11",
     "next-themes": "catalog:",
     "nuqs": "^2.8.9",
-    "posthog-js": "^1.372.10",
+    "posthog-js": "^1.373.4",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "recharts": "^3.8.1",
@@ -63,11 +63,11 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.36.3",
+    "@cloudflare/vite-plugin": "^1.37.0",
     "@content-collections/cli": "^0.1.9",
     "@inlang/paraglide-js": "^2.18.0",
-    "@playwright/test": "^1.59.1",
-    "@tanstack/react-query-devtools": "^5.100.9",
+    "@playwright/test": "^1.60.0",
+    "@tanstack/react-query-devtools": "^5.100.10",
     "@tanstack/react-router-devtools": "^1.166.13",
     "@tauri-apps/cli": "^2.11.1",
     "@testing-library/dom": "^10.4.1",
@@ -79,13 +79,13 @@
     "@vitejs/plugin-react": "^6.0.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "jsdom": "^29.1.1",
-    "msw": "^2.14.5",
+    "msw": "^2.14.6",
     "react-scan": "^0.5.6",
     "typescript": "^6",
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:",
     "web-vitals": "^5.2.0",
-    "wrangler": "^4.90.0"
+    "wrangler": "^4.91.0"
   }
 }
