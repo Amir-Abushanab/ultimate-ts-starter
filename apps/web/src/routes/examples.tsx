@@ -4,7 +4,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   createColumnHelper,
   flexRender,
@@ -19,10 +19,18 @@ import {
   AnimatedPage,
 } from "@ultimate-ts-starter/ui/components/animated";
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@ultimate-ts-starter/ui/components/sheet";
+import {
   SkeletonCard,
   SkeletonList,
 } from "@ultimate-ts-starter/ui/components/skeletons";
 import { Suspense, useState } from "react";
+import { z } from "zod";
 
 import { orpc } from "@/utils/orpc";
 
@@ -60,10 +68,14 @@ const InfiniteList = () => {
             key={item.id}
             className="flex items-center justify-between rounded-lg border p-3"
           >
-            <div>
+            <Link
+              to="/examples"
+              search={(prev) => ({ ...prev, item: item.id })}
+              className="text-start hover:opacity-80"
+            >
               <p className="text-sm font-medium">{item.title}</p>
               <p className="text-xs text-muted-foreground">{item.id}</p>
-            </div>
+            </Link>
             <DeleteButton id={item.id} />
           </div>
         ))}
@@ -243,6 +255,39 @@ const DataTable = () => {
   );
 };
 
+// ── Route-driven overlay: the Sheet's open state lives entirely in the URL ──
+// Clicking a list item sets `?item=<id>`; this reads it back. The drawer is
+// shareable via URL and the browser back button closes it — "here's a route,
+// make it a drawer."
+const ItemDetailsSheet = () => {
+  const { item } = Route.useSearch();
+  const navigate = Route.useNavigate();
+
+  return (
+    <Sheet
+      open={item !== undefined}
+      onOpenChange={(open) => {
+        if (!open) {
+          void navigate({ search: (prev) => ({ ...prev, item: undefined }) });
+        }
+      }}
+    >
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>Item details</SheetTitle>
+          <SheetDescription>
+            Opened from the <code>?item=</code> URL param — shareable, and the
+            browser back button closes it.
+          </SheetDescription>
+        </SheetHeader>
+        <div className="p-4">
+          <p className="font-mono text-xs text-muted-foreground">{item}</p>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+};
+
 // ── Page: ties everything together ──
 const ExamplesPage = () => (
   <AnimatedPage className="mx-auto w-full max-w-2xl space-y-6 p-6">
@@ -279,9 +324,24 @@ const ExamplesPage = () => (
         <InfiniteList />
       </Suspense>
     </section>
+
+    {/* Route-driven overlay (URL-controlled Sheet) */}
+    <ItemDetailsSheet />
   </AnimatedPage>
 );
 
 export const Route = createFileRoute("/examples")({
   component: ExamplesPage,
+  // Prefetch the suspense queries on the server so SSR streams real data and
+  // the client mounts without a fetch waterfall. The <Suspense> boundaries in
+  // the component then resolve instantly from cache.
+  loader: async ({ context }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(orpc.healthCheck.queryOptions()),
+      context.queryClient.ensureQueryData(
+        orpc.example.list.queryOptions({ input: { limit: 10 } })
+      ),
+    ]);
+  },
+  validateSearch: z.object({ item: z.string().optional() }),
 });
