@@ -25,6 +25,8 @@
     "@polar-sh/better-auth": "catalog:",
     "@posthog/react": "^1.9.0",
     "@tailwindcss/vite": "^4.3.0",
+    "@tanstack/query-db-collection": "^1.0.41",
+    "@tanstack/react-db": "^0.1.87",
     "@tanstack/react-form": "catalog:",
     "@tanstack/react-query": "^5.100.10",
     "@tanstack/react-router": "^1.169.2",
