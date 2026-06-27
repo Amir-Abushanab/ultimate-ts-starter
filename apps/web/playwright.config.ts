@@ -12,6 +12,9 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "html",
   retries: process.env.CI ? 2 : 0,
   testDir: "./e2e",
+  // Full-stack flows (need the API + DB) live in *.e2e.spec.ts and run via
+  // playwright.e2e.config.ts. This web-only config stays CI-safe without a DB.
+  testIgnore: "**/*.e2e.spec.ts",
   use: {
     baseURL: "http://localhost:3001",
     trace: "on-first-retry",
