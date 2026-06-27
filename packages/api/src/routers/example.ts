@@ -82,4 +82,16 @@ export const exampleRouter = {
 
       return { items, nextCursor };
     }),
+
+  /** Update an item's title (authenticated) */
+  update: protectedProcedure
+    .input(z.object({ id: z.string(), title: z.string().min(1) }))
+    .handler(({ input }) => {
+      const item = fakeItems.find((i) => i.id === input.id);
+      if (!item) {
+        throw new Error("Not found");
+      }
+      item.title = input.title;
+      return item;
+    }),
 };

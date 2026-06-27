@@ -32,6 +32,16 @@ export const exampleCollection = createCollection(
         )
       );
     },
+    onUpdate: async ({ transaction }) => {
+      await Promise.all(
+        transaction.mutations.map((mutation) =>
+          client.example.update({
+            id: mutation.original.id,
+            title: mutation.modified.title,
+          })
+        )
+      );
+    },
     queryClient,
     queryFn: async () => {
       const { items } = await client.example.list({ limit: 100 });

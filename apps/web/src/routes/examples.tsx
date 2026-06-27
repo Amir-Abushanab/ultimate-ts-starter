@@ -1,6 +1,6 @@
 import { useLiveQuery } from "@tanstack/react-db";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { ClientOnly, createFileRoute, Link } from "@tanstack/react-router";
 import {
   AnimatedButton,
   AnimatedList,
@@ -23,6 +23,13 @@ import { z } from "zod";
 import { exampleCollection } from "@/collections/example";
 import { orpc } from "@/utils/orpc";
 
+const PAGE_SIZE = 8;
+const INPUT_CLASS =
+  "flex-1 rounded-md border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
+type SortKey = "createdAt" | "title";
+type SortDir = "asc" | "desc";
+
 // ── Suspense query: data loads in the route loader, so no loading state here ──
 const HealthStatus = () => {
   const { data } = useSuspenseQuery(orpc.healthCheck.queryOptions());
@@ -33,80 +40,240 @@ const HealthStatus = () => {
   );
 };
 
-// ── Create form: optimistic insert. The row appears instantly; onInsert
-//    persists via oRPC and the collection refetches to reconcile. ──
-const CreateForm = () => {
-  const [title, setTitle] = useState("");
-
-  return (
-    <form
-      className="flex gap-2"
-      onSubmit={(e) => {
-        e.preventDefault();
-        const trimmed = title.trim();
-        if (!trimmed) {
-          return;
-        }
-        exampleCollection.insert({
-          createdAt: new Date().toISOString(),
-          id: crypto.randomUUID(),
-          title: trimmed,
-        });
-        setTitle("");
-      }}
-    >
-      <input
-        required
-        className="flex-1 rounded-md border bg-background px-3 py-2 text-sm"
-        placeholder="New item title..."
-        value={title}
-        onChange={(e) => {
-          setTitle(e.target.value);
-        }}
-      />
-      <AnimatedButton type="submit">Add</AnimatedButton>
-    </form>
-  );
+const sortArrow = (active: boolean, dir: SortDir) => {
+  if (!active) {
+    return "";
+  }
+  return dir === "asc" ? " ↑" : " ↓";
 };
 
-// ── Live list: useLiveQuery is reactive, so optimistic insert/delete reflect
-//    here instantly without manual cache invalidation. ──
-const LiveItems = () => {
-  const { data: items, isLoading } = useLiveQuery((q) =>
+// ── TanStack DB manager: live reactive list + optimistic create/edit/delete,
+//    with client-side filter, sort, and pagination over the live collection.
+//    CLIENT-ONLY because useLiveQuery isn't server-renderable. ──
+const ExampleManager = () => {
+  const { data: items } = useLiveQuery((q) =>
     q.from({ example: exampleCollection })
   );
 
-  if (isLoading) {
-    return <SkeletonList count={5} />;
-  }
+  const [newTitle, setNewTitle] = useState("");
+  const [search, setSearch] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("createdAt");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [page, setPage] = useState(0);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+
+  // filter → sort → paginate, recomputed live as the collection changes.
+  const term = search.trim().toLowerCase();
+  const filtered = items.filter((item) =>
+    item.title.toLowerCase().includes(term)
+  );
+  const sorted = [...filtered].toSorted((a, b) => {
+    const cmp =
+      sortKey === "title"
+        ? a.title.localeCompare(b.title)
+        : a.createdAt.localeCompare(b.createdAt);
+    return sortDir === "asc" ? cmp : -cmp;
+  });
+  const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount - 1);
+  const pageItems = sorted.slice(
+    currentPage * PAGE_SIZE,
+    currentPage * PAGE_SIZE + PAGE_SIZE
+  );
+
+  const toggleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir((dir) => (dir === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir(key === "createdAt" ? "desc" : "asc");
+    }
+    setPage(0);
+  };
 
   return (
-    <AnimatedList className="space-y-2">
-      {items.map((item) => (
-        <div
-          key={item.id}
-          className="flex items-center justify-between rounded-lg border p-3"
+    <div className="space-y-3">
+      {/* Create — optimistic insert (instant, then persisted + reconciled) */}
+      <form
+        className="flex gap-2"
+        onSubmit={(e) => {
+          e.preventDefault();
+          const title = newTitle.trim();
+          if (!title) {
+            return;
+          }
+          exampleCollection.insert({
+            createdAt: new Date().toISOString(),
+            id: crypto.randomUUID(),
+            title,
+          });
+          setNewTitle("");
+        }}
+      >
+        <input
+          aria-label="New item title"
+          className={INPUT_CLASS}
+          placeholder="New item title..."
+          required
+          value={newTitle}
+          onChange={(e) => {
+            setNewTitle(e.target.value);
+          }}
+        />
+        <AnimatedButton type="submit">Add</AnimatedButton>
+      </form>
+
+      {/* Filter + sort controls */}
+      <div className="flex flex-wrap items-center gap-2">
+        <input
+          aria-label="Filter items by title"
+          className={INPUT_CLASS}
+          placeholder="Filter by title..."
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(0);
+          }}
+        />
+        <AnimatedButton
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            toggleSort("title");
+          }}
         >
-          <Link
-            className="text-start hover:opacity-80"
-            search={(prev) => ({ ...prev, item: item.id })}
-            to="/examples"
+          Title{sortArrow(sortKey === "title", sortDir)}
+        </AnimatedButton>
+        <AnimatedButton
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            toggleSort("createdAt");
+          }}
+        >
+          Date{sortArrow(sortKey === "createdAt", sortDir)}
+        </AnimatedButton>
+        <span
+          className="text-xs text-muted-foreground"
+          data-testid="item-count"
+        >
+          {sorted.length} items
+        </span>
+      </div>
+
+      {/* Live list with inline edit + delete */}
+      <AnimatedList className="space-y-2">
+        {pageItems.map((item) => (
+          <div
+            key={item.id}
+            className="flex items-center justify-between gap-2 rounded-lg border p-3"
           >
-            <p className="text-sm font-medium">{item.title}</p>
-            <p className="text-xs text-muted-foreground">{item.id}</p>
-          </Link>
-          <AnimatedButton
-            size="sm"
-            variant="destructive"
-            onClick={() => {
-              exampleCollection.delete(item.id);
-            }}
-          >
-            Delete
-          </AnimatedButton>
-        </div>
-      ))}
-    </AnimatedList>
+            {editingId === item.id ? (
+              <form
+                className="flex flex-1 gap-2"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const title = editTitle.trim();
+                  if (!title) {
+                    return;
+                  }
+                  exampleCollection.update(item.id, (draft) => {
+                    draft.title = title;
+                  });
+                  setEditingId(null);
+                }}
+              >
+                <input
+                  aria-label="Edit item title"
+                  className={INPUT_CLASS}
+                  required
+                  value={editTitle}
+                  onChange={(e) => {
+                    setEditTitle(e.target.value);
+                  }}
+                />
+                <AnimatedButton size="sm" type="submit">
+                  Save
+                </AnimatedButton>
+                <AnimatedButton
+                  size="sm"
+                  type="button"
+                  variant="ghost"
+                  onClick={() => {
+                    setEditingId(null);
+                  }}
+                >
+                  Cancel
+                </AnimatedButton>
+              </form>
+            ) : (
+              <>
+                <Link
+                  className="text-start hover:opacity-80"
+                  search={(prev) => ({ ...prev, item: item.id })}
+                  to="/examples"
+                >
+                  <p className="text-sm font-medium">{item.title}</p>
+                  <p className="text-xs text-muted-foreground">{item.id}</p>
+                </Link>
+                <div className="flex gap-2">
+                  <AnimatedButton
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingId(item.id);
+                      setEditTitle(item.title);
+                    }}
+                  >
+                    Edit
+                  </AnimatedButton>
+                  <AnimatedButton
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => {
+                      exampleCollection.delete(item.id);
+                    }}
+                  >
+                    Delete
+                  </AnimatedButton>
+                </div>
+              </>
+            )}
+          </div>
+        ))}
+      </AnimatedList>
+
+      {/* Pagination */}
+      <div className="flex items-center justify-between">
+        <AnimatedButton
+          disabled={currentPage === 0}
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            setPage(currentPage - 1);
+          }}
+        >
+          Previous
+        </AnimatedButton>
+        <span
+          className="text-xs text-muted-foreground"
+          data-testid="page-status"
+        >
+          Page {currentPage + 1} of {pageCount}
+        </span>
+        <AnimatedButton
+          disabled={currentPage >= pageCount - 1}
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            setPage(currentPage + 1);
+          }}
+        >
+          Next
+        </AnimatedButton>
+      </div>
+    </div>
   );
 };
 
@@ -155,10 +322,11 @@ const ExamplesPage = () => (
 
     <section className="space-y-2">
       <h2 className="text-lg font-semibold">
-        TanStack DB — live query + optimistic mutations
+        TanStack DB — live query + optimistic CRUD, filter, sort, paginate
       </h2>
-      <CreateForm />
-      <LiveItems />
+      <ClientOnly fallback={<SkeletonList count={PAGE_SIZE} />}>
+        <ExampleManager />
+      </ClientOnly>
     </section>
 
     {/* Route-driven overlay (URL-controlled Sheet) */}
