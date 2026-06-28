@@ -118,6 +118,9 @@ importers:
 
   apps/extension:
     dependencies:
+      '@ultimate-ts-starter/query':
+        specifier: workspace:*
+        version: link:../../packages/query
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -391,6 +394,9 @@ importers:
       '@opentui/react':
         specifier: ^0.2.10
         version: 0.2.13(react-devtools-core@6.1.5)(react@19.2.6)(typescript@5.9.3)(web-tree-sitter@0.25.10)(ws@8.20.0)
+      '@ultimate-ts-starter/query':
+        specifier: workspace:*
+        version: link:../../packages/query
       react:
         specifier: ^19.2.6
         version: 19.2.6

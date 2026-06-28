@@ -1,3 +1,4 @@
+import { createAppQueryClient } from "@ultimate-ts-starter/query";
 import { useEffect, useState } from "react";
 
 import "./app.css";
@@ -32,6 +33,18 @@ const clearTokenStorage = async () => {
   await chrome.storage.local.remove("auth_token");
 };
 
+// Typed oRPC client — the same contract the web + native apps use. Auth still
+// flows through Better Auth's REST endpoints; the app's data API is now reached
+// through the fully-typed client instead of hand-rolled fetch.
+const { client } = createAppQueryClient({
+  credentials: "omit",
+  headers: async (): Promise<Record<string, string>> => {
+    const token = await getToken();
+    return token === null ? {} : { Authorization: `Bearer ${token}` };
+  },
+  serverUrl: API_URL,
+});
+
 const App = () => {
   const [screen, setScreen] = useState<Screen>("loading");
   const [email, setEmail] = useState("");
@@ -40,6 +53,7 @@ const App = () => {
   const [user, setUser] = useState<{ name: string; email: string } | null>(
     null
   );
+  const [items, setItems] = useState<{ id: string; title: string }[]>([]);
 
   const checkSession = async () => {
     const token = await getToken();
@@ -53,7 +67,7 @@ const App = () => {
       });
       if (res.ok) {
         // eslint-disable-next-line typescript/no-unsafe-type-assertion -- JSON response shape validated by API contract
-        const data = (await res.json()) as unknown as {
+        const data = (await res.json()) as {
           user: { name: string; email: string };
         };
         setUser(data.user);
@@ -71,6 +85,21 @@ const App = () => {
   useEffect(() => {
     void checkSession();
   }, []);
+
+  // Read app data through the typed oRPC client once we're on the home screen.
+  useEffect(() => {
+    if (screen !== "home") {
+      return;
+    }
+    void (async () => {
+      try {
+        const { items: result } = await client.example.list({ limit: 5 });
+        setItems(result);
+      } catch {
+        setItems([]);
+      }
+    })();
+  }, [screen]);
 
   const handleSendOtp = async () => {
     if (!email.trim()) {
@@ -125,6 +154,7 @@ const App = () => {
   const handleSignOut = async () => {
     await clearTokenStorage();
     setUser(null);
+    setItems([]);
     setScreen("login");
     setStatus("");
     setEmail("");
@@ -210,6 +240,18 @@ const App = () => {
             <strong>{user.name}</strong>
           </p>
           <p className="dim">{user.email}</p>
+
+          {items.length > 0 && (
+            <div className="items">
+              <p className="dim">Example items (typed oRPC):</p>
+              <ul>
+                {items.map((item) => (
+                  <li key={item.id}>{item.title}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <button
             type="button"
             className="danger"

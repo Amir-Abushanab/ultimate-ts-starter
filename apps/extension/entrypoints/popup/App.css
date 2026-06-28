@@ -72,3 +72,13 @@
   font-size: 13px;
   margin: 0;
 }
+
+.items ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+.items li {
+  font-size: 13px;
+  color: #444;
+}

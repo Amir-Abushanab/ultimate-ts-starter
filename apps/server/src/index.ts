@@ -104,7 +104,7 @@ app.get("/api-docs", (c) =>
     <style>body { margin: 0; }</style>
   </head>
   <body>
-    <script id="api-reference" data-url="/api-reference/openapi.json"></script>
+    <script id="api-reference" data-url="/api-reference/spec.json"></script>
     <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
   </body>
 </html>`)
