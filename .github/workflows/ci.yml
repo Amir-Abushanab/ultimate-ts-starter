@@ -95,6 +95,30 @@ jobs:
       - name: Lint & format
         run: pnpm exec vp check
 
+  deps:
+    name: Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build i18n messages
+        run: pnpm --filter @ultimate-ts-starter/i18n build
+
+      - name: Dependency rules (dependency-cruiser, blocking)
+        run: pnpm lint:deps
+
+      - name: Unused files, deps & exports (knip, advisory)
+        run: pnpm lint:unused
+        continue-on-error: true
+
   typecheck:
     name: Typecheck
     needs: detect

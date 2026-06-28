@@ -23,7 +23,7 @@ module.exports = {
       from: { path: "^apps/([^/]+)/" },
       name: "apps-no-cross-import",
       severity: "error",
-      to: { path: "^apps/(?!\\1)" },
+      to: { path: "^apps/([^/]+)/", pathNot: "^apps/$1/" },
     },
     {
       comment:
@@ -40,10 +40,13 @@ module.exports = {
       conditionNames: ["import", "require", "node", "default"],
       exportsFields: ["exports"],
     },
+    // Skip build/generated output — these contain bundled facades that
+    // re-import app source and would otherwise trip the cross-app rule.
+    exclude: {
+      path: "(^|/)(\\.wrangler|\\.output|\\.content-collections|\\.expo|\\.vite|\\.turbo|\\.tanstack|dist|coverage)(/|$)",
+    },
     reporterOptions: {
       text: { highlightFocused: true },
     },
-    tsConfig: { fileName: "packages/config/tsconfig.base.json" },
-    tsPreCompilationDeps: true,
   },
 };

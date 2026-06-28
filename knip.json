@@ -1,8 +1,22 @@
 {
   "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "ignore": [
+    "**/*.d.ts",
+    "**/*.gen.ts",
+    "**/*.config.{ts,cjs,mjs,js}",
+    ".agents/**",
+    ".claude/**",
+    ".dependency-cruiser.cjs",
+    ".goose/**",
+    ".ncurc.cjs",
+    ".vite-hooks/**",
+    "apps/web/content-collections.ts"
+  ],
+  "ignoreBinaries": ["createdb", "wait"],
+  "ignoreDependencies": ["dotenv", "babel-plugin-react-compiler"],
   "workspaces": {
     ".": {
-      "entry": ["vite.config.ts"]
+      "entry": ["vite.config.ts", "scripts/*.mjs"]
     },
     "apps/web": {
       "entry": ["src/routes/**/*.tsx", "src/router.tsx"],
@@ -21,13 +35,16 @@
       "ignoreDependencies": ["@ultimate-ts-starter/*"]
     },
     "apps/extension": {
-      "entry": ["src/**/*.tsx"],
+      "entry": ["entrypoints/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["@ultimate-ts-starter/*"]
+    },
+    "packages/auth": {
+      "entry": ["auth.ts", "src/**/*.ts"],
       "ignoreDependencies": ["@ultimate-ts-starter/*"]
     },
     "packages/*": {
-      "entry": ["src/index.ts", "src/**/*.ts"],
+      "entry": ["src/**/*.ts"],
       "ignoreDependencies": ["@ultimate-ts-starter/*"]
     }
-  },
-  "ignore": ["**/*.d.ts", "**/*.gen.ts", ".claude/**", ".vite-hooks/**"]
+  }
 }
