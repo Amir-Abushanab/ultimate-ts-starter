@@ -1,8 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
+import * as Haptics from "expo-haptics";
 import { Card, Chip, useThemeColor } from "heroui-native";
 import { Pressable, Text, View } from "react-native";
 
+import { AppButton } from "@/components/app-button";
 import { AuthForm } from "@/components/auth-form";
 import { Container } from "@/components/container";
 import { authClient } from "@/lib/auth-client";
@@ -19,6 +21,10 @@ const Home = () => {
   const successColor = useThemeColor("success");
   const dangerColor = useThemeColor("danger");
   const _foregroundColor = useThemeColor("foreground");
+
+  const tap = () => {
+    void Haptics.selectionAsync();
+  };
 
   return (
     <Container className="p-6">
@@ -93,6 +99,15 @@ const Home = () => {
       <Card variant="secondary" className="mt-6 p-4">
         <Card.Title className="mb-3">Private Data</Card.Title>
         <Card.Description>{privateData.data?.message}</Card.Description>
+      </Card>
+
+      <Card variant="secondary" className="mt-6 p-4">
+        <Card.Title className="mb-3">Native buttons (@expo/ui)</Card.Title>
+        <View className="gap-3">
+          <AppButton label="Primary" onPress={tap} variant="primary" />
+          <AppButton label="Secondary" onPress={tap} variant="secondary" />
+          <AppButton label="Destructive" onPress={tap} variant="destructive" />
+        </View>
       </Card>
 
       {!session?.user && <AuthForm />}
