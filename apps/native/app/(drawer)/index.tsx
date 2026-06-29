@@ -2,9 +2,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { Card, Chip, useThemeColor } from "heroui-native";
+import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
 import { AppButton } from "@/components/app-button";
+import { AppTextField } from "@/components/app-text-field";
 import { AuthForm } from "@/components/auth-form";
 import { Container } from "@/components/container";
 import { authClient } from "@/lib/auth-client";
@@ -16,6 +18,7 @@ const Home = () => {
   const isConnected = healthCheck?.data === "OK";
   const isLoading = healthCheck?.isLoading;
   const { data: session } = authClient.useSession();
+  const [typed, setTyped] = useState("");
 
   const mutedColor = useThemeColor("muted");
   const successColor = useThemeColor("success");
@@ -102,11 +105,18 @@ const Home = () => {
       </Card>
 
       <Card variant="secondary" className="mt-6 p-4">
-        <Card.Title className="mb-3">Native buttons (@expo/ui)</Card.Title>
+        <Card.Title className="mb-3">Native UI (@expo/ui)</Card.Title>
         <View className="gap-3">
           <AppButton label="Primary" onPress={tap} variant="primary" />
           <AppButton label="Secondary" onPress={tap} variant="secondary" />
           <AppButton label="Destructive" onPress={tap} variant="destructive" />
+          <AppTextField
+            placeholder="Native text field…"
+            onChangeText={setTyped}
+          />
+          {typed.length > 0 ? (
+            <Text className="text-muted text-sm">You typed: {typed}</Text>
+          ) : null}
         </View>
       </Card>
 
