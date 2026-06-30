@@ -1,4 +1,4 @@
-import { Host, TextInput, useNativeState } from "@expo/ui";
+import { TextInput, useNativeState } from "@expo/ui";
 
 interface AppTextFieldProps {
   onChangeText?: (text: string) => void;
@@ -7,10 +7,11 @@ interface AppTextFieldProps {
 }
 
 /**
- * A native @expo/ui text field, cross-platform from one import. Note the value
- * flows through @expo/ui's own reactive primitive (`useNativeState` →
- * `ObservableState`) rather than RN's `useState` — that's a real difference from
- * heroui/RN inputs. `onChangeText` still reports the string for app-side use.
+ * A native @expo/ui text field. Host-less — compose inside an <AppCard>/<Host>.
+ * Its value flows through @expo/ui's reactive primitive (`useNativeState` →
+ * `ObservableState`) rather than RN's `useState`; `onChangeText` still reports
+ * the string. Note: transformed/controlled inputs (e.g. cleaning an OTP and
+ * reflecting it back) don't map cleanly to this model — that stays on heroui.
  */
 export const AppTextField = ({
   onChangeText,
@@ -20,13 +21,11 @@ export const AppTextField = ({
   const value = useNativeState("");
 
   return (
-    <Host matchContents>
-      <TextInput
-        placeholder={placeholder}
-        secureTextEntry={secureTextEntry}
-        value={value}
-        onChangeText={onChangeText}
-      />
-    </Host>
+    <TextInput
+      placeholder={placeholder}
+      secureTextEntry={secureTextEntry}
+      value={value}
+      onChangeText={onChangeText}
+    />
   );
 };

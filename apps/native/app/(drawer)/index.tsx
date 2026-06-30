@@ -6,6 +6,8 @@ import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
 import { AppButton } from "@/components/app-button";
+import { AppCard } from "@/components/app-card";
+import { AppText } from "@/components/app-text";
 import { AppTextField } from "@/components/app-text-field";
 import { AuthForm } from "@/components/auth-form";
 import { Container } from "@/components/container";
@@ -104,9 +106,9 @@ const Home = () => {
         <Card.Description>{privateData.data?.message}</Card.Description>
       </Card>
 
-      <Card variant="secondary" className="mt-6 p-4">
-        <Card.Title className="mb-3">Native UI (@expo/ui)</Card.Title>
-        <View className="gap-3">
+      <View className="mt-6">
+        <AppCard>
+          <AppText variant="title">Native UI (@expo/ui)</AppText>
           <AppButton label="Primary" onPress={tap} variant="primary" />
           <AppButton label="Secondary" onPress={tap} variant="secondary" />
           <AppButton label="Destructive" onPress={tap} variant="destructive" />
@@ -115,10 +117,10 @@ const Home = () => {
             onChangeText={setTyped}
           />
           {typed.length > 0 ? (
-            <Text className="text-muted text-sm">You typed: {typed}</Text>
+            <AppText variant="muted">{`You typed: ${typed}`}</AppText>
           ) : null}
-        </View>
-      </Card>
+        </AppCard>
+      </View>
 
       {!session?.user && <AuthForm />}
     </Container>
