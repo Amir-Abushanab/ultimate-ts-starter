@@ -27,6 +27,13 @@ catalog:
 overrides:
   vite: "catalog:"
   vitest: "catalog:"
+  # Expo SDK 57 / RN 0.86 Babel plugins (babel-preset-expo, react-native-worklets,
+  # @babel/preset-typescript) are Babel-7-only (assertVersion "^7.0.0-0"). Vite 8 /
+  # rolldown pull @babel/core 8 into the workspace, and pnpm otherwise mis-pairs the
+  # RN plugins with it — breaking Metro's transform (WorkletsBabelPluginError:
+  # "Requires Babel ^7.0.0-0, but was loaded with 8.0.1"). @rolldown/plugin-babel
+  # accepts "^7.29.0 || ^8", so pinning Babel 7 is safe for the web tooling too.
+  "@babel/core": "7.29.0"
 peerDependencyRules:
   allowAny:
     - vite
