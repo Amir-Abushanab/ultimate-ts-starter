@@ -14,6 +14,7 @@
     "build:analyze": "pnpm --filter web dlx vite-bundle-visualizer",
     "check-types": "tsgo --noEmit -p apps/server/tsconfig.json & tsgo --noEmit -p apps/web/tsconfig.json & tsgo --noEmit -p apps/native/tsconfig.json & tsgo --noEmit -p apps/tui/tsconfig.json & tsgo --noEmit -p apps/extension/tsconfig.json & wait",
     "dev:native": "pnpm --filter native dev",
+    "dev:native:full": "pnpm --filter server --filter native -r --stream dev",
     "dev:web": "pnpm --filter server --filter web -r --stream dev",
     "dev:tui": "pnpm --filter tui dev",
     "dev:server": "pnpm --filter server dev",
