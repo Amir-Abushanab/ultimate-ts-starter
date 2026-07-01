@@ -22,7 +22,6 @@
   "vars": {
     "NODE_ENV": "production",
     "CORS_ORIGIN": "",
-    "BETTER_AUTH_URL": "",
     "POLAR_SUCCESS_URL": "",
     "EMAIL_FROM": "",
   },

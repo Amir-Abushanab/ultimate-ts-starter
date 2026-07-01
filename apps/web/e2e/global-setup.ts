@@ -15,7 +15,6 @@ const E2E_DB =
 const DEV_VARS_PATH = new URL("../../server/.dev.vars", import.meta.url);
 const DEV_VARS = `DATABASE_URL=${E2E_DB}
 BETTER_AUTH_SECRET=dev-secret-change-me-in-production-please
-BETTER_AUTH_URL=http://localhost:3000
 CORS_ORIGIN=http://localhost:3001
 NODE_ENV=development
 `;

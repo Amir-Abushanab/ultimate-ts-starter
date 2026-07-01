@@ -16,7 +16,6 @@
   "vars": {
     "NODE_ENV": "development",
     "CORS_ORIGIN": "http://localhost:3001",
-    "BETTER_AUTH_URL": "http://localhost:3000",
     "POLAR_SUCCESS_URL": "http://localhost:3001/success",
     "EMAIL_FROM": "noreply@localhost",
   },

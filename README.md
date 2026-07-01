@@ -31,7 +31,6 @@ Copy `.env.example` and fill in the required values. Minimum to get running loca
 | -------------------- | -------- | -------------------------------------------------------- |
 | `DATABASE_URL`       | Yes      | Your PostgreSQL connection string                        |
 | `BETTER_AUTH_SECRET` | Yes      | Any random string (`openssl rand -hex 32`)               |
-| `BETTER_AUTH_URL`    | Yes      | `http://localhost:3000` for dev                          |
 | `CORS_ORIGIN`        | Yes      | `http://localhost:3001` for dev                          |
 | `EMAIL_FROM`         | Yes      | Sender on a domain onboarded to Cloudflare Email Service |
 | `POLAR_ACCESS_TOKEN` | Yes      | [polar.sh/settings](https://polar.sh/settings)           |
