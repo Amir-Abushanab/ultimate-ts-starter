@@ -80,6 +80,18 @@ minimumReleaseAgeExclude:
   # drizzle ships frequent patch releases; trusted publisher.
   - drizzle-orm
   - drizzle-kit
+  # ─────────────────────────────────────────────────────────────────────────
+  # TEMPORARY (added 2026-07-01): Expo SDK 57 shipped ~2026-06-30, still inside
+  # the 7-day cooldown. Exclude the Expo/RN toolchain so `expo install` can pull
+  # 57 now. REMOVE THIS BLOCK once 57 clears the cooldown (~2026-07-08) and
+  # re-run `pnpm install` to re-assert the gate. TODO: remove after 2026-07-08.
+  - expo
+  - "@expo/*"
+  - "expo-*"
+  - babel-preset-expo
+  - react-native
+  - "@react-native/*"
+  # ─────────────────────────────────────────────────────────────────────────
 # pnpm 11+ requires explicit per-package approval for install scripts.
 # Anything not listed here will silently skip its postinstall — fine for
 # analytics-only scripts, breaking for things that compile native bindings
