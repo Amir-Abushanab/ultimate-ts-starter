@@ -164,6 +164,9 @@ importers:
       '@better-auth/expo':
         specifier: 'catalog:'
         version: 1.6.11(4ec8f3be4344f7fe431b2c54c055e7df)
+      '@expo/material-symbols':
+        specifier: ^0.1.1
+        version: 0.1.1
       '@expo/metro-runtime':
         specifier: ~56.0.8
         version: 56.0.11(@expo/log-box@56.0.13)(expo@56.0.12)(react-dom@19.2.6(react@19.2.6))(react-native@0.85.1(@babel/core@8.0.1)(@react-native/metro-config@0.85.1(@babel/core@8.0.1))(@types/react@19.2.14)(react@19.2.6))(react@19.2.6)
@@ -2738,6 +2741,10 @@ packages:
       expo: '*'
       react: '*'
       react-native: '*'
+
+  '@expo/material-symbols@0.1.1':
+    resolution: {integrity: sha512-ruA6hZATOPKxo1qSd1NE3HI9FrmEDwcMDhsvzTAdMkP9AapdHfJ/0tKmBMWFJir85voxs1twYxLVrGW9OLGaOg==}
+    hasBin: true
 
   '@expo/metro-config@56.0.14':
     resolution: {integrity: sha512-O3CIHruaTJhswPAf/nf3i8QQ3f2jl+mEwSea1eb3khuplabdy/wTQz+JvHN8VGUFyg7JKwUGU1QfO6T3JiSQqA==}
@@ -13911,6 +13918,8 @@ snapshots:
       react: 19.2.6
       react-native: 0.85.1(@babel/core@8.0.1)(@react-native/metro-config@0.85.1(@babel/core@8.0.1))(@types/react@19.2.14)(react@19.2.6)
       stacktrace-parser: 0.1.11
+
+  '@expo/material-symbols@0.1.1': {}
 
   '@expo/metro-config@56.0.14(expo@56.0.12)(typescript@6.0.2)':
     dependencies:

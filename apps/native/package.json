@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@better-auth/expo": "catalog:",
+    "@expo/material-symbols": "^0.1.1",
     "@expo/metro-runtime": "~56.0.8",
     "@expo/ui": "~56.0.18",
     "@expo/vector-icons": "^15.1.1",
