@@ -1,35 +1,20 @@
-import type { ButtonVariant, UniversalStyle } from "@expo/ui";
+import type { ButtonVariant } from "@expo/ui";
 
 export type AppButtonVariant = "primary" | "secondary" | "destructive";
 
 /**
- * Maps a semantic variant + the app's theme colors to the *universal* @expo/ui
- * Button's cross-platform props (`variant` + `style`). One place for branding,
- * and it works on iOS and Android from a single import — no per-platform
- * modifiers. (The universal components accept an RN `style` subset, so uniwind
- * could drive this via cssInterop too; here we read straight from the theme.)
+ * Maps a semantic variant to the *universal* @expo/ui Button's `variant` — its
+ * shape (filled vs. outlined). The universal Button has no per-instance colour
+ * prop: the fill/tint comes from the enclosing <Host seedColor> (the SwiftUI
+ * tint on iOS, a Material 3 palette on Android). So colour is a Host concern
+ * (see <AppCard seedColor>) and this only picks the shape.
  */
-export const buttonVariantProps = (
-  variant: AppButtonVariant,
-  colors: { accent: string; danger: string }
-): { style: UniversalStyle; variant: ButtonVariant } => {
+export const buttonVariant = (variant: AppButtonVariant): ButtonVariant => {
   const byVariant = {
-    destructive: {
-      style: { backgroundColor: colors.danger },
-      variant: "filled",
-    },
-    primary: {
-      style: { backgroundColor: colors.accent },
-      variant: "filled",
-    },
-    secondary: {
-      style: { borderColor: colors.accent },
-      variant: "outlined",
-    },
-  } satisfies Record<
-    AppButtonVariant,
-    { style: UniversalStyle; variant: ButtonVariant }
-  >;
+    destructive: "filled",
+    primary: "filled",
+    secondary: "outlined",
+  } satisfies Record<AppButtonVariant, ButtonVariant>;
 
   return byVariant[variant];
 };

@@ -177,6 +177,7 @@ const Home = () => {
   const mutedColor = useThemeColor("muted");
   const successColor = useThemeColor("success");
   const dangerColor = useThemeColor("danger");
+  const accentColor = useThemeColor("accent");
   const _foregroundColor = useThemeColor("foreground");
 
   const tap = () => {
@@ -259,11 +260,10 @@ const Home = () => {
       </Card>
 
       <View className="mt-6">
-        <AppCard>
+        <AppCard seedColor={accentColor}>
           <AppText variant="title">Native UI (@expo/ui)</AppText>
           <AppButton label="Primary" onPress={tap} variant="primary" />
           <AppButton label="Secondary" onPress={tap} variant="secondary" />
-          <AppButton label="Destructive" onPress={tap} variant="destructive" />
           <AppTextField
             placeholder="Native text field…"
             onChangeText={setTyped}
@@ -271,6 +271,12 @@ const Home = () => {
           {typed.length > 0 ? (
             <AppText variant="muted">{`You typed: ${typed}`}</AppText>
           ) : null}
+        </AppCard>
+      </View>
+
+      <View className="mt-3">
+        <AppCard seedColor={dangerColor}>
+          <AppButton label="Destructive" onPress={tap} variant="destructive" />
         </AppCard>
       </View>
 
