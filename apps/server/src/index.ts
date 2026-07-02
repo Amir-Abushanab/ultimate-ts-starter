@@ -52,7 +52,13 @@ app.use(
     allowHeaders: ["Content-Type", "Authorization"],
     allowMethods: ["GET", "POST", "OPTIONS"],
     credentials: true,
-    origin: env.CORS_ORIGIN,
+    origin: [
+      env.CORS_ORIGIN,
+      // Expo web (`expo start --web`) serves on Metro's port 8081; allow it in
+      // dev so the native app's web target can reach the API. Mirrors the auth
+      // trustedOrigins dev allowlist.
+      ...(env.NODE_ENV === "development" ? ["http://localhost:8081"] : []),
+    ],
   })
 );
 
