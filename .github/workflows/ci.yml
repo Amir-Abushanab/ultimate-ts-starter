@@ -95,6 +95,9 @@ jobs:
       - name: Lint & format
         run: pnpm exec vp check
 
+      - name: Design tokens (no raw colors)
+        run: pnpm lint:tokens
+
   deps:
     name: Dependencies
     runs-on: ubuntu-latest

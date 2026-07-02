@@ -34,6 +34,7 @@
     "fix": "vp check --fix",
     "lint:unused": "knip",
     "lint:deps": "depcruise --config .dependency-cruiser.cjs apps packages",
+    "lint:tokens": "node scripts/lint-tokens.mjs",
     "ncu": "pnpm dlx npm-check-updates --deep",
     "registry:build": "node scripts/build-registry.mjs",
     "changeset": "changeset",
