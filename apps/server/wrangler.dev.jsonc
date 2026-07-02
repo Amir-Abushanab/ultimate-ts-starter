@@ -1,0 +1,26 @@
+{
+  // Local dev / E2E server config. Differs from wrangler.jsonc in two ways:
+  //  1. No `send_email` binding → `env.EMAIL` is undefined, so the auth code
+  //     logs OTPs to the console (`[auth] OTP for <email>: <code>`) instead of
+  //     sending real email. This is what the E2E test reads to log in.
+  //  2. No observability/traces (need a real Cloudflare account).
+  // Secrets (DATABASE_URL, BETTER_AUTH_SECRET, …) come from .dev.vars.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "server",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-04-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "dev": {
+    "port": 3000,
+  },
+  "vars": {
+    "NODE_ENV": "development",
+    "CORS_ORIGIN": "http://localhost:3001",
+    "POLAR_SUCCESS_URL": "http://localhost:3001/success",
+    "EMAIL_FROM": "noreply@localhost",
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "USER_EVENTS", "class_name": "UserEvents" }],
+  },
+  "migrations": [{ "tag": "v1", "new_classes": ["UserEvents"] }],
+}

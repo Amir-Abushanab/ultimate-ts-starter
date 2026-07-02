@@ -68,7 +68,7 @@ export const useRealtime = ({
         setStatus("connected");
       });
 
-      ws.addEventListener("message", (e: MessageEvent<unknown>) => {
+      ws.addEventListener("message", (e: MessageEvent) => {
         const raw = String(e.data);
         const msg = decodeEvent(raw);
         if (!msg) {

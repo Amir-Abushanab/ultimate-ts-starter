@@ -15,7 +15,8 @@
     "test:watch": "vp test",
     "test:coverage": "vp test run --coverage",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:full": "playwright test --config playwright.e2e.config.ts"
   },
   "dependencies": {
     "@better-auth/sso": "^1.6.11",
@@ -25,6 +26,8 @@
     "@polar-sh/better-auth": "catalog:",
     "@posthog/react": "^1.9.0",
     "@tailwindcss/vite": "^4.3.0",
+    "@tanstack/query-db-collection": "^1.0.41",
+    "@tanstack/react-db": "^0.1.87",
     "@tanstack/react-form": "catalog:",
     "@tanstack/react-query": "^5.100.10",
     "@tanstack/react-router": "^1.169.2",
@@ -49,7 +52,6 @@
     "lucide-react": "catalog:",
     "nanoid": "^5.1.11",
     "next-themes": "catalog:",
-    "nuqs": "^2.8.9",
     "posthog-js": "^1.373.4",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
@@ -63,10 +65,12 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@babel/core": "^8.0.1",
     "@cloudflare/vite-plugin": "^1.37.0",
     "@content-collections/cli": "^0.1.9",
     "@inlang/paraglide-js": "^2.18.0",
     "@playwright/test": "^1.60.0",
+    "@rolldown/plugin-babel": "^0.2.3",
     "@tanstack/react-query-devtools": "^5.100.10",
     "@tanstack/react-router-devtools": "^1.166.13",
     "@tauri-apps/cli": "^2.11.1",

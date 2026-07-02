@@ -11,7 +11,6 @@ const requiredSchema = z.object({
   BETTER_AUTH_SECRET: z
     .string()
     .min(1, "Set via `wrangler secret put BETTER_AUTH_SECRET`"),
-  BETTER_AUTH_URL: z.string().min(1),
   CORS_ORIGIN: z.string().min(1),
   DATABASE_URL: z.string().min(1, "Set via `wrangler secret put DATABASE_URL`"),
   NODE_ENV: z.string(),

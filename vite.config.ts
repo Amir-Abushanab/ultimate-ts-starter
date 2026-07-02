@@ -142,7 +142,7 @@ export default defineConfig({
           },
           {
             // Playwright config uses require() and untyped APIs
-            files: ["**/playwright.config.*"],
+            files: ["**/playwright.config.*", "**/playwright.*.config.*"],
             rules: {
               "typescript/no-unsafe-assignment": "off",
               "typescript/no-unsafe-call": "off",

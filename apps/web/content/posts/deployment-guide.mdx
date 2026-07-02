@@ -18,7 +18,7 @@ Ready to ship? This guide covers everything from database migrations to deployin
 
 <Step number={2} title="Set environment variables">
   Configure all required secrets in your deployment platform. At minimum you
-  need `DATABASE_URL`, `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL`.
+  need `DATABASE_URL` and `BETTER_AUTH_SECRET`.
 </Step>
 
 <Step number={3} title="Deploy the API">
@@ -39,7 +39,6 @@ Ready to ship? This guide covers everything from database migrations to deployin
 | -------------------- | -------- | ---------------------------- |
 | `DATABASE_URL`       | Yes      | PostgreSQL connection string |
 | `BETTER_AUTH_SECRET` | Yes      | Auth signing secret          |
-| `BETTER_AUTH_URL`    | Yes      | Public URL of your app       |
 | `POSTHOG_KEY`        | No       | Analytics tracking key       |
 | `POLAR_ACCESS_TOKEN` | No       | Billing integration          |
 

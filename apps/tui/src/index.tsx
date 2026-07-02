@@ -1,5 +1,6 @@
 import { TextAttributes, createCliRenderer } from "@opentui/core";
 import { createRoot } from "@opentui/react";
+import { createAppQueryClient } from "@ultimate-ts-starter/query";
 import { useState } from "react";
 
 const API_URL = process.env.SERVER_URL ?? "http://localhost:3000";
@@ -27,6 +28,18 @@ const clearToken = async () => {
   }
 };
 
+// ── Typed oRPC client (the same contract the web + native apps use) ──
+// Auth still flows through Better Auth's REST endpoints; the app's data API
+// is now reached through the fully-typed client instead of hand-rolled fetch.
+const { client } = createAppQueryClient({
+  credentials: "omit",
+  headers: async (): Promise<Record<string, string>> => {
+    const token = await loadToken();
+    return token === null ? {} : { Authorization: `Bearer ${token}` };
+  },
+  serverUrl: API_URL,
+});
+
 // ── API helper ──────────────────────────────────
 const apiCall = async (path: string, opts?: RequestInit) => {
   const token = await loadToken();
@@ -46,22 +59,53 @@ const App = () => {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("Type /help for commands");
 
-  const handleCommand = async (cmd: string) => {
-    const c = cmd.trim().toLowerCase();
+  const showItems = async () => {
+    try {
+      const { items } = await client.example.list({ limit: 5 });
+      setStatus(
+        items.length > 0
+          ? `Items: ${items.map((item) => item.title).join("  ·  ")}`
+          : "No items yet — /add <title>"
+      );
+    } catch {
+      setStatus("Couldn't reach the API. Is the server running?");
+    }
+  };
 
-    if (c === "/login") {
+  const addItem = async (title: string) => {
+    if (title.length === 0) {
+      setStatus("Usage: /add <title>");
+      return;
+    }
+    try {
+      const item = await client.example.create({ title });
+      setStatus(`Added "${item.title}" — run /items to see the list.`);
+    } catch {
+      setStatus("Couldn't add (sign in first with /login).");
+    }
+  };
+
+  const handleCommand = async (cmd: string) => {
+    const trimmed = cmd.trim();
+    const spaceIdx = trimmed.indexOf(" ");
+    const name = (
+      spaceIdx === -1 ? trimmed : trimmed.slice(0, spaceIdx)
+    ).toLowerCase();
+    const arg = spaceIdx === -1 ? "" : trimmed.slice(spaceIdx + 1).trim();
+
+    if (name === "/login") {
       setScreen("login-email");
       setStatus("Enter your email:");
       return;
     }
 
-    if (c === "/logout") {
+    if (name === "/logout") {
       await clearToken();
       setStatus("Signed out.");
       return;
     }
 
-    if (c === "/status") {
+    if (name === "/status") {
       try {
         const res = await apiCall("/health");
         const data = (await res.json()) as {
@@ -77,33 +121,42 @@ const App = () => {
       return;
     }
 
-    if (c === "/me") {
+    if (name === "/me") {
       try {
-        const res = await apiCall("/api/auth/get-session");
-        if (res.ok) {
-          const data = (await res.json()) as {
-            user: { name: string; email: string };
-          };
-          setStatus(`Signed in as ${data.user.name} (${data.user.email})`);
-        } else {
-          setStatus("Not signed in. Use /login");
-        }
+        const data = await client.privateData();
+        setStatus(
+          data.user === undefined
+            ? "Not signed in. Use /login"
+            : `Signed in as ${data.user.name} (${data.user.email})`
+        );
       } catch {
-        setStatus("Failed to check session.");
+        setStatus("Not signed in. Use /login");
       }
       return;
     }
 
-    if (c === "/help") {
-      setStatus("/login  /logout  /status  /me  /help  /quit");
+    if (name === "/items") {
+      await showItems();
       return;
     }
 
-    if (c === "/quit" || c === "/exit") {
+    if (name === "/add") {
+      await addItem(arg);
+      return;
+    }
+
+    if (name === "/help") {
+      setStatus(
+        "/login  /logout  /status  /me  /items  /add <title>  /help  /quit"
+      );
+      return;
+    }
+
+    if (name === "/quit" || name === "/exit") {
       process.exit(0);
     }
 
-    setStatus(`Unknown: ${c} — type /help`);
+    setStatus(`Unknown: ${name} — type /help`);
   };
 
   const handleEmailSubmit = async (val: string) => {

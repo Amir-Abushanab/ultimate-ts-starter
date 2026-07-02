@@ -4,9 +4,10 @@ import { resolve } from "node:path";
 import { cloudflare } from "@cloudflare/vite-plugin";
 import contentCollections from "@content-collections/vite";
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
+import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-import viteReact from "@vitejs/plugin-react";
+import viteReact, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { defineConfig } from "vite-plus";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -40,6 +41,10 @@ export default defineConfig({
     tailwindcss(),
     tanstackStart(),
     viteReact(),
+    // React Compiler — @vitejs/plugin-react v6 dropped the babel option, so it
+    // runs via @rolldown/plugin-babel + reactCompilerPreset (auto-memoizes,
+    // retiring manual useMemo/useCallback). target "19" matches React 19.2.
+    babel({ presets: [reactCompilerPreset({ target: "19" })] }),
   ],
   server: {
     port: 3001,

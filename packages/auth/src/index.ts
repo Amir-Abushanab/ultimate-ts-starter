@@ -35,7 +35,8 @@ export const createAuth = () => {
       // },
     },
     appName: "ultimate-ts-starter",
-    baseURL: env.BETTER_AUTH_URL,
+    // No baseURL: Better Auth infers it from the request origin (getOrigin of
+    // the incoming request). trustedOrigins below stays the strict allowlist.
     database: drizzleAdapter(db, {
       provider: "pg",
       schema,

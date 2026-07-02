@@ -1,4 +1,11 @@
 import { createFileRoute, useSearch } from "@tanstack/react-router";
+import { z } from "zod";
+
+// Type-safe URL search params: the schema is the single source of truth, so
+// `useSearch({ from: "/success" })` is fully typed and runtime-validated.
+const searchSchema = z.object({
+  checkout_id: z.string().optional(),
+});
 
 const SuccessPage = () => {
   const { checkout_id } = useSearch({ from: "/success" });
@@ -15,8 +22,5 @@ const SuccessPage = () => {
 
 export const Route = createFileRoute("/success")({
   component: SuccessPage,
-  validateSearch: (search) => ({
-    checkout_id:
-      typeof search.checkout_id === "string" ? search.checkout_id : undefined,
-  }),
+  validateSearch: searchSchema,
 });

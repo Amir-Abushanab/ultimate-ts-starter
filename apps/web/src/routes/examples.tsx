@@ -1,32 +1,36 @@
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import type { SortingState } from "@tanstack/react-table";
+import { useLiveQuery } from "@tanstack/react-db";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { ClientOnly, createFileRoute, Link } from "@tanstack/react-router";
 import {
   AnimatedButton,
   AnimatedList,
   AnimatedPage,
 } from "@ultimate-ts-starter/ui/components/animated";
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@ultimate-ts-starter/ui/components/sheet";
+import {
   SkeletonCard,
   SkeletonList,
 } from "@ultimate-ts-starter/ui/components/skeletons";
 import { Suspense, useState } from "react";
+import { z } from "zod";
 
+import { exampleCollection } from "@/collections/example";
 import { orpc } from "@/utils/orpc";
 
-// ── Suspense query (data loads before render, no loading state in component) ──
+const PAGE_SIZE = 8;
+const INPUT_CLASS =
+  "flex-1 rounded-md border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
+type SortKey = "createdAt" | "title";
+type SortDir = "asc" | "desc";
+
+// ── Suspense query: data loads in the route loader, so no loading state here ──
 const HealthStatus = () => {
   const { data } = useSuspenseQuery(orpc.healthCheck.queryOptions());
   return (
@@ -36,210 +40,271 @@ const HealthStatus = () => {
   );
 };
 
-// ── Infinite scroll with cursor pagination ──
-const InfiniteList = () => {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery(
-      orpc.example.list.infiniteOptions({
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-        initialPageParam: undefined,
-        input: (pageParam: string | undefined) => ({
-          cursor: pageParam,
-          limit: 10,
-        }),
-      })
-    );
+const sortArrow = (active: boolean, dir: SortDir) => {
+  if (!active) {
+    return "";
+  }
+  return dir === "asc" ? " ↑" : " ↓";
+};
 
-  const items = data?.pages.flatMap((page) => page.items) ?? [];
+// ── TanStack DB manager: live reactive list + optimistic create/edit/delete,
+//    with client-side filter, sort, and pagination over the live collection.
+//    CLIENT-ONLY because useLiveQuery isn't server-renderable. ──
+const ExampleManager = () => {
+  const { data: items } = useLiveQuery((q) =>
+    q.from({ example: exampleCollection })
+  );
+
+  const [newTitle, setNewTitle] = useState("");
+  const [search, setSearch] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("createdAt");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [page, setPage] = useState(0);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+
+  // filter → sort → paginate, recomputed live as the collection changes.
+  const term = search.trim().toLowerCase();
+  const filtered = items.filter((item) =>
+    item.title.toLowerCase().includes(term)
+  );
+  const sorted = [...filtered].toSorted((a, b) => {
+    const cmp =
+      sortKey === "title"
+        ? a.title.localeCompare(b.title)
+        : a.createdAt.localeCompare(b.createdAt);
+    return sortDir === "asc" ? cmp : -cmp;
+  });
+  const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount - 1);
+  const pageItems = sorted.slice(
+    currentPage * PAGE_SIZE,
+    currentPage * PAGE_SIZE + PAGE_SIZE
+  );
+
+  const toggleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir((dir) => (dir === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir(key === "createdAt" ? "desc" : "asc");
+    }
+    setPage(0);
+  };
 
   return (
     <div className="space-y-3">
+      {/* Create — optimistic insert (instant, then persisted + reconciled) */}
+      <form
+        className="flex gap-2"
+        onSubmit={(e) => {
+          e.preventDefault();
+          const title = newTitle.trim();
+          if (!title) {
+            return;
+          }
+          exampleCollection.insert({
+            createdAt: new Date().toISOString(),
+            id: crypto.randomUUID(),
+            title,
+          });
+          setNewTitle("");
+        }}
+      >
+        <input
+          aria-label="New item title"
+          className={INPUT_CLASS}
+          placeholder="New item title..."
+          required
+          value={newTitle}
+          onChange={(e) => {
+            setNewTitle(e.target.value);
+          }}
+        />
+        <AnimatedButton type="submit">Add</AnimatedButton>
+      </form>
+
+      {/* Filter + sort controls */}
+      <div className="flex flex-wrap items-center gap-2">
+        <input
+          aria-label="Filter items by title"
+          className={INPUT_CLASS}
+          placeholder="Filter by title..."
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(0);
+          }}
+        />
+        <AnimatedButton
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            toggleSort("title");
+          }}
+        >
+          Title{sortArrow(sortKey === "title", sortDir)}
+        </AnimatedButton>
+        <AnimatedButton
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            toggleSort("createdAt");
+          }}
+        >
+          Date{sortArrow(sortKey === "createdAt", sortDir)}
+        </AnimatedButton>
+        <span
+          className="text-xs text-muted-foreground"
+          data-testid="item-count"
+        >
+          {sorted.length} items
+        </span>
+      </div>
+
+      {/* Live list with inline edit + delete */}
       <AnimatedList className="space-y-2">
-        {items.map((item) => (
+        {pageItems.map((item) => (
           <div
             key={item.id}
-            className="flex items-center justify-between rounded-lg border p-3"
+            className="flex items-center justify-between gap-2 rounded-lg border p-3"
           >
-            <div>
-              <p className="text-sm font-medium">{item.title}</p>
-              <p className="text-xs text-muted-foreground">{item.id}</p>
-            </div>
-            <DeleteButton id={item.id} />
+            {editingId === item.id ? (
+              <form
+                className="flex flex-1 gap-2"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const title = editTitle.trim();
+                  if (!title) {
+                    return;
+                  }
+                  exampleCollection.update(item.id, (draft) => {
+                    draft.title = title;
+                  });
+                  setEditingId(null);
+                }}
+              >
+                <input
+                  aria-label="Edit item title"
+                  className={INPUT_CLASS}
+                  required
+                  value={editTitle}
+                  onChange={(e) => {
+                    setEditTitle(e.target.value);
+                  }}
+                />
+                <AnimatedButton size="sm" type="submit">
+                  Save
+                </AnimatedButton>
+                <AnimatedButton
+                  size="sm"
+                  type="button"
+                  variant="ghost"
+                  onClick={() => {
+                    setEditingId(null);
+                  }}
+                >
+                  Cancel
+                </AnimatedButton>
+              </form>
+            ) : (
+              <>
+                <Link
+                  className="text-start hover:opacity-80"
+                  search={(prev) => ({ ...prev, item: item.id })}
+                  to="/examples"
+                >
+                  <p className="text-sm font-medium">{item.title}</p>
+                  <p className="text-xs text-muted-foreground">{item.id}</p>
+                </Link>
+                <div className="flex gap-2">
+                  <AnimatedButton
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingId(item.id);
+                      setEditTitle(item.title);
+                    }}
+                  >
+                    Edit
+                  </AnimatedButton>
+                  <AnimatedButton
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => {
+                      exampleCollection.delete(item.id);
+                    }}
+                  >
+                    Delete
+                  </AnimatedButton>
+                </div>
+              </>
+            )}
           </div>
         ))}
       </AnimatedList>
 
-      {hasNextPage && (
+      {/* Pagination */}
+      <div className="flex items-center justify-between">
         <AnimatedButton
+          disabled={currentPage === 0}
+          size="sm"
           variant="outline"
-          className="w-full"
           onClick={() => {
-            void fetchNextPage();
+            setPage(currentPage - 1);
           }}
-          disabled={isFetchingNextPage}
         >
-          {isFetchingNextPage ? "Loading..." : "Load more"}
+          Previous
         </AnimatedButton>
-      )}
+        <span
+          className="text-xs text-muted-foreground"
+          data-testid="page-status"
+        >
+          Page {currentPage + 1} of {pageCount}
+        </span>
+        <AnimatedButton
+          disabled={currentPage >= pageCount - 1}
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            setPage(currentPage + 1);
+          }}
+        >
+          Next
+        </AnimatedButton>
+      </div>
     </div>
   );
 };
 
-// ── Delete button ──
-const DeleteButton = ({ id }: { id: string }) => {
-  const queryClient = useQueryClient();
-  const deleteMutation = useMutation(
-    orpc.example.delete.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({
-          queryKey: orpc.example.list.key(),
-        });
-      },
-    })
-  );
+// ── Route-driven overlay: the Sheet's open state lives entirely in the URL.
+//    Clicking an item sets `?item=<id>`; this reads it back. ──
+const ItemDetailsSheet = () => {
+  const { item } = Route.useSearch();
+  const navigate = Route.useNavigate();
 
   return (
-    <AnimatedButton
-      variant="destructive"
-      size="sm"
-      onClick={() => {
-        deleteMutation.mutate({ id });
-      }}
-      disabled={deleteMutation.isPending}
-    >
-      {deleteMutation.isPending ? "..." : "Delete"}
-    </AnimatedButton>
-  );
-};
-
-// ── Create form ──
-const CreateForm = () => {
-  const [title, setTitle] = useState("");
-  const queryClient = useQueryClient();
-  const createMutation = useMutation(
-    orpc.example.create.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries({
-          queryKey: orpc.example.list.key(),
-        });
-      },
-    })
-  );
-
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (!title.trim()) {
-          return;
+    <Sheet
+      open={item !== undefined}
+      onOpenChange={(open) => {
+        if (!open) {
+          void navigate({ search: (prev) => ({ ...prev, item: undefined }) });
         }
-        createMutation.mutate({ title: title.trim() });
-        setTitle("");
       }}
-      className="flex gap-2"
     >
-      <input
-        required
-        value={title}
-        onChange={(e) => {
-          setTitle(e.target.value);
-        }}
-        placeholder="New item title..."
-        className="flex-1 rounded-md border bg-background px-3 py-2 text-sm"
-      />
-      <AnimatedButton type="submit" disabled={createMutation.isPending}>
-        {createMutation.isPending ? "Adding..." : "Add"}
-      </AnimatedButton>
-    </form>
-  );
-};
-
-// ── Sortable data table ──
-interface Item {
-  id: string;
-  title: string;
-  createdAt: string;
-}
-const columnHelper = createColumnHelper<Item>();
-
-const columns = [
-  columnHelper.accessor("id", {
-    cell: (info) => (
-      <span className="font-mono text-xs text-muted-foreground">
-        {info.getValue()}
-      </span>
-    ),
-    header: "ID",
-  }),
-  columnHelper.accessor("title", {
-    cell: (info) => <span className="font-medium">{info.getValue()}</span>,
-    header: "Title",
-  }),
-  columnHelper.accessor("createdAt", {
-    cell: (info) => (
-      <span className="text-xs text-muted-foreground">
-        {new Date(info.getValue()).toLocaleDateString()}
-      </span>
-    ),
-    header: "Created",
-  }),
-];
-
-const DataTable = () => {
-  const { data } = useSuspenseQuery(
-    orpc.example.list.queryOptions({ input: { limit: 10 } })
-  );
-  const [sorting, setSorting] = useState<SortingState>([]);
-
-  const table = useReactTable({
-    columns,
-    data: data.items,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
-    state: { sorting },
-  });
-
-  return (
-    <div className="overflow-hidden rounded-lg border">
-      <table className="w-full text-sm">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="border-b bg-muted/50">
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  className="px-3 py-2 text-start font-medium cursor-pointer select-none hover:bg-muted transition-colors"
-                  onClick={header.column.getToggleSortingHandler()}
-                >
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                  {{ asc: " ↑", desc: " ↓" }[
-                    String(header.column.getIsSorted())
-                  ] ?? ""}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr
-              key={row.id}
-              className="border-b last:border-0 hover:bg-muted/30 transition-colors"
-            >
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="px-3 py-2">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>Item details</SheetTitle>
+          <SheetDescription>
+            Opened from the <code>?item=</code> URL param — shareable, and the
+            browser back button closes it.
+          </SheetDescription>
+        </SheetHeader>
+        <div className="p-4">
+          <p className="font-mono text-xs text-muted-foreground">{item}</p>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };
 
@@ -248,7 +313,6 @@ const ExamplesPage = () => (
   <AnimatedPage className="mx-auto w-full max-w-2xl space-y-6 p-6">
     <h1 className="text-3xl font-bold">Data Fetching Examples</h1>
 
-    {/* Suspense: shows skeleton while health check loads */}
     <section className="space-y-2">
       <h2 className="text-lg font-semibold">Suspense Query</h2>
       <Suspense fallback={<SkeletonCard />}>
@@ -256,32 +320,23 @@ const ExamplesPage = () => (
       </Suspense>
     </section>
 
-    {/* Create form with optimistic insert */}
-    <section className="space-y-2">
-      <h2 className="text-lg font-semibold">Optimistic Create</h2>
-      <CreateForm />
-    </section>
-
-    {/* Sortable data table */}
-    <section className="space-y-2">
-      <h2 className="text-lg font-semibold">Sortable Table</h2>
-      <Suspense fallback={<SkeletonList count={5} />}>
-        <DataTable />
-      </Suspense>
-    </section>
-
-    {/* Infinite scroll with optimistic delete */}
     <section className="space-y-2">
       <h2 className="text-lg font-semibold">
-        Cursor Pagination + Optimistic Delete
+        TanStack DB — live query + optimistic CRUD, filter, sort, paginate
       </h2>
-      <Suspense fallback={<SkeletonList count={5} />}>
-        <InfiniteList />
-      </Suspense>
+      <ClientOnly fallback={<SkeletonList count={PAGE_SIZE} />}>
+        <ExampleManager />
+      </ClientOnly>
     </section>
+
+    {/* Route-driven overlay (URL-controlled Sheet) */}
+    <ItemDetailsSheet />
   </AnimatedPage>
 );
 
 export const Route = createFileRoute("/examples")({
   component: ExamplesPage,
+  loader: ({ context }) =>
+    context.queryClient.ensureQueryData(orpc.healthCheck.queryOptions()),
+  validateSearch: z.object({ item: z.string().optional() }),
 });

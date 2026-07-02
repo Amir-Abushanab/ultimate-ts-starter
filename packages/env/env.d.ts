@@ -9,7 +9,6 @@ export interface CloudflareEnv {
   DATABASE_URL: string;
   CORS_ORIGIN: string;
   BETTER_AUTH_SECRET: string;
-  BETTER_AUTH_URL: string;
   POLAR_ACCESS_TOKEN: string;
   POLAR_PRODUCT_ID: string;
   POLAR_SUCCESS_URL: string;

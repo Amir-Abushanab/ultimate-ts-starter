@@ -6,7 +6,8 @@
     "build": "vp pack",
     "check-types": "tsc -b",
     "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
-    "dev": "wrangler dev",
+    "dev": "wrangler dev --config wrangler.dev.jsonc",
+    "dev:remote": "wrangler dev",
     "deploy": "wrangler deploy"
   },
   "dependencies": {
