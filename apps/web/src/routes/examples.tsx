@@ -21,6 +21,7 @@ import { Suspense, useState } from "react";
 import { z } from "zod";
 
 import { exampleCollection } from "@/collections/example";
+import { ErrorBoundary } from "@/components/error-boundary";
 import { orpc } from "@/utils/orpc";
 
 const PAGE_SIZE = 8;
@@ -277,8 +278,27 @@ const ExampleManager = () => {
   );
 };
 
+// Suspense-fetched detail for the selected item. `example.get` is a public
+// oRPC procedure (SSR-safe), so a Suspense boundary covers loading and an
+// ErrorBoundary covers a missing/invalid id — no isPending/isError branch.
+const ItemDetails = ({ id }: { id: string }) => {
+  const { data } = useSuspenseQuery(
+    orpc.example.get.queryOptions({ input: { id } })
+  );
+  return (
+    <div className="space-y-1">
+      <p className="text-sm font-medium">{data.title}</p>
+      <p className="font-mono text-xs text-muted-foreground">{data.id}</p>
+      <p className="text-xs text-muted-foreground">
+        Created {new Date(data.createdAt).toLocaleString()}
+      </p>
+    </div>
+  );
+};
+
 // ── Route-driven overlay: the Sheet's open state lives entirely in the URL.
-//    Clicking an item sets `?item=<id>`; this reads it back. ──
+//    Clicking an item sets `?item=<id>`; this reads it back and Suspense-loads
+//    the item's details. ──
 const ItemDetailsSheet = () => {
   const { item } = Route.useSearch();
   const navigate = Route.useNavigate();
@@ -301,7 +321,19 @@ const ItemDetailsSheet = () => {
           </SheetDescription>
         </SheetHeader>
         <div className="p-4">
-          <p className="font-mono text-xs text-muted-foreground">{item}</p>
+          {item !== undefined && (
+            <ErrorBoundary
+              fallback={
+                <p className="text-sm text-destructive">
+                  Could not load this item.
+                </p>
+              }
+            >
+              <Suspense fallback={<SkeletonCard />}>
+                <ItemDetails key={item} id={item} />
+              </Suspense>
+            </ErrorBoundary>
+          )}
         </div>
       </SheetContent>
     </Sheet>

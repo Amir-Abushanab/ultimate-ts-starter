@@ -34,13 +34,16 @@
     "fix": "vp check --fix",
     "lint:unused": "knip",
     "lint:deps": "depcruise --config .dependency-cruiser.cjs apps packages",
+    "lint:tokens": "node scripts/lint-tokens.mjs",
     "ncu": "pnpm dlx npm-check-updates --deep",
     "registry:build": "node scripts/build-registry.mjs",
     "changeset": "changeset",
     "version": "changeset version",
     "release": "changeset version && pnpm install --lockfile-only",
-    "sync-rules": "cp .claude/CLAUDE.md AGENTS.md && cp .claude/CLAUDE.md GEMINI.md",
-    "prepare": "vp config && pnpm --filter @ultimate-ts-starter/i18n build && pnpm sync-rules"
+    "sync-rules": "node scripts/sync-rules.mjs",
+    "agents": "apm install",
+    "agents:frozen": "apm install --frozen",
+    "prepare": "vp config && pnpm --filter @ultimate-ts-starter/i18n build && pnpm sync-rules && (command -v apm >/dev/null 2>&1 && apm install --frozen || echo '[agents] apm not installed — run: brew install microsoft/apm/apm, then pnpm agents')"
   },
   "dependencies": {
     "@ultimate-ts-starter/env": "workspace:*",

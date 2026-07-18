@@ -1,0 +1,58 @@
+name: ultimate-ts-starter
+version: 0.1.0
+targets:
+  - claude
+  - cursor
+  - codex
+  - gemini
+dependencies:
+  apm:
+    - better-auth/skills/better-auth/best-practices
+    - vercel-labs/agent-skills/skills/composition-patterns
+    - vercel-labs/agent-skills/skills/react-best-practices
+    - vercel-labs/agent-skills/skills/react-native-skills
+    - vercel-labs/agent-skills/skills/web-design-guidelines
+    - shadcn/ui/skills/shadcn
+    - yusukebe/hono-skill/skills/hono
+    - msmps/opentui-skill/skill/opentui
+    - haydenbleasel/ultracite/skills/ultracite
+    - heroui-inc/heroui/skills/heroui-native#v3
+    - expo/skills/plugins/expo/skills/expo-dev-client
+    - expo/skills/plugins/expo/skills/expo-tailwind-setup
+    - expo/skills/plugins/expo/skills/expo-native-ui
+    - expo/skills/plugins/expo/skills/eas-workflows
+    - expo/skills/plugins/expo/skills/eas-app-stores
+    - expo/skills/plugins/expo/skills/expo-data-fetching
+    - expo/skills/plugins/expo/skills/expo-upgrade
+  mcp:
+    - name: context7
+      registry: false
+      transport: stdio
+      command: npx
+      args:
+        - -y
+        - "@upstash/context7-mcp"
+    - name: cloudflare-docs
+      registry: false
+      transport: sse
+      url: https://docs.mcp.cloudflare.com/sse
+    - name: shadcn
+      registry: false
+      transport: stdio
+      command: npx
+      args:
+        - -y
+        - shadcn@latest
+        - mcp
+    - name: better-auth
+      registry: false
+      transport: http
+      url: https://mcp.inkeep.com/better-auth/mcp
+    - name: expo-mcp
+      registry: false
+      transport: http
+      url: https://mcp.expo.dev/mcp
+    - name: polar
+      registry: false
+      transport: http
+      url: https://mcp.polar.sh/mcp/polar-mcp

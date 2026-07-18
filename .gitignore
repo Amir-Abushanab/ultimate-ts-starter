@@ -60,3 +60,7 @@ temp
 # Playwright
 test-results/
 playwright-report/
+
+
+# APM dependencies
+apm_modules/
