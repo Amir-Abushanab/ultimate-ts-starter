@@ -21,6 +21,13 @@ export default defineConfig({
       "AGENTS.md",
       "GEMINI.md",
       ".cursor/rules/**",
+      // Materialized raw by `apm install` (agent skill docs + lockfile) — committed
+      // as-generated; formatting them here only causes churn on every install.
+      // Kept in sync with lint.ignorePatterns below.
+      ".agents/**",
+      ".claude/skills/**",
+      ".goose/**",
+      "apm.lock.yaml",
     ],
     jsxSingleQuote: false,
     printWidth: 80,
