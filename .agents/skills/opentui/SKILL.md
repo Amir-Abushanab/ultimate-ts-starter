@@ -2,7 +2,7 @@
 name: opentui
 description: OpenTUI skill for building terminal user interfaces with the Core, React, or Solid APIs. Use for any TUI task including components, layout, keyboard and keymap handling, animations, and testing.
 metadata:
-  references: core, react, solid, components, layout, keyboard, keymap, animation, testing
+   references: core, react, solid, components, layout, keyboard, keymap, animation, testing
 ---
 
 # OpenTUI Platform Skill
@@ -26,13 +26,13 @@ Framework references follow a 5-file pattern. Cross-cutting concepts are single-
 
 Each framework in `./references/<framework>/` contains:
 
-| File               | Purpose                            | When to Read            |
-| ------------------ | ---------------------------------- | ----------------------- |
-| `REFERENCE.md`     | Overview, when to use, quick start | **Always read first**   |
-| `api.md`           | Runtime API, components, hooks     | Writing code            |
-| `configuration.md` | Setup, tsconfig, bundling          | Configuring a project   |
-| `patterns.md`      | Common patterns, best practices    | Implementation guidance |
-| `gotchas.md`       | Pitfalls, limitations, debugging   | Troubleshooting         |
+| File | Purpose | When to Read |
+|------|---------|--------------|
+| `REFERENCE.md` | Overview, when to use, quick start | **Always read first** |
+| `api.md` | Runtime API, components, hooks | Writing code |
+| `configuration.md` | Setup, tsconfig, bundling | Configuring a project |
+| `patterns.md` | Common patterns, best practices | Implementation guidance |
+| `gotchas.md` | Pitfalls, limitations, debugging | Troubleshooting |
 
 Cross-cutting concepts in `./references/<concept>/` have `REFERENCE.md` as the entry point.
 
@@ -185,42 +185,38 @@ For component naming differences and text modifiers, see `components/REFERENCE.m
 ## Product Index
 
 ### Frameworks
-
-| Framework | Entry File                        | Description                            |
-| --------- | --------------------------------- | -------------------------------------- |
-| Core      | `./references/core/REFERENCE.md`  | Imperative API, all primitives         |
-| React     | `./references/react/REFERENCE.md` | React reconciler for declarative TUI   |
-| Solid     | `./references/solid/REFERENCE.md` | SolidJS reconciler for declarative TUI |
+| Framework | Entry File | Description |
+|-----------|------------|-------------|
+| Core | `./references/core/REFERENCE.md` | Imperative API, all primitives |
+| React | `./references/react/REFERENCE.md` | React reconciler for declarative TUI |
+| Solid | `./references/solid/REFERENCE.md` | SolidJS reconciler for declarative TUI |
 
 ### Cross-Cutting Concepts
-
-| Concept    | Entry File                             | Description                                         |
-| ---------- | -------------------------------------- | --------------------------------------------------- |
-| Layout     | `./references/layout/REFERENCE.md`     | Yoga/Flexbox layout system                          |
-| Components | `./references/components/REFERENCE.md` | Component reference by category                     |
-| Keyboard   | `./references/keyboard/REFERENCE.md`   | Low-level keyboard input handling                   |
-| Keymap     | `./references/keymap/REFERENCE.md`     | Declarative layered keybindings (`@opentui/keymap`) |
-| Animation  | `./references/animation/REFERENCE.md`  | Timeline-based animations                           |
-| Testing    | `./references/testing/REFERENCE.md`    | Test renderer and snapshots                         |
+| Concept | Entry File | Description |
+|---------|------------|-------------|
+| Layout | `./references/layout/REFERENCE.md` | Yoga/Flexbox layout system |
+| Components | `./references/components/REFERENCE.md` | Component reference by category |
+| Keyboard | `./references/keyboard/REFERENCE.md` | Low-level keyboard input handling |
+| Keymap | `./references/keymap/REFERENCE.md` | Declarative layered keybindings (`@opentui/keymap`) |
+| Animation | `./references/animation/REFERENCE.md` | Timeline-based animations |
+| Testing | `./references/testing/REFERENCE.md` | Test renderer and snapshots |
 
 ### Component Categories
-
-| Category       | Entry File                                | Components                                    |
-| -------------- | ----------------------------------------- | --------------------------------------------- |
-| Text & Display | `./references/components/text-display.md` | text, ascii-font, styled text, qr-code        |
-| Containers     | `./references/components/containers.md`   | box, scrollbox, scrollbar, borders            |
-| Inputs         | `./references/components/inputs.md`       | input, textarea, select, tab-select, slider   |
-| Code & Diff    | `./references/components/code-diff.md`    | code, line-number, diff, markdown, text-table |
+| Category | Entry File | Components |
+|----------|------------|------------|
+| Text & Display | `./references/components/text-display.md` | text, ascii-font, styled text, qr-code |
+| Containers | `./references/components/containers.md` | box, scrollbox, scrollbar, borders |
+| Inputs | `./references/components/inputs.md` | input, textarea, select, tab-select, slider |
+| Code & Diff | `./references/components/code-diff.md` | code, line-number, diff, markdown, text-table |
 
 ### Additional Packages
-
-| Package             | Description                                             | Docs                                      |
-| ------------------- | ------------------------------------------------------- | ----------------------------------------- |
-| `@opentui/keymap`   | Layered keybinding/command engine (Bun or Node, no FFI) | `./references/keymap/REFERENCE.md`        |
-| `@opentui/qrcode`   | QR code component                                       | `./references/components/text-display.md` |
-| `@opentui/ssh`      | Serve a TUI over SSH                                    | `./references/core/REFERENCE.md`          |
-| `@opentui/three`    | Three.js WebGPU renderer (formerly `core/src/3d`)       | upstream `packages/three`                 |
-| `@opentui/examples` | Runnable examples (formerly `core/src/examples`)        | upstream `packages/examples`              |
+| Package | Description | Docs |
+|---------|-------------|------|
+| `@opentui/keymap` | Layered keybinding/command engine (Bun or Node, no FFI) | `./references/keymap/REFERENCE.md` |
+| `@opentui/qrcode` | QR code component | `./references/components/text-display.md` |
+| `@opentui/ssh` | Serve a TUI over SSH | `./references/core/REFERENCE.md` |
+| `@opentui/three` | Three.js WebGPU renderer (formerly `core/src/3d`) | upstream `packages/three` |
+| `@opentui/examples` | Runnable examples (formerly `core/src/examples`) | upstream `packages/examples` |
 
 Core also ships a native **Audio** engine and OSC desktop **notifications** — see `./references/core/api.md`.
 

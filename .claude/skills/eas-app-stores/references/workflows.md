@@ -32,7 +32,7 @@ name: Release
 
 on:
   push:
-    tags: ["v*"]
+    tags: ['v*']
 
 jobs:
   build-ios:

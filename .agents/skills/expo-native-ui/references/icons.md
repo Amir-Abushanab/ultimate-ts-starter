@@ -20,20 +20,19 @@ import { colors } from "@/theme/colors";
 
 ```tsx
 <SymbolView
-  name="star.fill" // SF Symbol name (required)
-  tintColor={colors.label} // Icon color
-  size={24} // Shorthand for width/height
-  resizeMode="scaleAspectFit" // How to scale
-  weight="regular" // thin | ultraLight | light | regular | medium | semibold | bold | heavy | black
-  scale="medium" // small | medium | large
-  style={{ width: 16, height: 16 }} // Standard style props
+  name="star.fill"                    // SF Symbol name (required)
+  tintColor={colors.label}            // Icon color
+  size={24}                           // Shorthand for width/height
+  resizeMode="scaleAspectFit"         // How to scale
+  weight="regular"                    // thin | ultraLight | light | regular | medium | semibold | bold | heavy | black
+  scale="medium"                      // small | medium | large
+  style={{ width: 16, height: 16 }}   // Standard style props
 />
 ```
 
 ## Common Icons
 
 ### Navigation & Actions
-
 - `house.fill` - home
 - `gear` - settings
 - `magnifyingglass` - search
@@ -45,7 +44,6 @@ import { colors } from "@/theme/colors";
 - `arrow.right` - forward arrow
 
 ### Media
-
 - `play.fill` - play
 - `pause.fill` - pause
 - `stop.fill` - stop
@@ -55,7 +53,6 @@ import { colors } from "@/theme/colors";
 - `speaker.slash.fill` - mute
 
 ### Camera
-
 - `camera` - camera
 - `camera.fill` - camera filled
 - `arrow.triangle.2.circlepath` - flip camera
@@ -64,7 +61,6 @@ import { colors } from "@/theme/colors";
 - `bolt.slash` - flash off
 
 ### Communication
-
 - `message` - message
 - `message.fill` - message filled
 - `envelope` - email
@@ -75,7 +71,6 @@ import { colors } from "@/theme/colors";
 - `video.fill` - video call filled
 
 ### Social
-
 - `heart` - like
 - `heart.fill` - liked
 - `star` - favorite
@@ -88,7 +83,6 @@ import { colors } from "@/theme/colors";
 - `person.2.fill` - people filled
 
 ### Content Actions
-
 - `square.and.arrow.up` - share
 - `square.and.arrow.down` - download
 - `doc.on.doc` - copy
@@ -100,7 +94,6 @@ import { colors } from "@/theme/colors";
 - `bookmark.fill` - bookmarked
 
 ### Status & Feedback
-
 - `checkmark` - success/done
 - `checkmark.circle.fill` - completed
 - `xmark.circle.fill` - error/failed
@@ -111,7 +104,6 @@ import { colors } from "@/theme/colors";
 - `bell.fill` - notification filled
 
 ### Misc
-
 - `ellipsis` - more options
 - `ellipsis.circle` - more in circle
 - `line.3.horizontal` - menu/hamburger
@@ -200,7 +192,10 @@ animationSpec={{
 Some symbols support multiple colors:
 
 ```tsx
-<SymbolView name="cloud.sun.rain.fill" type="multicolor" />
+<SymbolView
+  name="cloud.sun.rain.fill"
+  type="multicolor"
+/>
 ```
 
 ## Finding Symbol Names

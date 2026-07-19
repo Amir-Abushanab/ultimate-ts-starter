@@ -20,43 +20,35 @@ bun add @opentui/keymap
 
 ## Entry Points
 
-| Import                           | Purpose                                                                                                            |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `@opentui/keymap`                | Main engine: `Keymap`, key stringifiers, shared types                                                              |
-| `@opentui/keymap/addons`         | Universal addons (parser stages, metadata, diagnostics, sequences, ex-commands)                                    |
-| `@opentui/keymap/addons/opentui` | Universal addons + OpenTUI base-layout & edit-buffer helpers                                                       |
-| `@opentui/keymap/extras`         | Config/formatting helpers (`commandBindings`, `createBindingLookup`, `formatKeySequence`, `formatCommandBindings`) |
-| `@opentui/keymap/extras/graph`   | `getGraphSnapshot()` for debug/graph UIs                                                                           |
-| `@opentui/keymap/testing`        | Fake host + diagnostics for addon tests                                                                            |
-| `@opentui/keymap/opentui`        | OpenTUI terminal host adapter                                                                                      |
-| `@opentui/keymap/html`           | DOM host adapter                                                                                                   |
-| `@opentui/keymap/react`          | React provider/hooks                                                                                               |
-| `@opentui/keymap/solid`          | Solid provider/hooks                                                                                               |
+| Import | Purpose |
+|--------|---------|
+| `@opentui/keymap` | Main engine: `Keymap`, key stringifiers, shared types |
+| `@opentui/keymap/addons` | Universal addons (parser stages, metadata, diagnostics, sequences, ex-commands) |
+| `@opentui/keymap/addons/opentui` | Universal addons + OpenTUI base-layout & edit-buffer helpers |
+| `@opentui/keymap/extras` | Config/formatting helpers (`commandBindings`, `createBindingLookup`, `formatKeySequence`, `formatCommandBindings`) |
+| `@opentui/keymap/extras/graph` | `getGraphSnapshot()` for debug/graph UIs |
+| `@opentui/keymap/testing` | Fake host + diagnostics for addon tests |
+| `@opentui/keymap/opentui` | OpenTUI terminal host adapter |
+| `@opentui/keymap/html` | DOM host adapter |
+| `@opentui/keymap/react` | React provider/hooks |
+| `@opentui/keymap/solid` | Solid provider/hooks |
 
 ## Quick Start (Terminal)
 
 ```typescript
-import { createCliRenderer } from "@opentui/core";
-import { createDefaultOpenTuiKeymap } from "@opentui/keymap/opentui";
+import { createCliRenderer } from "@opentui/core"
+import { createDefaultOpenTuiKeymap } from "@opentui/keymap/opentui"
 
-const renderer = await createCliRenderer();
-const keymap = createDefaultOpenTuiKeymap(renderer);
+const renderer = await createCliRenderer()
+const keymap = createDefaultOpenTuiKeymap(renderer)
 
 keymap.registerLayer({
-  commands: [
-    {
-      name: "quit",
-      run() {
-        renderer.destroy();
-      },
-    },
-  ],
+  commands: [{ name: "quit", run() { renderer.destroy() } }],
   bindings: [{ key: "q", cmd: "quit" }],
-});
+})
 ```
 
 Construction options:
-
 - Bare: `new Keymap(host)`
 - Host helpers: `createOpenTuiKeymap(renderer)` / `createHtmlKeymap(root)`
 - With default addons: `createDefaultOpenTuiKeymap(renderer)` / `createDefaultHtmlKeymap(root)`
@@ -104,22 +96,11 @@ A binding has a required `key`, plus optional fields:
 ## React
 
 ```tsx
-import {
-  KeymapProvider,
-  useKeymap,
-  useBindings,
-  useActiveKeys,
-} from "@opentui/keymap/react";
+import { KeymapProvider, useKeymap, useBindings, useActiveKeys } from "@opentui/keymap/react"
 
 // Provide a pre-created Keymap<Renderable, KeyEvent>, then:
-useBindings(
-  (keymap) =>
-    keymap.registerLayer({
-      /* ... */
-    }),
-  [deps]
-);
-const active = useActiveKeys();
+useBindings((keymap) => keymap.registerLayer({ /* ... */ }), [deps])
+const active = useActiveKeys()
 ```
 
 Exports: `KeymapProvider`, `useKeymap()`, `useBindings(createLayer, deps?)`,

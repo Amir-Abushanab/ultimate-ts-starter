@@ -34,7 +34,6 @@ const codeBlock = new CodeRenderable(renderer, {
 ### Supported Languages
 
 OpenTUI uses Tree-sitter for syntax highlighting. Common languages:
-
 - `typescript`, `javascript`
 - `python`
 - `rust`
@@ -85,7 +84,6 @@ const codeBlock = new CodeRenderable(renderer, {
 ```
 
 **Callback signature:**
-
 - `highlights: SimpleHighlight[]` - Array of `[start, end, scope, metadata]`
 - `context: { content, filetype, syntaxStyle }` - Highlighting context
 - Return modified highlights array or `undefined` to use original
@@ -143,57 +141,57 @@ Render data tables with borders, word wrapping, and selection support.
 
 ```typescript
 // Core
-import { TextTableRenderable, type TextTableContent } from "@opentui/core";
+import { TextTableRenderable, type TextTableContent } from "@opentui/core"
 
 const content: TextTableContent = [
-  [[{ text: "Name" }], [{ text: "Age" }], [{ text: "Role" }]],
-  [[{ text: "Alice" }], [{ text: "30" }], [{ text: "Engineer" }]],
-  [[{ text: "Bob" }], [{ text: "25" }], [{ text: "Designer" }]],
-];
+  [[ { text: "Name" } ], [ { text: "Age" } ], [ { text: "Role" } ]],
+  [[ { text: "Alice" } ], [ { text: "30" } ], [ { text: "Engineer" } ]],
+  [[ { text: "Bob" } ], [ { text: "25" } ], [ { text: "Designer" } ]],
+]
 
 const table = new TextTableRenderable(renderer, {
   id: "table",
   content,
-  wrapMode: "word", // "none" | "char" | "word"
+  wrapMode: "word",           // "none" | "char" | "word"
   columnWidthMode: "content", // "content" | "fill"
   cellPadding: 0,
   border: true,
   outerBorder: true,
-  borderStyle: "single", // single | double | rounded | bold
-  selectable: true, // Allow text selection
-  columnFitter: "balanced", // "proportional" | "balanced"
-});
+  borderStyle: "single",      // single | double | rounded | bold
+  selectable: true,           // Allow text selection
+  columnFitter: "balanced",   // "proportional" | "balanced"
+})
 ```
 
 ### Options
 
-| Option            | Type                           | Default          | Description               |
-| ----------------- | ------------------------------ | ---------------- | ------------------------- |
-| `content`         | `TextTableContent`             | -                | 2D array of cell content  |
-| `wrapMode`        | `"none" \| "char" \| "word"`   | `"none"`         | Text wrapping in cells    |
-| `columnWidthMode` | `"content" \| "fill"`          | `"content"`      | Column sizing strategy    |
-| `cellPadding`     | `number`                       | `0`              | Padding inside cells      |
-| `border`          | `boolean`                      | `true`           | Show inner borders        |
-| `outerBorder`     | `boolean`                      | `true`           | Show outer borders        |
-| `borderStyle`     | `string`                       | `"single"`       | Border style              |
-| `borderColor`     | `string \| RGBA`               | -                | Border color              |
-| `selectable`      | `boolean`                      | `false`          | Allow text selection      |
-| `columnFitter`    | `"proportional" \| "balanced"` | `"proportional"` | Column width distribution |
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `content` | `TextTableContent` | - | 2D array of cell content |
+| `wrapMode` | `"none" \| "char" \| "word"` | `"none"` | Text wrapping in cells |
+| `columnWidthMode` | `"content" \| "fill"` | `"content"` | Column sizing strategy |
+| `cellPadding` | `number` | `0` | Padding inside cells |
+| `border` | `boolean` | `true` | Show inner borders |
+| `outerBorder` | `boolean` | `true` | Show outer borders |
+| `borderStyle` | `string` | `"single"` | Border style |
+| `borderColor` | `string \| RGBA` | - | Border color |
+| `selectable` | `boolean` | `false` | Allow text selection |
+| `columnFitter` | `"proportional" \| "balanced"` | `"proportional"` | Column width distribution |
 
 ### Cell Content Format
 
 Each cell is an array of styled text chunks:
 
 ```typescript
-type TextTableCellContent = { text: string; fg?: RGBA; bg?: RGBA }[];
-type TextTableContent = TextTableCellContent[][]; // rows -> cells -> chunks
+type TextTableCellContent = { text: string; fg?: RGBA; bg?: RGBA }[]
+type TextTableContent = TextTableCellContent[][]  // rows -> cells -> chunks
 ```
 
 ### Selection
 
 ```typescript
-table.getSelectedText(); // Get selected text
-table.hasSelection(); // Check if text is selected
+table.getSelectedText()  // Get selected text
+table.hasSelection()     // Check if text is selected
 ```
 
 Columnar selection is supported: dragging vertically within a single column selects only that column's content.
@@ -292,7 +290,6 @@ Show errors, warnings, and info on specific lines:
 ```
 
 **Diagnostic severity levels:**
-
 - `error` - Red indicator
 - `warning` - Yellow indicator
 - `info` - Blue indicator
@@ -306,8 +303,8 @@ Show added/removed lines:
 <line-number
   code={sourceCode}
   language="typescript"
-  addedLines={[5, 6, 7]} // Green background
-  removedLines={[10, 11]} // Red background
+  addedLines={[5, 6, 7]}      // Green background
+  removedLines={[10, 11]}     // Red background
 />
 ```
 
@@ -394,7 +391,7 @@ diffView.syncScroll = false
   language="typescript"
   mode="unified"
   showLineNumbers
-  context={3} // Lines of context around changes
+  context={3}                // Lines of context around changes
 />
 ```
 
@@ -416,33 +413,31 @@ Programmatically highlight specific lines in a diff:
 
 ```typescript
 // Set a single line's color
-diffView.setLineColor(5, "#2d4f2d");
-diffView.setLineColor(5, { gutter: "#333", content: "#2d4f2d" });
+diffView.setLineColor(5, "#2d4f2d")
+diffView.setLineColor(5, { gutter: "#333", content: "#2d4f2d" })
 
 // Clear a single line's color
-diffView.clearLineColor(5);
+diffView.clearLineColor(5)
 
 // Set multiple lines at once
-diffView.setLineColors(
-  new Map([
-    [1, "#2d4f2d"],
-    [2, "#4f2d2d"],
-  ])
-);
+diffView.setLineColors(new Map([
+  [1, "#2d4f2d"],
+  [2, "#4f2d2d"],
+]))
 
 // Highlight a range
-diffView.highlightLines(10, 20, "#2d4f2d");
-diffView.clearHighlightLines(10, 20);
+diffView.highlightLines(10, 20, "#2d4f2d")
+diffView.clearHighlightLines(10, 20)
 
 // Clear all line colors
-diffView.clearAllLineColors();
+diffView.clearAllLineColors()
 ```
 
 The `LineNumberRenderable` also supports programmatic highlighting:
 
 ```typescript
-lineNumberView.highlightLines(5, 10, "#2d4f2d");
-lineNumberView.clearHighlightLines(5, 10);
+lineNumberView.highlightLines(5, 10, "#2d4f2d")
+lineNumberView.clearHighlightLines(5, 10)
 ```
 
 ### Hunk Navigation (Core)
@@ -452,15 +447,15 @@ wrapping and concealed lines) where each diff hunk begins, in hunk order. Works
 in both `"unified"` and `"split"` views.
 
 ```typescript
-const offsets = diffView.getHunkRowOffsets(); // number[]
+const offsets = diffView.getHunkRowOffsets()  // number[]
 
 // Jump to the next hunk below the current scroll position
-const next = offsets.find((row) => row > diffView.scrollTop);
-if (next !== undefined) diffView.scrollTop = next;
+const next = offsets.find((row) => row > diffView.scrollTop)
+if (next !== undefined) diffView.scrollTop = next
 
 // Jump to the previous hunk
-const prev = [...offsets].reverse().find((row) => row < diffView.scrollTop);
-if (prev !== undefined) diffView.scrollTop = prev;
+const prev = [...offsets].reverse().find((row) => row < diffView.scrollTop)
+if (prev !== undefined) diffView.scrollTop = prev
 ```
 
 The result is cached and invalidated when the view rebuilds, `wrapMode` changes,
@@ -500,23 +495,22 @@ const md = new MarkdownRenderable(renderer, {
 ```tsx
 <markdown
   content={markdownText}
-  syntaxStyle={syntaxStyle} // Required
-  treeSitterClient={client} // Optional: custom tree-sitter client
-  conceal={true} // Hide markdown syntax characters (default true)
-  concealCode={false} // Conceal code fences too (default false)
-  streaming={true} // Enable streaming mode for incremental updates
+  syntaxStyle={syntaxStyle}    // Required
+  treeSitterClient={client}    // Optional: custom tree-sitter client
+  conceal={true}               // Hide markdown syntax characters (default true)
+  concealCode={false}          // Conceal code fences too (default false)
+  streaming={true}             // Enable streaming mode for incremental updates
   internalBlockMode="coalesced" // "coalesced" (default) | "top-level"
-  tableOptions={{
-    // Customize markdown table rendering
-    style: "columns", // "grid" | "columns"
-    widthMode: "full", // "content" | "full"
-    wrapMode: "word", // "none" | "char" | "word"
+  tableOptions={{              // Customize markdown table rendering
+    style: "columns",          // "grid" | "columns"
+    widthMode: "full",         // "content" | "full"
+    wrapMode: "word",          // "none" | "char" | "word"
     cellPadding: 0,
     borders: true,
     outerBorder: true,
     borderStyle: "single",
     borderColor: "#555",
-    selectable: true, // Tables are selectable by default
+    selectable: true,          // Tables are selectable by default
   }}
 />
 ```
@@ -541,11 +535,11 @@ const md = new MarkdownRenderable(renderer, {
       // Return custom renderable for headings
       return new TextRenderable(ctx, {
         content: `>> ${node.content} <<`,
-      });
+      })
     }
-    return null; // Use default rendering
+    return null // Use default rendering
   },
-});
+})
 ```
 
 ### Custom Code Block Renderers
@@ -555,22 +549,19 @@ fenced code blocks, keyed by the **normalized** fence info string (e.g. `tsx` â†
 `typescriptreact`; custom names like `taskflow` match directly):
 
 ```typescript
-import {
-  createMarkdownCodeBlockRenderer,
-  MarkdownRenderable,
-} from "@opentui/core";
+import { createMarkdownCodeBlockRenderer, MarkdownRenderable } from "@opentui/core"
 
 const renderNode = createMarkdownCodeBlockRenderer({
   mermaid: (token, ctx) => renderMermaidDiagram(ctx, token.text),
   taskflow: (token, ctx) => renderTaskflow(ctx, token.text),
-});
+})
 
 const md = new MarkdownRenderable(renderer, {
   id: "markdown",
   content,
   syntaxStyle,
-  renderNode, // Only the matched fences are replaced; others render normally
-});
+  renderNode,  // Only the matched fences are replaced; others render normally
+})
 ```
 
 Each renderer receives `(token: Tokens.Code, context: RenderNodeContext)` and
@@ -611,8 +602,8 @@ boundaries (`markdown._stableBlockCount`).
 function CodeEditor() {
   const [code, setCode] = useState(`function hello() {
   console.log("Hello!");
-}`);
-
+}`)
+  
   return (
     <box flexDirection="column" height="100%">
       <box height={1}>
@@ -627,7 +618,7 @@ function CodeEditor() {
         focused
       />
     </box>
-  );
+  )
 }
 ```
 
@@ -648,7 +639,7 @@ function CodeReview({ oldCode, newCode }) {
         showLineNumbers
       />
     </box>
-  );
+  )
 }
 ```
 
@@ -657,17 +648,20 @@ function CodeReview({ oldCode, newCode }) {
 ```tsx
 function MarkdownPreview({ content }) {
   // Extract code blocks from markdown
-  const codeBlocks = extractCodeBlocks(content);
-
+  const codeBlocks = extractCodeBlocks(content)
+  
   return (
     <scrollbox height={20}>
       {codeBlocks.map((block, i) => (
         <box key={i} marginBottom={1}>
-          <code code={block.code} language={block.language} />
+          <code
+            code={block.code}
+            language={block.language}
+          />
         </box>
       ))}
     </scrollbox>
-  );
+  )
 }
 ```
 
@@ -675,20 +669,20 @@ function MarkdownPreview({ content }) {
 
 ```tsx
 function ErrorView({ errors, code }) {
-  const diagnostics = errors.map((err) => ({
+  const diagnostics = errors.map(err => ({
     line: err.line,
     severity: "error",
     message: err.message,
-  }));
-
+  }))
+  
   return (
     <line-number
       code={code}
       language="typescript"
       diagnostics={diagnostics}
-      highlightedLines={errors.map((e) => e.line)}
+      highlightedLines={errors.map(e => e.line)}
     />
-  );
+  )
 }
 ```
 
@@ -717,14 +711,16 @@ function ErrorView({ errors, code }) {
 ### Large Files
 
 For very large files, consider:
-
 - Pagination or virtual scrolling
 - Loading only visible portion
 - Using `scrollbox` wrapper
 
 ```tsx
 <scrollbox height={30}>
-  <line-number code={largeFile} language="typescript" />
+  <line-number
+    code={largeFile}
+    language="typescript"
+  />
 </scrollbox>
 ```
 

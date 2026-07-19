@@ -32,10 +32,10 @@ bun install @opentui/react @opentui/core react
     "target": "ESNext",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-
+    
     "jsx": "react-jsx",
     "jsxImportSource": "@opentui/react",
-
+    
     "strict": true,
     "skipLibCheck": true,
     "noEmit": true,
@@ -46,7 +46,6 @@ bun install @opentui/react @opentui/core react
 ```
 
 **Critical settings:**
-
 - `jsx: "react-jsx"` - Use the new JSX transform
 - `jsxImportSource: "@opentui/react"` - Import JSX runtime from OpenTUI
 - `module` / `moduleResolution: "NodeNext"` - Recommended for OpenTUI compatibility
@@ -104,23 +103,23 @@ my-tui-app/
 ### Entry Point (src/index.tsx)
 
 ```tsx
-import { createCliRenderer } from "@opentui/core";
-import { createRoot } from "@opentui/react";
-import { App } from "./App";
+import { createCliRenderer } from "@opentui/core"
+import { createRoot } from "@opentui/react"
+import { App } from "./App"
 
 const renderer = await createCliRenderer({
   exitOnCtrlC: true,
-});
+})
 
-createRoot(renderer).render(<App />);
+createRoot(renderer).render(<App />)
 ```
 
 ### App Component (src/App.tsx)
 
 ```tsx
-import { Header } from "./components/Header";
-import { Sidebar } from "./components/Sidebar";
-import { MainContent } from "./components/MainContent";
+import { Header } from "./components/Header"
+import { Sidebar } from "./components/Sidebar"
+import { MainContent } from "./components/MainContent"
 
 export function App() {
   return (
@@ -131,7 +130,7 @@ export function App() {
         <MainContent />
       </box>
     </box>
-  );
+  )
 }
 ```
 
@@ -140,29 +139,29 @@ export function App() {
 ### createCliRenderer Options
 
 ```tsx
-import { createCliRenderer, ConsolePosition } from "@opentui/core";
+import { createCliRenderer, ConsolePosition } from "@opentui/core"
 
 const renderer = await createCliRenderer({
   // Rendering
   targetFPS: 60,
-
+  
   // Behavior
-  exitOnCtrlC: true, // Set false to handle Ctrl+C yourself
-  autoFocus: true, // Auto-focus elements on click (default: true)
-  useMouse: true, // Enable mouse support (default: true)
-
+  exitOnCtrlC: true,        // Set false to handle Ctrl+C yourself
+  autoFocus: true,          // Auto-focus elements on click (default: true)
+  useMouse: true,           // Enable mouse support (default: true)
+  
   // Debug console
   consoleOptions: {
     position: ConsolePosition.BOTTOM,
     sizePercent: 30,
     startInDebugMode: false,
   },
-
+  
   // Cleanup
   onDestroy: () => {
     // Cleanup code
   },
-});
+})
 ```
 
 ## Building for Distribution
@@ -176,7 +175,7 @@ await Bun.build({
   outdir: "./dist",
   target: "bun",
   minify: true,
-});
+})
 ```
 
 Run: `bun run build.ts`
@@ -190,10 +189,10 @@ await Bun.build({
   outdir: "./dist",
   target: "bun",
   compile: {
-    target: "bun-darwin-arm64", // or bun-linux-x64, etc.
+    target: "bun-darwin-arm64",  // or bun-linux-x64, etc.
     outfile: "my-app",
   },
-});
+})
 ```
 
 ## Environment Variables
@@ -212,7 +211,7 @@ API_URL=https://api.example.com
 Bun auto-loads `.env` files. Access via `process.env`:
 
 ```tsx
-const apiUrl = process.env.API_URL;
+const apiUrl = process.env.API_URL
 ```
 
 ## React DevTools
@@ -222,13 +221,11 @@ OpenTUI React supports React DevTools for debugging.
 ### Setup
 
 1. Install DevTools as a dev dependency (must use version 7):
-
    ```bash
    bun add react-devtools-core@7 -d
    ```
 
 2. Run DevTools standalone app:
-
    ```bash
    npx react-devtools@7
    ```
@@ -250,16 +247,16 @@ OpenTUI checks for `process.env["DEV"] === "true"` at startup. When true, it dyn
 
 ```typescript
 // src/test-utils.tsx
-import { createTestRenderer } from "@opentui/core/testing";
-import { createRoot } from "@opentui/react";
+import { createTestRenderer } from "@opentui/core/testing"
+import { createRoot } from "@opentui/react"
 
 export async function renderForTest(
   element: React.ReactElement,
   options = { width: 80, height: 24 }
 ) {
-  const testSetup = await createTestRenderer(options);
-  createRoot(testSetup.renderer).render(element);
-  return testSetup;
+  const testSetup = await createTestRenderer(options)
+  createRoot(testSetup.renderer).render(element)
+  return testSetup
 }
 ```
 

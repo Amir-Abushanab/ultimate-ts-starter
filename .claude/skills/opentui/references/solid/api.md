@@ -7,22 +7,22 @@
 Renders a Solid component tree into a CLI renderer.
 
 ```tsx
-import { render } from "@opentui/solid";
+import { render } from "@opentui/solid"
 
 // Simple usage - creates renderer automatically
-render(() => <App />);
+render(() => <App />)
 
 // With config
 render(() => <App />, {
   exitOnCtrlC: false,
   targetFPS: 60,
-});
+})
 
 // With existing renderer
-import { createCliRenderer } from "@opentui/core";
+import { createCliRenderer } from "@opentui/core"
 
-const renderer = await createCliRenderer();
-render(() => <App />, renderer);
+const renderer = await createCliRenderer()
+render(() => <App />, renderer)
 ```
 
 ### testRender(node, options?)
@@ -30,16 +30,16 @@ render(() => <App />, renderer);
 Create a test renderer for snapshots and tests.
 
 ```tsx
-import { testRender } from "@opentui/solid";
+import { testRender } from "@opentui/solid"
 
 const testSetup = await testRender(() => <App />, {
   width: 40,
   height: 10,
-});
+})
 
 // Access test utilities
-testSetup.snapshot(); // Get current render
-testSetup.renderer; // Access renderer
+testSetup.snapshot()  // Get current render
+testSetup.renderer    // Access renderer
 ```
 
 ### extend(components)
@@ -63,10 +63,10 @@ extend({
 Returns the current component catalogue.
 
 ```tsx
-import { getComponentCatalogue } from "@opentui/solid";
+import { getComponentCatalogue } from "@opentui/solid"
 
-const catalogue = getComponentCatalogue();
-console.log(Object.keys(catalogue));
+const catalogue = getComponentCatalogue()
+console.log(Object.keys(catalogue))
 ```
 
 ## Hooks
@@ -76,39 +76,39 @@ console.log(Object.keys(catalogue));
 Access the OpenTUI renderer instance.
 
 ```tsx
-import { useRenderer } from "@opentui/solid";
-import { onMount } from "solid-js";
+import { useRenderer } from "@opentui/solid"
+import { onMount } from "solid-js"
 
 function App() {
-  const renderer = useRenderer();
-
+  const renderer = useRenderer()
+  
   onMount(() => {
-    console.log(`Terminal: ${renderer.width}x${renderer.height}`);
-    renderer.console.show();
-
+    console.log(`Terminal: ${renderer.width}x${renderer.height}`)
+    renderer.console.show()
+    
     // Access theme mode (dark/light based on terminal settings)
-    console.log(`Theme: ${renderer.themeMode}`); // "dark" | "light" | null
-  });
-
-  return <text>Hello</text>;
+    console.log(`Theme: ${renderer.themeMode}`)  // "dark" | "light" | null
+  })
+  
+  return <text>Hello</text>
 }
 
 // Listen for theme mode changes
 function ThemedApp() {
-  const renderer = useRenderer();
-  const [theme, setTheme] = createSignal(renderer.themeMode ?? "dark");
-
+  const renderer = useRenderer()
+  const [theme, setTheme] = createSignal(renderer.themeMode ?? "dark")
+  
   onMount(() => {
-    renderer.on("theme_mode", (mode: "dark" | "light") => setTheme(mode));
-  });
-
+    renderer.on("theme_mode", (mode: "dark" | "light") => setTheme(mode))
+  })
+  
   return (
     <box backgroundColor={theme() === "dark" ? "#1a1a2e" : "#ffffff"}>
       <text fg={theme() === "dark" ? "#fff" : "#000"}>
         Current theme: {theme()}
       </text>
     </box>
-  );
+  )
 }
 ```
 
@@ -117,43 +117,43 @@ function ThemedApp() {
 Handle keyboard events.
 
 ```tsx
-import { useKeyboard, useRenderer } from "@opentui/solid";
+import { useKeyboard, useRenderer } from "@opentui/solid"
 
 function App() {
-  const renderer = useRenderer();
-
+  const renderer = useRenderer()
+  
   useKeyboard((key) => {
     if (key.name === "escape") {
-      renderer.destroy(); // Never use process.exit() directly!
+      renderer.destroy()  // Never use process.exit() directly!
     }
     if (key.ctrl && key.name === "s") {
-      saveDocument();
+      saveDocument()
     }
-  });
-
-  return <text>Press ESC to exit</text>;
+  })
+  
+  return <text>Press ESC to exit</text>
 }
 
 // With release events
 function GameControls() {
-  const [pressed, setPressed] = createSignal(new Set<string>());
-
+  const [pressed, setPressed] = createSignal(new Set<string>())
+  
   useKeyboard(
     (event) => {
-      setPressed((keys) => {
-        const newKeys = new Set(keys);
+      setPressed(keys => {
+        const newKeys = new Set(keys)
         if (event.eventType === "release") {
-          newKeys.delete(event.name);
+          newKeys.delete(event.name)
         } else {
-          newKeys.add(event.name);
+          newKeys.add(event.name)
         }
-        return newKeys;
-      });
+        return newKeys
+      })
     },
     { release: true }
-  );
-
-  return <text>Pressed: {Array.from(pressed()).join(", ")}</text>;
+  )
+  
+  return <text>Pressed: {Array.from(pressed()).join(", ")}</text>
 }
 ```
 
@@ -162,16 +162,16 @@ function GameControls() {
 Handle paste events. Receives a `PasteEvent` with raw bytes.
 
 ```tsx
-import { usePaste } from "@opentui/solid";
-import { decodePasteBytes } from "@opentui/core";
+import { usePaste } from "@opentui/solid"
+import { decodePasteBytes } from "@opentui/core"
 
 function PasteHandler() {
   usePaste((event) => {
-    const text = decodePasteBytes(event.bytes);
-    console.log("Pasted:", text);
-  });
-
-  return <text>Paste something</text>;
+    const text = decodePasteBytes(event.bytes)
+    console.log("Pasted:", text)
+  })
+  
+  return <text>Paste something</text>
 }
 ```
 
@@ -180,14 +180,14 @@ function PasteHandler() {
 Handle terminal resize events.
 
 ```tsx
-import { onResize } from "@opentui/solid";
+import { onResize } from "@opentui/solid"
 
 function App() {
   onResize((width, height) => {
-    console.log(`Resized to ${width}x${height}`);
-  });
-
-  return <text>Resize the terminal</text>;
+    console.log(`Resized to ${width}x${height}`)
+  })
+  
+  return <text>Resize the terminal</text>
 }
 ```
 
@@ -196,17 +196,17 @@ function App() {
 Get reactive terminal dimensions.
 
 ```tsx
-import { useTerminalDimensions } from "@opentui/solid";
+import { useTerminalDimensions } from "@opentui/solid"
 
 function ResponsiveLayout() {
-  const dimensions = useTerminalDimensions();
-
+  const dimensions = useTerminalDimensions()
+  
   return (
     <box flexDirection={dimensions().width > 80 ? "row" : "column"}>
       <text>Width: {dimensions().width}</text>
       <text>Height: {dimensions().height}</text>
     </box>
-  );
+  )
 }
 ```
 
@@ -215,18 +215,18 @@ function ResponsiveLayout() {
 Handle terminal window focus and blur events. Solid-only hooks.
 
 ```tsx
-import { onFocus, onBlur } from "@opentui/solid";
+import { onFocus, onBlur } from "@opentui/solid"
 
 function App() {
   onFocus(() => {
-    console.log("Terminal window gained focus");
-  });
-
+    console.log("Terminal window gained focus")
+  })
+  
   onBlur(() => {
-    console.log("Terminal window lost focus");
-  });
-
-  return <text>Focus/blur tracking</text>;
+    console.log("Terminal window lost focus")
+  })
+  
+  return <text>Focus/blur tracking</text>
 }
 ```
 
@@ -237,27 +237,27 @@ These hooks fire when the terminal emulator window gains or loses operating syst
 Handle text selection events. Fires when the user finishes a mouse selection (mouse-up). Solid-only hook - React does not have this.
 
 ```tsx
-import { useSelectionHandler } from "@opentui/solid";
-import type { Selection } from "@opentui/core";
+import { useSelectionHandler } from "@opentui/solid"
+import type { Selection } from "@opentui/core"
 
 function SelectableText() {
-  const [selected, setSelected] = createSignal("");
-  const renderer = useRenderer();
-
+  const [selected, setSelected] = createSignal("")
+  const renderer = useRenderer()
+  
   useSelectionHandler((selection: Selection) => {
-    const text = selection.getSelectedText();
+    const text = selection.getSelectedText()
     if (text) {
-      setSelected(text);
-      renderer.copyToClipboardOSC52(text);
+      setSelected(text)
+      renderer.copyToClipboardOSC52(text)
     }
-  });
-
+  })
+  
   return (
     <box flexDirection="column">
       <text selectable>Select this text with your mouse</text>
       <text fg="#888">Selected: {selected()}</text>
     </box>
-  );
+  )
 }
 ```
 
@@ -268,17 +268,17 @@ The `Selection` object aggregates selected text from all selectable renderables 
 Create animations with the timeline system.
 
 ```tsx
-import { useTimeline } from "@opentui/solid";
-import { createSignal, onMount } from "solid-js";
+import { useTimeline } from "@opentui/solid"
+import { createSignal, onMount } from "solid-js"
 
 function AnimatedBox() {
-  const [width, setWidth] = createSignal(0);
-
+  const [width, setWidth] = createSignal(0)
+  
   const timeline = useTimeline({
     duration: 2000,
     loop: false,
-  });
-
+  })
+  
   onMount(() => {
     timeline.add(
       { width: 0 },
@@ -287,15 +287,13 @@ function AnimatedBox() {
         duration: 2000,
         ease: "easeOutQuad",
         onUpdate: (anim) => {
-          setWidth(Math.round(anim.targets[0].width));
+          setWidth(Math.round(anim.targets[0].width))
         },
       }
-    );
-  });
-
-  return (
-    <box style={{ width: width(), height: 3, backgroundColor: "#6a5acd" }} />
-  );
+    )
+  })
+  
+  return <box style={{ width: width(), height: 3, backgroundColor: "#6a5acd" }} />
 }
 ```
 
@@ -309,20 +307,19 @@ category file for the complete prop list.
 
 Multi-word elements use **underscores** (not hyphens like React):
 
-| Element                                                      | Full props                                       |
-| ------------------------------------------------------------ | ------------------------------------------------ |
+| Element | Full props |
+|---------|-----------|
 | `<text>`, `<span>`, `<strong>`, `<em>`, `<u>`, `<a>`, `<br>` | [text-display.md](../components/text-display.md) |
-| `<box>`, `<scrollbox>`                                       | [containers.md](../components/containers.md)     |
-| `<input>`, `<textarea>`, `<select>`, `<tab_select>`          | [inputs.md](../components/inputs.md)             |
-| `<code>`, `<line_number>`, `<diff>`, `<markdown>`            | [code-diff.md](../components/code-diff.md)       |
-| `<ascii_font>`                                               | [text-display.md](../components/text-display.md) |
+| `<box>`, `<scrollbox>` | [containers.md](../components/containers.md) |
+| `<input>`, `<textarea>`, `<select>`, `<tab_select>` | [inputs.md](../components/inputs.md) |
+| `<code>`, `<line_number>`, `<diff>`, `<markdown>` | [code-diff.md](../components/code-diff.md) |
+| `<ascii_font>` | [text-display.md](../components/text-display.md) |
 
 ### Text Styling Uses Nested Tags (Solid-specific)
 
 ```tsx
 <text fg="#FFFFFF" bg="#000000" selectable>
-  <span fg="red">Red</span> <strong>Bold</strong> <em>Italic</em>{" "}
-  <u>Underline</u>
+  <span fg="red">Red</span> <strong>Bold</strong> <em>Italic</em> <u>Underline</u>
 </text>
 ```
 
@@ -356,7 +353,7 @@ Solid's control flow components work with OpenTUI:
 ### For
 
 ```tsx
-import { For } from "solid-js";
+import { For } from "solid-js"
 
 <For each={items()}>
   {(item, index) => (
@@ -364,23 +361,23 @@ import { For } from "solid-js";
       <text>{item.name}</text>
     </box>
   )}
-</For>;
+</For>
 ```
 
 ### Show
 
 ```tsx
-import { Show } from "solid-js";
+import { Show } from "solid-js"
 
 <Show when={isVisible()} fallback={<text>Hidden</text>}>
   <text>Visible content</text>
-</Show>;
+</Show>
 ```
 
 ### Switch/Match
 
 ```tsx
-import { Switch, Match } from "solid-js";
+import { Switch, Match } from "solid-js"
 
 <Switch>
   <Match when={status() === "loading"}>
@@ -392,21 +389,19 @@ import { Switch, Match } from "solid-js";
   <Match when={status() === "success"}>
     <text fg="green">Success!</text>
   </Match>
-</Switch>;
+</Switch>
 ```
 
 ### Index
 
 ```tsx
-import { Index } from "solid-js";
+import { Index } from "solid-js"
 
 <Index each={items()}>
   {(item, index) => (
-    <text>
-      {index}: {item().name}
-    </text>
+    <text>{index}: {item().name}</text>
   )}
-</Index>;
+</Index>
 ```
 
 ## Special Components
@@ -414,21 +409,21 @@ import { Index } from "solid-js";
 ### Portal
 
 ```tsx
-import { Portal } from "@opentui/solid";
+import { Portal } from "@opentui/solid"
 
 <Portal mount={targetNode}>
   <box>Portal content</box>
-</Portal>;
+</Portal>
 ```
 
 ### Dynamic
 
 ```tsx
-import { Dynamic } from "@opentui/solid";
+import { Dynamic } from "@opentui/solid"
 
 <Dynamic
   component={isMultiline() ? "textarea" : "input"}
   placeholder="Enter text..."
   focused
-/>;
+/>
 ```

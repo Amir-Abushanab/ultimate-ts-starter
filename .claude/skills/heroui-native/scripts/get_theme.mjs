@@ -9,8 +9,7 @@
  *   Theme variables organized by light/dark with HSL color format
  */
 
-const API_BASE =
-  process.env.HEROUI_NATIVE_API_BASE || "https://native-mcp-api.heroui.com";
+const API_BASE = process.env.HEROUI_NATIVE_API_BASE || "https://native-mcp-api.heroui.com";
 const APP_PARAM = "app=native-skills";
 
 // Fallback theme reference when API is unavailable
@@ -109,7 +108,7 @@ async function fetchApi(endpoint) {
 
   try {
     const response = await fetch(url, {
-      headers: { "User-Agent": "HeroUI-Native-Skill/1.0" },
+      headers: {"User-Agent": "HeroUI-Native-Skill/1.0"},
       signal: AbortSignal.timeout(30000),
     });
 
@@ -145,9 +144,7 @@ function formatColors(colors) {
   const lines = [];
 
   for (const [category, tokens] of Object.entries(grouped)) {
-    lines.push(
-      `  /* ${category.charAt(0).toUpperCase() + category.slice(1)} Colors */`
-    );
+    lines.push(`  /* ${category.charAt(0).toUpperCase() + category.slice(1)} Colors */`);
     for (const token of tokens) {
       const name = token.name || "";
       const value = token.value || "";

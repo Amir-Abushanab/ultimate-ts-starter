@@ -12,13 +12,13 @@ The primary container component with borders, backgrounds, and layout capabiliti
 // React/Solid
 <box>
   <text>Content inside box</text>
-</box>;
+</box>
 
 // Core
 const box = new BoxRenderable(renderer, {
   id: "container",
-});
-box.add(child);
+})
+box.add(child)
 ```
 
 ### Borders
@@ -49,12 +49,12 @@ box.add(child);
 
 **Border Styles:**
 
-| Style     | Appearance  |
-| --------- | ----------- |
-| `single`  | `┌─┐│ │└─┘` |
-| `double`  | `╔═╗║ ║╚═╝` |
+| Style | Appearance |
+|-------|------------|
+| `single` | `┌─┐│ │└─┘` |
+| `double` | `╔═╗║ ║╚═╝` |
 | `rounded` | `╭─╮│ │╰─╯` |
-| `bold`    | `┏━┓┃ ┃┗━┛` |
+| `bold` | `┏━┓┃ ┃┗━┛` |
 
 ### Title
 
@@ -62,22 +62,22 @@ box.add(child);
 <box
   border
   title="Settings"
-  titleColor="#FFCC00" // Title text color (defaults to border color)
-  titleAlignment="center" // left | center | right
+  titleColor="#FFCC00"          // Title text color (defaults to border color)
+  titleAlignment="center"       // left | center | right
   bottomTitle="Press q to quit" // Title text in the bottom border
-  bottomTitleAlignment="right" // left | center | right
+  bottomTitleAlignment="right"  // left | center | right
 >
   Panel content
 </box>
 ```
 
-| Prop                   | Type                            | Default      | Description                     |
-| ---------------------- | ------------------------------- | ------------ | ------------------------------- |
-| `title`                | `string`                        | –            | Title text in the top border    |
-| `titleColor`           | `string \| RGBA`                | border color | Color of the title text         |
-| `titleAlignment`       | `"left" \| "center" \| "right"` | `"left"`     | Top title position              |
-| `bottomTitle`          | `string`                        | –            | Title text in the bottom border |
-| `bottomTitleAlignment` | `"left" \| "center" \| "right"` | `"left"`     | Bottom title position           |
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | `string` | – | Title text in the top border |
+| `titleColor` | `string \| RGBA` | border color | Color of the title text |
+| `titleAlignment` | `"left" \| "center" \| "right"` | `"left"` | Top title position |
+| `bottomTitle` | `string` | – | Title text in the bottom border |
+| `bottomTitleAlignment` | `"left" \| "center" \| "right"` | `"left"` | Bottom title position |
 
 ### Background
 
@@ -97,10 +97,10 @@ Boxes are flex containers by default:
 
 ```tsx
 <box
-  flexDirection="row" // row | column | row-reverse | column-reverse
-  justifyContent="center" // flex-start | flex-end | center | space-between | space-around
-  alignItems="center" // flex-start | flex-end | center | stretch | baseline
-  gap={2} // Space between children
+  flexDirection="row"       // row | column | row-reverse | column-reverse
+  justifyContent="center"   // flex-start | flex-end | center | space-between | space-around
+  alignItems="center"       // flex-start | flex-end | center | stretch | baseline
+  gap={2}                   // Space between children
 >
   <text>Item 1</text>
   <text>Item 2</text>
@@ -111,17 +111,17 @@ Boxes are flex containers by default:
 
 ```tsx
 <box
-  padding={2} // All sides
+  padding={2}               // All sides
   paddingTop={1}
   paddingRight={2}
   paddingBottom={1}
   paddingLeft={2}
-  paddingX={2} // Horizontal (left + right)
-  paddingY={1} // Vertical (top + bottom)
+  paddingX={2}              // Horizontal (left + right)
+  paddingY={1}              // Vertical (top + bottom)
   margin={1}
   marginTop={1}
-  marginX={2} // Horizontal (left + right)
-  marginY={1} // Vertical (top + bottom)
+  marginX={2}               // Horizontal (left + right)
+  marginY={1}               // Vertical (top + bottom)
 >
   Spaced content
 </box>
@@ -131,12 +131,12 @@ Boxes are flex containers by default:
 
 ```tsx
 <box
-  width={40} // Fixed width
-  height={10} // Fixed height
-  width="50%" // Percentage of parent
-  minWidth={20} // Minimum width
-  maxWidth={80} // Maximum width
-  flexGrow={1} // Grow to fill space
+  width={40}                // Fixed width
+  height={10}               // Fixed height
+  width="50%"               // Percentage of parent
+  minWidth={20}             // Minimum width
+  maxWidth={80}             // Maximum width
+  flexGrow={1}              // Grow to fill space
 >
   Sized box
 </box>
@@ -147,7 +147,7 @@ Boxes are flex containers by default:
 ```tsx
 <box
   onMouseDown={(event) => {
-    console.log("Clicked at:", event.x, event.y);
+    console.log("Clicked at:", event.x, event.y)
   }}
   onMouseUp={(event) => {}}
   onMouseMove={(event) => {}}
@@ -257,16 +257,16 @@ items.forEach(item => {
 const scrollbox = new ScrollBoxRenderable(renderer, {
   id: "list",
   height: 20,
-});
+})
 
 // Scroll programmatically
-scrollbox.scrollTo(0); // Scroll to top
-scrollbox.scrollTo(100); // Scroll to position
-scrollbox.scrollBy(10); // Scroll relative
-scrollbox.scrollToBottom(); // Scroll to end
+scrollbox.scrollTo(0)           // Scroll to top
+scrollbox.scrollTo(100)         // Scroll to position
+scrollbox.scrollBy(10)          // Scroll relative
+scrollbox.scrollToBottom()      // Scroll to end
 
 // Scroll a child into view (nearest alignment)
-scrollbox.scrollChildIntoView("child-id"); // Searches descendants by ID
+scrollbox.scrollChildIntoView("child-id")  // Searches descendants by ID
 ```
 
 `scrollChildIntoView(childId)` scrolls the minimum amount needed to make the identified descendant visible. It mirrors `Element.scrollIntoView({ block: "nearest" })` from the CSSOM View spec. Works with nested descendants and handles both horizontal and vertical scrolling.
@@ -278,38 +278,38 @@ draggable thumb, and keyboard navigation. `ScrollBarRenderable` is exported from
 `@opentui/core`. Connect it to any content by wiring its size/position props.
 
 ```typescript
-import { ScrollBarRenderable } from "@opentui/core";
+import { ScrollBarRenderable } from "@opentui/core"
 
 const scrollbar = new ScrollBarRenderable(renderer, {
   id: "scrollbar",
-  orientation: "vertical", // "vertical" | "horizontal"
+  orientation: "vertical",   // "vertical" | "horizontal"
   showArrows: false,
-  scrollSize: 0, // Total content size
-  viewportSize: 0, // Visible size
-  scrollPosition: 0, // Current position
+  scrollSize: 0,             // Total content size
+  viewportSize: 0,           // Visible size
+  scrollPosition: 0,         // Current position
   onChange: (position) => {
     // Sync your content to the new scroll position
   },
-});
+})
 
 // Drive it from your content dimensions, then focus for keyboard control
-scrollbar.scrollSize = content.length;
-scrollbar.viewportSize = visibleRows;
-scrollbar.scrollPosition = 0;
-scrollbar.focus();
+scrollbar.scrollSize = content.length
+scrollbar.viewportSize = visibleRows
+scrollbar.scrollPosition = 0
+scrollbar.focus()
 ```
 
-| Prop             | Type                         | Default |
-| ---------------- | ---------------------------- | ------- |
-| `orientation`    | `"vertical" \| "horizontal"` | –       |
-| `showArrows`     | `boolean`                    | `false` |
-| `arrowOptions`   | `ArrowOptions`               | –       |
-| `trackOptions`   | `Partial<SliderOptions>`     | –       |
-| `scrollSize`     | `number`                     | `0`     |
-| `viewportSize`   | `number`                     | `0`     |
-| `scrollPosition` | `number`                     | `0`     |
-| `scrollStep`     | `number`                     | –       |
-| `onChange`       | `(position: number) => void` | –       |
+| Prop | Type | Default |
+|------|------|---------|
+| `orientation` | `"vertical" \| "horizontal"` | – |
+| `showArrows` | `boolean` | `false` |
+| `arrowOptions` | `ArrowOptions` | – |
+| `trackOptions` | `Partial<SliderOptions>` | – |
+| `scrollSize` | `number` | `0` |
+| `viewportSize` | `number` | `0` |
+| `scrollPosition` | `number` | `0` |
+| `scrollStep` | `number` | – |
+| `onChange` | `(position: number) => void` | – |
 
 When focused: arrows / `hjkl`, `PageUp`/`PageDown`, `Home`/`End`.
 
@@ -324,15 +324,22 @@ When focused: arrows / `hjkl`, `PageUp`/`PageDown`, `Home`/`End`.
 ```tsx
 function Card({ title, children }) {
   return (
-    <box border borderStyle="rounded" padding={2} marginBottom={1}>
+    <box
+      border
+      borderStyle="rounded"
+      padding={2}
+      marginBottom={1}
+    >
       {title && (
         <text fg="#00FFFF" bold>
           {title}
         </text>
       )}
-      <box marginTop={title ? 1 : 0}>{children}</box>
+      <box marginTop={title ? 1 : 0}>
+        {children}
+      </box>
     </box>
-  );
+  )
 }
 ```
 
@@ -341,15 +348,26 @@ function Card({ title, children }) {
 ```tsx
 function Panel({ title, children, width = 40 }) {
   return (
-    <box border borderStyle="double" width={width} backgroundColor="#1a1a2e">
+    <box
+      border
+      borderStyle="double"
+      width={width}
+      backgroundColor="#1a1a2e"
+    >
       {title && (
-        <box borderBottom padding={1} backgroundColor="#2a2a4e">
+        <box
+          borderBottom
+          padding={1}
+          backgroundColor="#2a2a4e"
+        >
           <text bold>{title}</text>
         </box>
       )}
-      <box padding={2}>{children}</box>
+      <box padding={2}>
+        {children}
+      </box>
     </box>
-  );
+  )
 }
 ```
 
@@ -369,7 +387,7 @@ function List({ items, renderItem }) {
         </box>
       ))}
     </scrollbox>
-  );
+  )
 }
 ```
 
@@ -381,17 +399,19 @@ function List({ items, renderItem }) {
   <box height={3} border>
     <text>Header</text>
   </box>
-
+  
   {/* Main area with sidebar */}
   <box flexDirection="row" flexGrow={1}>
     <box width={20} border>
       <text>Sidebar</text>
     </box>
     <box flexGrow={1}>
-      <scrollbox height="100%">{/* Scrollable content */}</scrollbox>
+      <scrollbox height="100%">
+        {/* Scrollable content */}
+      </scrollbox>
     </box>
   </box>
-
+  
   {/* Footer */}
   <box height={1}>
     <text>Footer</text>

@@ -37,16 +37,15 @@ For React and Solid, use **nested modifier tags** for text styling:
 ### Styling (Core) - Text Attributes
 
 ```typescript
-import { TextRenderable, TextAttributes } from "@opentui/core";
+import { TextRenderable, TextAttributes } from "@opentui/core"
 
 const text = new TextRenderable(renderer, {
   content: "Styled",
   attributes: TextAttributes.BOLD | TextAttributes.UNDERLINE,
-});
+})
 ```
 
 **Available attributes:**
-
 - `TextAttributes.BOLD`
 - `TextAttributes.DIM`
 - `TextAttributes.ITALIC`
@@ -137,9 +136,7 @@ Inline styled text:
   </span>
   and
   <span fg="#FF0000">
-    <em>
-      <u>italic underlined red</u>
-    </em>
+    <em><u>italic underlined red</u></em>
   </span>
 </text>
 ```
@@ -149,30 +146,30 @@ Inline styled text:
 The `t` template literal for complex styling:
 
 ```typescript
-import { t, bold, italic, underline, fg, bg, dim } from "@opentui/core";
+import { t, bold, italic, underline, fg, bg, dim } from "@opentui/core"
 
 const styled = t`
   ${bold("Bold")} and ${italic("italic")} text.
   ${fg("#FF0000")("Red text")} with ${bg("#0000FF")("blue background")}.
   ${dim("Dimmed")} and ${underline("underlined")}.
-`;
+`
 
 const text = new TextRenderable(renderer, {
   content: styled,
-});
+})
 ```
 
 ### Style Functions
 
-| Function              | Description          |
-| --------------------- | -------------------- |
-| `bold(text)`          | Bold text            |
-| `italic(text)`        | Italic text          |
-| `underline(text)`     | Underlined text      |
-| `dim(text)`           | Dimmed text          |
-| `strikethrough(text)` | Strikethrough text   |
-| `fg(color)(text)`     | Set foreground color |
-| `bg(color)(text)`     | Set background color |
+| Function | Description |
+|----------|-------------|
+| `bold(text)` | Bold text |
+| `italic(text)` | Italic text |
+| `underline(text)` | Underlined text |
+| `dim(text)` | Dimmed text |
+| `strikethrough(text)` | Strikethrough text |
+| `fg(color)(text)` | Set foreground color |
+| `bg(color)(text)` | Set background color |
 
 ## ASCII Font Component
 
@@ -197,27 +194,31 @@ const title = new ASCIIFontRenderable(renderer, {
 
 ### Available Fonts
 
-| Font    | Description         |
-| ------- | ------------------- |
-| `tiny`  | Compact ASCII font  |
+| Font | Description |
+|------|-------------|
+| `tiny` | Compact ASCII font |
 | `block` | Block-style letters |
-| `slick` | Sleek modern style  |
-| `shade` | Shaded 3D effect    |
+| `slick` | Sleek modern style |
+| `shade` | Shaded 3D effect |
 
 ### Styling
 
 ```tsx
 // React
-<ascii-font text="HELLO" font="block" color="#00FF00" />;
+<ascii-font
+  text="HELLO"
+  font="block"
+  color="#00FF00"
+/>
 
 // Core
-import { RGBA } from "@opentui/core";
+import { RGBA } from "@opentui/core"
 
 const title = new ASCIIFontRenderable(renderer, {
   text: "HELLO",
   font: "block",
   color: RGBA.fromHex("#00FF00"),
-});
+})
 ```
 
 ### Example Output
@@ -245,17 +246,17 @@ bun add @opentui/qrcode
 
 ```typescript
 // Core
-import { createCliRenderer } from "@opentui/core";
-import { QRCodeRenderable } from "@opentui/qrcode";
+import { createCliRenderer } from "@opentui/core"
+import { QRCodeRenderable } from "@opentui/qrcode"
 
-const renderer = await createCliRenderer();
+const renderer = await createCliRenderer()
 const qr = new QRCodeRenderable(renderer, {
   id: "docs-link",
   content: "https://opentui.com/docs/getting-started",
   quietZone: 4,
   scale: 2,
-});
-renderer.root.add(qr);
+})
+renderer.root.add(qr)
 ```
 
 React and Solid require explicit element registration (the elements are not
@@ -273,17 +274,17 @@ registerQRCode()
 <qr_code content="https://opentui.com" quietZone={4} scale={2} />
 ```
 
-| Prop                   | Type                   | Default     | Notes                             |
-| ---------------------- | ---------------------- | ----------- | --------------------------------- |
-| `content`              | `string`               | `""`        | Text/URL to encode                |
-| `errorCorrectionLevel` | `ErrorCorrectionLevel` | `M`         | `.L` / `.M` / `.Q` / `.H`         |
-| `quietZone`            | `number`               | `4`         | Must be ≥ 4 (throws otherwise)    |
-| `scale`                | `number`               | `1`         | Columns per module before fitting |
-| `fit`                  | `"contain" \| "none"`  | `"contain"` | `contain` shrinks to parent       |
-| `foregroundColor`      | `ColorInput`           | `"#000000"` | Dark module color                 |
-| `backgroundColor`      | `ColorInput`           | `"#ffffff"` | Light module / quiet-zone color   |
-| `fallbackContent`      | `string`               | `""`        | Shown when too small to render    |
-| `fallbackColor`        | `ColorInput`           | `"#ffffff"` | Fallback text color               |
+| Prop | Type | Default | Notes |
+|------|------|---------|-------|
+| `content` | `string` | `""` | Text/URL to encode |
+| `errorCorrectionLevel` | `ErrorCorrectionLevel` | `M` | `.L` / `.M` / `.Q` / `.H` |
+| `quietZone` | `number` | `4` | Must be ≥ 4 (throws otherwise) |
+| `scale` | `number` | `1` | Columns per module before fitting |
+| `fit` | `"contain" \| "none"` | `"contain"` | `contain` shrinks to parent |
+| `foregroundColor` | `ColorInput` | `"#000000"` | Dark module color |
+| `backgroundColor` | `ColorInput` | `"#ffffff"` | Light module / quiet-zone color |
+| `fallbackContent` | `string` | `""` | Shown when too small to render |
+| `fallbackColor` | `ColorInput` | `"#ffffff"` | Fallback text color |
 
 Import `ErrorCorrectionLevel` from `@opentui/qrcode`, e.g.
 `errorCorrectionLevel: ErrorCorrectionLevel.H`. Read-only getters: `version`,
@@ -314,14 +315,11 @@ in all frameworks. For programmatic color manipulation, the `RGBA` class from
 Core, React, and Solid alike:
 
 ```tsx
-import { RGBA } from "@opentui/core";
+import { RGBA } from "@opentui/core"
 
-<box
-  backgroundColor={RGBA.fromHex("#1a1a2e")}
-  borderColor={RGBA.fromInts(122, 162, 247, 255)}
->
+<box backgroundColor={RGBA.fromHex("#1a1a2e")} borderColor={RGBA.fromInts(122, 162, 247, 255)}>
   <text fg={RGBA.fromHex("#c0caf5")}>Styled with RGBA</text>
-</box>;
+</box>
 ```
 
 See **[core/api.md → Colors (RGBA)](../core/api.md#colors-rgba)** for the full
@@ -334,8 +332,8 @@ Text wraps based on parent container:
 ```tsx
 <box width={40}>
   <text>
-    This long text will wrap when it reaches the edge of the 40-character wide
-    parent container.
+    This long text will wrap when it reaches the edge of the 
+    40-character wide parent container.
   </text>
 </box>
 ```
@@ -346,8 +344,8 @@ Text wraps based on parent container:
 
 ```tsx
 function Counter() {
-  const [count, setCount] = useState(0);
-  return <text>Count: {count}</text>;
+  const [count, setCount] = useState(0)
+  return <text>Count: {count}</text>
 }
 ```
 
@@ -355,8 +353,8 @@ function Counter() {
 
 ```tsx
 function Counter() {
-  const [count, setCount] = createSignal(0);
-  return <text>Count: {count()}</text>;
+  const [count, setCount] = createSignal(0)
+  return <text>Count: {count()}</text>
 }
 ```
 
@@ -366,10 +364,10 @@ function Counter() {
 const text = new TextRenderable(renderer, {
   id: "counter",
   content: "Count: 0",
-});
+})
 
 // Update later
-text.setContent("Count: 1");
+text.setContent("Count: 1")
 ```
 
 ## Gotchas

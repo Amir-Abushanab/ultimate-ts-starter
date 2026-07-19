@@ -9,8 +9,7 @@
  *   JSON with components array, latestVersion, and count
  */
 
-const API_BASE =
-  process.env.HEROUI_NATIVE_API_BASE || "https://native-mcp-api.heroui.com";
+const API_BASE = process.env.HEROUI_NATIVE_API_BASE || "https://native-mcp-api.heroui.com";
 const APP_PARAM = "app=native-skills";
 const LLMS_TXT_URL = "https://heroui.com/native/llms.txt";
 
@@ -23,7 +22,7 @@ async function fetchApi(endpoint) {
 
   try {
     const response = await fetch(url, {
-      headers: { "User-Agent": "HeroUI-Native-Skill/1.0" },
+      headers: {"User-Agent": "HeroUI-Native-Skill/1.0"},
       signal: AbortSignal.timeout(30000),
     });
 
@@ -47,7 +46,7 @@ async function fetchApi(endpoint) {
 async function fetchFallback() {
   try {
     const response = await fetch(LLMS_TXT_URL, {
-      headers: { "User-Agent": "HeroUI-Native-Skill/1.0" },
+      headers: {"User-Agent": "HeroUI-Native-Skill/1.0"},
       signal: AbortSignal.timeout(30000),
     });
 
@@ -79,7 +78,7 @@ async function fetchFallback() {
       // Skip "All Components" which links to /components without a specific component
       if (inComponentsSection) {
         const match = line.match(
-          /^\s*-\s*\[([^\]]+)\]\(https:\/\/www\.heroui\.com\/docs\/native\/components\/[a-z]/
+          /^\s*-\s*\[([^\]]+)\]\(https:\/\/www\.heroui\.com\/docs\/native\/components\/[a-z]/,
         );
 
         if (match) {
@@ -119,9 +118,7 @@ async function main() {
   }
 
   if (!data || !data.components || data.components.length === 0) {
-    console.error(
-      "Error: Failed to fetch component list from API and fallback"
-    );
+    console.error("Error: Failed to fetch component list from API and fallback");
     process.exit(1);
   }
 
@@ -130,7 +127,7 @@ async function main() {
 
   // Print summary to stderr for human readability
   console.error(
-    `\n# Found ${data.components.length} Native components (${data.latestVersion || "unknown"})`
+    `\n# Found ${data.components.length} Native components (${data.latestVersion || "unknown"})`,
   );
 }
 

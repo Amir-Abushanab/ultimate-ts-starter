@@ -29,26 +29,10 @@ function Camera({ onPicture }: { onPicture: (uri: string) => Promise<void> }) {
 
   if (!permission?.granted) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: colors.systemBackground,
-        }}
-      >
-        <Text style={{ color: colors.label, padding: 16 }}>
-          Camera access is required
-        </Text>
-        <GlassView
-          isInteractive
-          tintColor={colors.systemBlue}
-          style={{ borderRadius: 12 }}
-        >
-          <TouchableOpacity
-            onPress={requestPermission}
-            style={{ padding: 12, borderRadius: 12 }}
-          >
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.systemBackground }}>
+        <Text style={{ color: colors.label, padding: 16 }}>Camera access is required</Text>
+        <GlassView isInteractive tintColor={colors.systemBlue} style={{ borderRadius: 12 }}>
+          <TouchableOpacity onPress={requestPermission} style={{ padding: 12, borderRadius: 12 }}>
             <Text style={{ color: "white" }}>Grant Permission</Text>
           </TouchableOpacity>
         </GlassView>
@@ -78,39 +62,13 @@ function Camera({ onPicture }: { onPicture: (uri: string) => Promise<void> }) {
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
       <CameraView ref={cameraRef} mirror style={{ flex: 1 }} facing={type} />
-      <View
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: bottom,
-          gap: 16,
-          alignItems: "center",
-        }}
-      >
+      <View style={{ position: "absolute", left: 0, right: 0, bottom: bottom, gap: 16, alignItems: "center" }}>
         <GlassView isInteractive style={{ padding: 8, borderRadius: 99 }}>
-          <TouchableOpacity
-            onPress={takePhoto}
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: 99,
-              backgroundColor: "white",
-            }}
-          />
+          <TouchableOpacity onPress={takePhoto} style={{ width: 64, height: 64, borderRadius: 99, backgroundColor: "white" }} />
         </GlassView>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            paddingHorizontal: 8,
-          }}
-        >
+        <View style={{ flexDirection: "row", justifyContent: "space-around", paddingHorizontal: 8 }}>
           <GlassButton onPress={selectPhoto} icon="photo" />
-          <GlassButton
-            onPress={() => setType((t) => (t === "back" ? "front" : "back"))}
-            icon="arrow.triangle.2.circlepath"
-          />
+          <GlassButton onPress={() => setType(t => t === "back" ? "front" : "back")} icon="arrow.triangle.2.circlepath" />
         </View>
       </View>
     </View>
@@ -123,13 +81,11 @@ function Camera({ onPicture }: { onPicture: (uri: string) => Promise<void> }) {
 Use `expo-audio` not `expo-av`:
 
 ```tsx
-import { useAudioPlayer } from "expo-audio";
+import { useAudioPlayer } from 'expo-audio';
 
-const player = useAudioPlayer({
-  uri: "https://stream.nightride.fm/rektory.mp3",
-});
+const player = useAudioPlayer({ uri: 'https://stream.nightride.fm/rektory.mp3' });
 
-<Button title="Play" onPress={() => player.play()} />;
+<Button title="Play" onPress={() => player.play()} />
 ```
 
 ## Audio Recording (Microphone)
@@ -141,9 +97,9 @@ import {
   RecordingPresets,
   setAudioModeAsync,
   useAudioRecorderState,
-} from "expo-audio";
-import { useEffect } from "react";
-import { Alert, Button } from "react-native";
+} from 'expo-audio';
+import { useEffect } from 'react';
+import { Alert, Button } from 'react-native';
 
 function App() {
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
@@ -162,14 +118,14 @@ function App() {
       if (status.granted) {
         setAudioModeAsync({ playsInSilentMode: true, allowsRecording: true });
       } else {
-        Alert.alert("Permission to access microphone was denied");
+        Alert.alert('Permission to access microphone was denied');
       }
     })();
   }, []);
 
   return (
     <Button
-      title={recorderState.isRecording ? "Stop" : "Start"}
+      title={recorderState.isRecording ? 'Stop' : 'Start'}
       onPress={recorderState.isRecording ? stop : record}
     />
   );
@@ -181,25 +137,22 @@ function App() {
 Use `expo-video` not `expo-av`:
 
 ```tsx
-import { useVideoPlayer, VideoView } from "expo-video";
-import { useEvent } from "expo";
+import { useVideoPlayer, VideoView } from 'expo-video';
+import { useEvent } from 'expo';
 
-const videoSource = "https://example.com/video.mp4";
+const videoSource = 'https://example.com/video.mp4';
 
-const player = useVideoPlayer(videoSource, (player) => {
+const player = useVideoPlayer(videoSource, player => {
   player.loop = true;
   player.play();
 });
 
-const { isPlaying } = useEvent(player, "playingChange", {
-  isPlaying: player.playing,
-});
+const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
 
-<VideoView player={player} fullscreenOptions={{}} allowsPictureInPicture />;
+<VideoView player={player} fullscreenOptions={{}} allowsPictureInPicture />
 ```
 
 VideoView options:
-
 - `allowsPictureInPicture`: boolean
 - `contentFit`: 'contain' | 'cover' | 'fill'
 - `nativeControls`: boolean

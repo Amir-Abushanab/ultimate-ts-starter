@@ -5,7 +5,6 @@ How to handle keyboard input in OpenTUI applications.
 ## Overview
 
 OpenTUI provides keyboard input handling through:
-
 - **Core**: `renderer.keyInput` EventEmitter
 - **React**: `useKeyboard()` hook
 - **Solid**: `useKeyboard()` hook
@@ -20,14 +19,14 @@ All keyboard handlers receive a `KeyEvent` object:
 
 ```typescript
 interface KeyEvent {
-  name: string; // Key name: "a", "escape", "f1", etc.
-  sequence: string; // Raw escape sequence
-  ctrl: boolean; // Ctrl modifier held
-  shift: boolean; // Shift modifier held
-  meta: boolean; // Alt modifier held
-  option: boolean; // Option modifier held (macOS)
-  eventType: "press" | "release" | "repeat";
-  repeated: boolean; // Key is being held (repeat event)
+  name: string          // Key name: "a", "escape", "f1", etc.
+  sequence: string      // Raw escape sequence
+  ctrl: boolean         // Ctrl modifier held
+  shift: boolean        // Shift modifier held
+  meta: boolean         // Alt modifier held
+  option: boolean       // Option modifier held (macOS)
+  eventType: "press" | "release" | "repeat"
+  repeated: boolean     // Key is being held (repeat event)
 }
 ```
 
@@ -36,53 +35,54 @@ interface KeyEvent {
 ### Core
 
 ```typescript
-import { createCliRenderer, type KeyEvent } from "@opentui/core";
+import { createCliRenderer, type KeyEvent } from "@opentui/core"
 
-const renderer = await createCliRenderer();
+const renderer = await createCliRenderer()
 
 renderer.keyInput.on("keypress", (key: KeyEvent) => {
   if (key.name === "escape") {
-    renderer.destroy();
-    return;
+    renderer.destroy()
+    return
   }
-
+  
   if (key.ctrl && key.name === "s") {
-    saveDocument();
+    saveDocument()
   }
-});
+})
 ```
 
 ### React
 
 ```tsx
-import { useKeyboard, useRenderer } from "@opentui/react";
+import { useKeyboard, useRenderer } from "@opentui/react"
 
 function App() {
-  const renderer = useRenderer();
+  const renderer = useRenderer()
   useKeyboard((key) => {
     if (key.name === "escape") {
-      renderer.destroy();
+      renderer.destroy()
     }
-  });
-
-  return <text>Press ESC to exit</text>;
+  })
+  
+  return <text>Press ESC to exit</text>
 }
 ```
+
 
 ### Solid
 
 ```tsx
-import { useKeyboard, useRenderer } from "@opentui/solid";
+import { useKeyboard, useRenderer } from "@opentui/solid"
 
 function App() {
-  const renderer = useRenderer();
+  const renderer = useRenderer()
   useKeyboard((key) => {
     if (key.name === "escape") {
-      renderer.destroy();
+      renderer.destroy()
     }
-  });
-
-  return <text>Press ESC to exit</text>;
+  })
+  
+  return <text>Press ESC to exit</text>
 }
 ```
 
@@ -104,34 +104,34 @@ With Shift: Check `key.shift && key.name === "a"` for uppercase
 
 ### Special Keys
 
-| Key Name    | Description          |
-| ----------- | -------------------- |
-| `escape`    | Escape key           |
-| `enter`     | Enter/Return         |
-| `return`    | Enter/Return (alias) |
-| `tab`       | Tab key              |
-| `backspace` | Backspace            |
-| `delete`    | Delete key           |
-| `space`     | Spacebar             |
+| Key Name | Description |
+|----------|-------------|
+| `escape` | Escape key |
+| `enter` | Enter/Return |
+| `return` | Enter/Return (alias) |
+| `tab` | Tab key |
+| `backspace` | Backspace |
+| `delete` | Delete key |
+| `space` | Spacebar |
 
 ### Arrow Keys
 
 | Key Name | Description |
-| -------- | ----------- |
-| `up`     | Up arrow    |
-| `down`   | Down arrow  |
-| `left`   | Left arrow  |
-| `right`  | Right arrow |
+|----------|-------------|
+| `up` | Up arrow |
+| `down` | Down arrow |
+| `left` | Left arrow |
+| `right` | Right arrow |
 
 ### Navigation Keys
 
-| Key Name   | Description |
-| ---------- | ----------- |
-| `home`     | Home key    |
-| `end`      | End key     |
-| `pageup`   | Page Up     |
-| `pagedown` | Page Down   |
-| `insert`   | Insert key  |
+| Key Name | Description |
+|----------|-------------|
+| `home` | Home key |
+| `end` | End key |
+| `pageup` | Page Up |
+| `pagedown` | Page Down |
+| `insert` | Insert key |
 
 ## Modifier Keys
 
@@ -142,19 +142,19 @@ renderer.keyInput.on("keypress", (key) => {
   if (key.ctrl && key.name === "c") {
     // Ctrl+C
   }
-
+  
   if (key.shift && key.name === "tab") {
     // Shift+Tab
   }
-
+  
   if (key.meta && key.name === "s") {
     // Alt+S (meta = Alt on most systems)
   }
-
+  
   if (key.option && key.name === "a") {
     // Option+A (macOS)
   }
-});
+})
 ```
 
 ### Modifier Combinations
@@ -162,7 +162,7 @@ renderer.keyInput.on("keypress", (key) => {
 ```typescript
 // Ctrl+Shift+S
 if (key.ctrl && key.shift && key.name === "s") {
-  saveAs();
+  saveAs()
 }
 
 // Ctrl+Alt+Delete (careful with system shortcuts!)
@@ -182,7 +182,7 @@ renderer.keyInput.on("keypress", (key) => {
   if (key.eventType === "press") {
     // Initial key press
   }
-});
+})
 ```
 
 ### Repeat Events
@@ -194,7 +194,7 @@ renderer.keyInput.on("keypress", (key) => {
   if (key.eventType === "repeat" || key.repeated) {
     // Key is being held
   }
-});
+})
 ```
 
 ### Release Events
@@ -209,8 +209,8 @@ useKeyboard(
       // Key released
     }
   },
-  { release: true } // Enable release events
-);
+  { release: true }  // Enable release events
+)
 
 // Solid
 useKeyboard(
@@ -220,7 +220,7 @@ useKeyboard(
     }
   },
   { release: true }
-);
+)
 ```
 
 ## Patterns
@@ -229,35 +229,37 @@ useKeyboard(
 
 ```tsx
 function Menu() {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const items = ["Home", "Settings", "Help", "Quit"];
-
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const items = ["Home", "Settings", "Help", "Quit"]
+  
   useKeyboard((key) => {
     switch (key.name) {
       case "up":
       case "k":
-        setSelectedIndex((i) => Math.max(0, i - 1));
-        break;
+        setSelectedIndex(i => Math.max(0, i - 1))
+        break
       case "down":
       case "j":
-        setSelectedIndex((i) => Math.min(items.length - 1, i + 1));
-        break;
+        setSelectedIndex(i => Math.min(items.length - 1, i + 1))
+        break
       case "enter":
-        handleSelect(items[selectedIndex]);
-        break;
+        handleSelect(items[selectedIndex])
+        break
     }
-  });
-
+  })
+  
   return (
     <box flexDirection="column">
       {items.map((item, i) => (
-        <text key={item} fg={i === selectedIndex ? "#00FF00" : "#FFFFFF"}>
-          {i === selectedIndex ? "> " : "  "}
-          {item}
+        <text
+          key={item}
+          fg={i === selectedIndex ? "#00FF00" : "#FFFFFF"}
+        >
+          {i === selectedIndex ? "> " : "  "}{item}
         </text>
       ))}
     </box>
-  );
+  )
 }
 ```
 
@@ -267,15 +269,15 @@ function Menu() {
 function Modal({ onClose, children }) {
   useKeyboard((key) => {
     if (key.name === "escape") {
-      onClose();
+      onClose()
     }
-  });
-
+  })
+  
   return (
     <box border padding={2}>
       {children}
     </box>
-  );
+  )
 }
 ```
 
@@ -283,33 +285,33 @@ function Modal({ onClose, children }) {
 
 ```tsx
 function Editor() {
-  const [mode, setMode] = useState<"normal" | "insert">("normal");
-  const [content, setContent] = useState("");
-
+  const [mode, setMode] = useState<"normal" | "insert">("normal")
+  const [content, setContent] = useState("")
+  
   useKeyboard((key) => {
     if (mode === "normal") {
       switch (key.name) {
         case "i":
-          setMode("insert");
-          break;
+          setMode("insert")
+          break
         case "escape":
           // Already in normal mode
-          break;
+          break
         case "j":
-          moveCursorDown();
-          break;
+          moveCursorDown()
+          break
         case "k":
-          moveCursorUp();
-          break;
+          moveCursorUp()
+          break
       }
     } else if (mode === "insert") {
       if (key.name === "escape") {
-        setMode("normal");
+        setMode("normal")
       }
       // Input component handles text in insert mode
     }
-  });
-
+  })
+  
   return (
     <box flexDirection="column">
       <text>Mode: {mode}</text>
@@ -319,7 +321,7 @@ function Editor() {
         focused={mode === "insert"}
       />
     </box>
-  );
+  )
 }
 ```
 
@@ -327,34 +329,34 @@ function Editor() {
 
 ```tsx
 function Game() {
-  const [pressed, setPressed] = useState(new Set<string>());
-
+  const [pressed, setPressed] = useState(new Set<string>())
+  
   useKeyboard(
     (key) => {
-      setPressed((keys) => {
-        const newKeys = new Set(keys);
+      setPressed(keys => {
+        const newKeys = new Set(keys)
         if (key.eventType === "release") {
-          newKeys.delete(key.name);
+          newKeys.delete(key.name)
         } else {
-          newKeys.add(key.name);
+          newKeys.add(key.name)
         }
-        return newKeys;
-      });
+        return newKeys
+      })
     },
     { release: true }
-  );
-
+  )
+  
   // Game logic uses pressed set
   useEffect(() => {
     if (pressed.has("up") || pressed.has("w")) {
-      moveUp();
+      moveUp()
     }
     if (pressed.has("down") || pressed.has("s")) {
-      moveDown();
+      moveDown()
     }
-  }, [pressed]);
-
-  return <text>WASD or arrows to move</text>;
+  }, [pressed])
+  
+  return <text>WASD or arrows to move</text>
 }
 ```
 
@@ -368,20 +370,18 @@ function ShortcutsHelp() {
     { keys: "Ctrl+F", action: "Find" },
     { keys: "Tab", action: "Next field" },
     { keys: "Shift+Tab", action: "Previous field" },
-  ];
-
+  ]
+  
   return (
     <box border title="Keyboard Shortcuts" padding={1}>
       {shortcuts.map(({ keys, action }) => (
         <box key={keys} flexDirection="row">
-          <text width={15} fg="#00FFFF">
-            {keys}
-          </text>
+          <text width={15} fg="#00FFFF">{keys}</text>
           <text>{action}</text>
         </box>
       ))}
     </box>
-  );
+  )
 }
 ```
 
@@ -392,19 +392,19 @@ Handle pasted content. Paste events deliver raw bytes, not decoded text.
 ### PasteEvent Object
 
 ```typescript
-import { type PasteEvent } from "@opentui/core";
+import { type PasteEvent } from "@opentui/core"
 
 interface PasteEvent {
-  type: "paste"; // Always "paste"
-  bytes: Uint8Array; // Raw pasted bytes
-  metadata?: PasteMetadata; // Optional metadata
-  preventDefault(): void; // Prevent default paste handling
-  defaultPrevented: boolean; // Whether preventDefault was called
+  type: "paste"              // Always "paste"
+  bytes: Uint8Array          // Raw pasted bytes
+  metadata?: PasteMetadata   // Optional metadata
+  preventDefault(): void     // Prevent default paste handling
+  defaultPrevented: boolean  // Whether preventDefault was called
 }
 
 interface PasteMetadata {
-  mimeType?: string; // MIME type if available
-  kind?: PasteKind; // Paste kind
+  mimeType?: string          // MIME type if available
+  kind?: PasteKind           // Paste kind
 }
 ```
 
@@ -413,21 +413,21 @@ interface PasteMetadata {
 Use `decodePasteBytes` to convert raw bytes to a string, and `stripAnsiSequences` to remove ANSI escape codes:
 
 ```typescript
-import { decodePasteBytes, stripAnsiSequences } from "@opentui/core";
+import { decodePasteBytes, stripAnsiSequences } from "@opentui/core"
 
-const text = decodePasteBytes(event.bytes); // Decode UTF-8
-const clean = stripAnsiSequences(decodePasteBytes(event.bytes)); // Decode + strip ANSI
+const text = decodePasteBytes(event.bytes)          // Decode UTF-8
+const clean = stripAnsiSequences(decodePasteBytes(event.bytes))  // Decode + strip ANSI
 ```
 
 ### Core
 
 ```typescript
-import { type PasteEvent, decodePasteBytes } from "@opentui/core";
+import { type PasteEvent, decodePasteBytes } from "@opentui/core"
 
 renderer.keyInput.on("paste", (event: PasteEvent) => {
-  const text = decodePasteBytes(event.bytes);
-  console.log("Pasted:", text);
-});
+  const text = decodePasteBytes(event.bytes)
+  console.log("Pasted:", text)
+})
 ```
 
 ### Solid
@@ -435,16 +435,16 @@ renderer.keyInput.on("paste", (event: PasteEvent) => {
 Solid provides a dedicated `usePaste` hook:
 
 ```tsx
-import { usePaste } from "@opentui/solid";
-import { decodePasteBytes } from "@opentui/core";
+import { usePaste } from "@opentui/solid"
+import { decodePasteBytes } from "@opentui/core"
 
 function App() {
   usePaste((event) => {
-    const text = decodePasteBytes(event.bytes);
-    console.log("Pasted:", text);
-  });
-
-  return <text>Paste something</text>;
+    const text = decodePasteBytes(event.bytes)
+    console.log("Pasted:", text)
+  })
+  
+  return <text>Paste something</text>
 }
 ```
 
@@ -460,14 +460,14 @@ A renderable must have `selectable` set to `true` to participate in selection. T
 
 ```tsx
 // React / Solid
-<text selectable>This text can be selected</text>;
+<text selectable>This text can be selected</text>
 
 // Core
 const text = new TextRenderable(renderer, {
   id: "label",
   content: "This text can be selected",
   selectable: true,
-});
+})
 ```
 
 ### Copy-on-Selection (Core)
@@ -475,14 +475,14 @@ const text = new TextRenderable(renderer, {
 Listen to the renderer's `"selection"` event. The `Selection` object's `getSelectedText()` returns text aggregated from all selected renderables in reading order:
 
 ```typescript
-import type { Selection } from "@opentui/core";
+import type { Selection } from "@opentui/core"
 
 renderer.on("selection", (selection: Selection) => {
-  const text = selection.getSelectedText();
+  const text = selection.getSelectedText()
   if (text) {
-    renderer.copyToClipboardOSC52(text);
+    renderer.copyToClipboardOSC52(text)
   }
-});
+})
 ```
 
 > **Important**: Call `selection.getSelectedText()` on the `Selection` object from the event -- not `renderer.root.getSelectedText()`. Individual renderables only return their own selected text. The `Selection` object aggregates across the tree.
@@ -490,17 +490,17 @@ renderer.on("selection", (selection: Selection) => {
 ### Copy-on-Selection (Solid)
 
 ```tsx
-import { useSelectionHandler } from "@opentui/solid";
+import { useSelectionHandler } from "@opentui/solid"
 
 function App() {
   useSelectionHandler((selection) => {
-    const text = selection.getSelectedText();
+    const text = selection.getSelectedText()
     if (text) {
-      renderer.copyToClipboardOSC52(text);
+      renderer.copyToClipboardOSC52(text)
     }
-  });
+  })
 
-  return <text selectable>Select this text</text>;
+  return <text selectable>Select this text</text>
 }
 ```
 
@@ -511,23 +511,22 @@ function App() {
 The `Selection` object passed to the event callback:
 
 ```typescript
-selection.getSelectedText(); // Aggregated text from all selected renderables
-selection.bounds; // { startX, startY, endX, endY } bounding rect
-selection.selectedRenderables; // Renderable[] with active selections
-selection.isActive; // Whether selection is still active
+selection.getSelectedText()       // Aggregated text from all selected renderables
+selection.bounds                  // { startX, startY, endX, endY } bounding rect
+selection.selectedRenderables     // Renderable[] with active selections
+selection.isActive                // Whether selection is still active
 ```
 
 Individual renderables also expose:
 
 ```typescript
-renderable.hasSelection(); // Does this renderable have selected text?
-renderable.getSelectedText(); // Selected text in this renderable only
+renderable.hasSelection()         // Does this renderable have selected text?
+renderable.getSelectedText()      // Selected text in this renderable only
 ```
 
 ### How Selection Traversal Works
 
 When the user drags to select, the renderer:
-
 1. Identifies the selection container (common ancestor of start and end points)
 2. Walks all `selectable` descendants within the selection bounds
 3. Calls `onSelectionChanged(selection)` on each, which computes local selection
@@ -541,20 +540,20 @@ Copy text to the system clipboard using OSC 52 escape sequences. Works over SSH 
 
 ```typescript
 // Copy to clipboard
-const success = renderer.copyToClipboardOSC52("text to copy");
+const success = renderer.copyToClipboardOSC52("text to copy")
 
 // Check if OSC 52 is supported
 if (renderer.isOsc52Supported()) {
-  renderer.copyToClipboardOSC52("Hello!");
+  renderer.copyToClipboardOSC52("Hello!")
 }
 
 // Clear clipboard
-renderer.clearClipboardOSC52();
+renderer.clearClipboardOSC52()
 
 // Target specific clipboard (X11)
-import { ClipboardTarget } from "@opentui/core";
-renderer.copyToClipboardOSC52("text", ClipboardTarget.Primary); // X11 primary
-renderer.copyToClipboardOSC52("text", ClipboardTarget.Clipboard); // System clipboard (default)
+import { ClipboardTarget } from "@opentui/core"
+renderer.copyToClipboardOSC52("text", ClipboardTarget.Primary)   // X11 primary
+renderer.copyToClipboardOSC52("text", ClipboardTarget.Clipboard) // System clipboard (default)
 ```
 
 ## Focus and Input Components
@@ -562,7 +561,7 @@ renderer.copyToClipboardOSC52("text", ClipboardTarget.Clipboard); // System clip
 Input components (`<input>`, `<textarea>`, `<select>`) capture keyboard events when focused:
 
 ```tsx
-<input focused /> // Receives keyboard input
+<input focused />  // Receives keyboard input
 
 // Global useKeyboard still fires, but input consumes characters
 ```
@@ -571,25 +570,25 @@ To prevent conflicts, check if an input is focused before handling global shortc
 
 ```tsx
 function App() {
-  const renderer = useRenderer();
-  const [inputFocused, setInputFocused] = useState(false);
-
+  const renderer = useRenderer()
+  const [inputFocused, setInputFocused] = useState(false)
+  
   useKeyboard((key) => {
-    if (inputFocused) return; // Let input handle it
-
+    if (inputFocused) return  // Let input handle it
+    
     // Global shortcuts
     if (key.name === "escape") {
-      renderer.destroy();
+      renderer.destroy()
     }
-  });
-
+  })
+  
   return (
     <input
       focused={inputFocused}
       onFocus={() => setInputFocused(true)}
       onBlur={() => setInputFocused(false)}
     />
-  );
+  )
 }
 ```
 
@@ -598,7 +597,6 @@ function App() {
 ### Terminal Limitations
 
 Some key combinations are captured by the terminal or OS:
-
 - `Ctrl+C` often sends SIGINT (use `exitOnCtrlC: false` to handle)
 - `Ctrl+Z` suspends the process
 - Some function keys may be intercepted
