@@ -8,14 +8,14 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@opentui/core": "^0.2.10",
-    "@opentui/react": "^0.2.10",
+    "@opentui/core": "^0.4.3",
+    "@opentui/react": "^0.4.3",
     "@ultimate-ts-starter/query": "workspace:*",
-    "react": "^19.2.6"
+    "react": "^19.2.7"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/react": "^19.2.14"
+    "@types/react": "^19.2.17"
   },
   "peerDependencies": {
     "typescript": "^5"

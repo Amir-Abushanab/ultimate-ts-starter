@@ -13,6 +13,6 @@
   },
   "devDependencies": {
     "@ultimate-ts-starter/config": "workspace:*",
-    "typescript": "^6"
+    "typescript": "^7"
   }
 }

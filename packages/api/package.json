@@ -25,6 +25,6 @@
   "devDependencies": {
     "@ultimate-ts-starter/config": "workspace:*",
     "hono": "catalog:",
-    "typescript": "^6"
+    "typescript": "^7"
   }
 }

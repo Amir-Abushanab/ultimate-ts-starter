@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-07-19T01:38:53.735607+00:00'
+generated_at: '2026-07-19T09:42:45.280225+00:00'
 apm_version: 0.25.0
 dependencies:
 - repo_url: better-auth/skills
