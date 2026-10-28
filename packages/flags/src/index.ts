@@ -121,8 +121,7 @@ export const getFlag = async <K extends keyof Flags>(
  * Use this in render paths where async isn't possible.
  */
 export const getFlagSync = <K extends keyof Flags>(key: K): Flags[K] =>
-  // eslint-disable-next-line typescript/no-unsafe-type-assertion -- generic K indexing requires assertion
-  (overrides[key] ?? defaults[key]) as unknown as Flags[K];
+  overrides[key] ?? defaults[key];
 
 /** Get all local flags as a snapshot (does not check remote). */
 export const getAllFlags = (): Flags => ({ ...defaults, ...overrides });

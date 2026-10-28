@@ -1,10 +1,7 @@
 .popup {
   width: 320px;
   padding: 16px;
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
+  font-family: system-ui, -apple-system, sans-serif;
 }
 
 .popup h1 {

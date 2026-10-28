@@ -19,12 +19,12 @@
     "@ultimate-ts-starter/db": "workspace:*",
     "@ultimate-ts-starter/env": "workspace:*",
     "dotenv": "catalog:",
-    "drizzle-orm": "^0.45.2",
+    "drizzle-orm": "^0.45.4",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@ultimate-ts-starter/config": "workspace:*",
     "hono": "catalog:",
-    "typescript": "^7"
+    "typescript": "^6.0.3"
   }
 }

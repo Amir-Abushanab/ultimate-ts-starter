@@ -48,6 +48,7 @@ export const useRealtime = ({
 }: UseRealtimeOptions) => {
   const [status, setStatus] = useState<ConnectionStatus>("disconnected");
   const handlersRef = useRef(onEvent);
+  // eslint-disable-next-line react/refs -- latest-callback ref: handlers swap without reconnecting the socket
   handlersRef.current = onEvent;
   const wsRef = useRef<WebSocket | null>(null);
 

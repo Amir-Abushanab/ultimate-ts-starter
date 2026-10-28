@@ -60,8 +60,9 @@ vi.mock("./utils", () => ({ validate: vi.fn() })); // Avoid
 ### API Mocking (MSW)
 
 ```tsx
-import { server } from "@/mocks/server";
 import { http, HttpResponse } from "msw";
+
+import { server } from "@/mocks/server";
 
 server.use(
   http.get("/api/data", () => {

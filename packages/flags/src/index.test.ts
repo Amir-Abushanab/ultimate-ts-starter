@@ -2,7 +2,7 @@ import type {
   AnalyticsClient,
   FlagsSnapshot,
 } from "@ultimate-ts-starter/analytics";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vite-plus/test";
 
 import {
   connectFlagsToAnalytics,

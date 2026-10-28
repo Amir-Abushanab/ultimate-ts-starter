@@ -83,7 +83,9 @@ const App = () => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react/set-state-in-effect -- one-time session check when the popup opens
     void checkSession();
+    // eslint-disable-next-line react/exhaustive-effect-dependencies -- run once on mount
   }, []);
 
   // Read app data through the typed oRPC client once we're on the home screen.

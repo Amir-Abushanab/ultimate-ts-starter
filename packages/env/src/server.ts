@@ -33,7 +33,7 @@ let validated = false;
  * On first access, validates required vars (throws if missing)
  * and warns about missing optional vars.
  */
-export const env: Env = new Proxy(rawEnv as Env, {
+export const env: Env = new Proxy(rawEnv, {
   get(target, prop, receiver) {
     if (!validated) {
       validated = true;

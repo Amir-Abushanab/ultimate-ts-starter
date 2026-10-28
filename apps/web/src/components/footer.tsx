@@ -6,6 +6,7 @@ export default function Footer() {
   );
 
   useEffect(() => {
+    // eslint-disable-next-line react/set-state-in-effect -- refresh an SSR-rendered year once on the client
     setCurrentYear(new Date().getFullYear());
   }, []);
 

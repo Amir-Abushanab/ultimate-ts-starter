@@ -15,8 +15,8 @@ import {
 
 export const auth = betterAuth({
   database: drizzleAdapter(
-    // eslint-disable-next-line typescript/no-unsafe-type-assertion -- CLI stub passes empty object as DB placeholder
-    {} as unknown as Parameters<typeof drizzleAdapter>[0],
+    // CLI stub: an empty object stands in for the DB connection
+    {},
     { provider: "pg" }
   ),
   plugins: [

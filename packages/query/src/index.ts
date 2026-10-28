@@ -2,10 +2,7 @@ import { createORPCClient } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
-import type {
-  AppRouter,
-  AppRouterClient,
-} from "@ultimate-ts-starter/api/routers/index";
+import type { AppRouterClient } from "@ultimate-ts-starter/api/routers/index";
 
 export interface QueryConfig {
   /** Server base URL (e.g. env.VITE_SERVER_URL) */
@@ -48,4 +45,7 @@ export const createAppQueryClient = (config: QueryConfig) => {
 };
 
 export { useRealtime, useEventStream } from "./use-event-stream.js";
-export type { AppRouter, AppRouterClient };
+export type {
+  AppRouter,
+  AppRouterClient,
+} from "@ultimate-ts-starter/api/routers/index";

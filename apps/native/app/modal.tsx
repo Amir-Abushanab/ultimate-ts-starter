@@ -5,12 +5,12 @@ import { Text, View } from "react-native";
 
 import { Container } from "@/components/container";
 
+const handleClose = () => {
+  router.back();
+};
+
 const Modal = () => {
   const accentForegroundColor = useThemeColor("accent-foreground");
-
-  const handleClose = () => {
-    router.back();
-  };
 
   return (
     <Container>

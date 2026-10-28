@@ -12,10 +12,10 @@
     }
   },
   "dependencies": {
-    "posthog-node": "^5.41.0"
+    "posthog-node": "^5.56.2"
   },
   "devDependencies": {
     "@ultimate-ts-starter/config": "workspace:*",
-    "typescript": "^7"
+    "typescript": "^6.0.3"
   }
 }

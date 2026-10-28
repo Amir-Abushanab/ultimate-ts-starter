@@ -64,3 +64,4 @@ playwright-report/
 
 # APM dependencies
 apm_modules/
+.vitest/

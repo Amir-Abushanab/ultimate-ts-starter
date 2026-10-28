@@ -60,6 +60,7 @@ const NotificationPreferences = () => {
     }));
   };
 
+  // eslint-disable-next-line unicorn/consistent-function-scoping -- placeholder; the real save (TODO below) captures prefs
   const handleSave = () => {
     // TODO: call your API to persist preferences
     // await orpc.notifications.updatePreferences.mutate(prefs);
@@ -89,7 +90,7 @@ const NotificationPreferences = () => {
       {categories.map((cat) => {
         const types = grouped
           .get(cat)
-          ?.filter(([_, def]) => !hasMandatoryEmail(def));
+          ?.filter(([, def]) => !hasMandatoryEmail(def));
         if (types === undefined || types.length === 0) {
           return null;
         }

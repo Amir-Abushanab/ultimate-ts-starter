@@ -241,11 +241,11 @@ pnpm --filter @ultimate-ts-starter/ui dlx shadcn@latest add dialog sheet table
 Import in any web app:
 
 ```tsx
-import { Button } from "@ultimate-ts-starter/ui/components/button";
 import {
   AnimatedButton,
   AnimatedPage,
 } from "@ultimate-ts-starter/ui/components/animated";
+import { Button } from "@ultimate-ts-starter/ui/components/button";
 ```
 
 Animated wrappers add iOS-like micro-interactions (press feedback, hover lift, page transitions, staggered lists) on top of the base components. They respect `prefers-reduced-motion`.

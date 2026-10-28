@@ -18,7 +18,7 @@ export interface BlogPost {
   wordCount: number;
 }
 
-export const allPosts: BlogPost[] = rawPosts as BlogPost[];
+export const allPosts: BlogPost[] = rawPosts;
 
 export const publishedPosts: BlogPost[] = allPosts
   .filter((p) => !p.draft)

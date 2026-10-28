@@ -6,12 +6,12 @@ import { authClient } from "@/lib/auth-client";
 
 export const { queryClient, client, orpc } = createAppQueryClient({
   credentials: Platform.OS === "web" ? "include" : "omit",
-  headers: (): Record<string, string> => {
+  headers: async (): Promise<Record<string, string>> => {
     if (Platform.OS === "web") {
       return {};
     }
-    const cookies = authClient.getCookie();
-    return cookies ? { Cookie: cookies } : {};
+    const cookies = await authClient.getCookie();
+    return cookies === "" ? {} : { Cookie: cookies };
   },
   onError: (error) => {
     console.log(error);
