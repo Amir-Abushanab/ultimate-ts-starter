@@ -41,5 +41,16 @@ module.exports = {
   // Respect each package's `latest` dist-tag instead of just picking the
   // numerically-highest published version. ('latest' is ncu's default but
   // worth being explicit about the rationale.)
-  target: "latest",
+  //
+  // Except the Polar pair, held together: @polar-sh/better-auth 1.8.4 (the
+  // last 1.x) peers on @polar-sh/sdk ^0.47.0, and better-auth 2.x needs sdk
+  // ^1.0.2, an API rewrite (createPolarCore from @polar-sh/sdk/2026-10,
+  // snake_case models) this repo hasn't migrated to. So sdk stays on 0.47.x
+  // ("patch": for a 0.x package "minor" would allow 0.48) and the adapter on
+  // 1.x. Lift both together as part of that migration.
+  target: (name) => {
+    if (name === "@polar-sh/sdk") return "patch";
+    if (name === "@polar-sh/better-auth") return "minor";
+    return "latest";
+  },
 };
