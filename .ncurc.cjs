@@ -49,8 +49,12 @@ module.exports = {
   // ("patch": for a 0.x package "minor" would allow 0.48) and the adapter on
   // 1.x. Lift both together as part of that migration.
   target: (name) => {
-    if (name === "@polar-sh/sdk") return "patch";
-    if (name === "@polar-sh/better-auth") return "minor";
+    if (name === "@polar-sh/sdk") {
+      return "patch";
+    }
+    if (name === "@polar-sh/better-auth") {
+      return "minor";
+    }
     return "latest";
   },
 };
