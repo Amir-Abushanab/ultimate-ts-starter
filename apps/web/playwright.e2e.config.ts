@@ -1,11 +1,17 @@
 import { defineConfig, devices } from "@playwright/test";
 
+import { ensureServerDevVars } from "./e2e/dev-vars";
+
 // Full-stack E2E config: boots BOTH the web app (:3001) and the oRPC server
 // (:3000, with the console-OTP dev config), seeds an isolated Postgres in
 // globalSetup, and runs only the `*.e2e.spec.ts` suites. Kept separate from
 // playwright.config.ts (web-only smoke tests) so CI without a DB is unaffected.
 //
 // Run with: pnpm --filter web test:e2e:full
+
+// Before webServer boots wrangler, which reads .dev.vars once at startup.
+ensureServerDevVars();
+
 export default defineConfig({
   forbidOnly: !!process.env.CI,
   // CRUD mutates shared in-memory server state, so keep the suite serial.

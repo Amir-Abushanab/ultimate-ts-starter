@@ -1,3 +1,4 @@
+import { ORPCError } from "@orpc/server";
 import { protectedProcedure, publicProcedure } from "@ultimate-ts-starter/api";
 import { z } from "zod";
 
@@ -26,13 +27,20 @@ const fakeItems: Item[] = Array.from({ length: 50 }, (_, i) => ({
 }));
 
 export const exampleRouter = {
-  /** Create a new item (authenticated) */
+  /**
+   * Create a new item (authenticated). Optimistic clients pass the id they
+   * already rendered the item under, so the persisted row keeps the same key
+   * (otherwise the optimistic row is swapped for a new one on reconcile).
+   */
   create: protectedProcedure
-    .input(z.object({ title: z.string().min(1) }))
+    .input(z.object({ id: z.uuid().optional(), title: z.string().min(1) }))
     .handler(({ input }) => {
+      if (input.id !== undefined && fakeItems.some((i) => i.id === input.id)) {
+        throw new ORPCError("CONFLICT", { message: "Item already exists" });
+      }
       const item: Item = {
         createdAt: new Date().toISOString(),
-        id: `item-${Date.now()}`,
+        id: input.id ?? `item-${Date.now()}`,
         title: input.title,
       };
       fakeItems.unshift(item);
