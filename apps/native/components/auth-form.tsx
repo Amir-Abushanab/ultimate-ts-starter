@@ -127,7 +127,7 @@ const AuthForm = () => {
             <Input
               value={otp}
               onChangeText={(val) => {
-                setOtp(val.replaceAll(/\D/g, "").slice(0, 6));
+                setOtp(val.replaceAll(/\D/gu, "").slice(0, 6));
               }}
               placeholder="000000"
               keyboardType="number-pad"

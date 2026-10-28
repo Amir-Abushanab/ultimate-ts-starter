@@ -182,7 +182,6 @@ const Home = () => {
   const successColor = useThemeColor("success");
   const dangerColor = useThemeColor("danger");
   const accentColor = useThemeColor("accent");
-  const _foregroundColor = useThemeColor("foreground");
 
   return (
     <Container className="p-6">

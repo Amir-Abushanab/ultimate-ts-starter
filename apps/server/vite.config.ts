@@ -4,7 +4,7 @@ export default defineConfig({
   pack: {
     clean: true,
     deps: {
-      alwaysBundle: [/@ultimate-ts-starter\/.*/],
+      alwaysBundle: [/@ultimate-ts-starter\/.*/u],
       // tsdown <0.23 compatibility: resolve external dependency subpaths.
       // Remove to preserve subpath imports as written (the new default).
       // https://tsdown.dev/options/dependencies#deps-resolvedepsubpath

@@ -13,7 +13,7 @@ import { authClient } from "@/lib/auth-client";
 
 type SetupStep = "idle" | "qr" | "backup-codes";
 
-export default function TwoFactorSetup() {
+const TwoFactorSetup = () => {
   const { data: session, isPending } = authClient.useSession();
   const [step, setStep] = useState<SetupStep>("idle");
   const [totpUri, setTotpUri] = useState("");
@@ -254,4 +254,6 @@ export default function TwoFactorSetup() {
       )}
     </div>
   );
-}
+};
+
+export default TwoFactorSetup;

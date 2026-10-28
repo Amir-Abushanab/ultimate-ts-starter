@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function Footer() {
+const Footer = () => {
   const [currentYear, setCurrentYear] = useState(() =>
     new Date().getFullYear()
   );
@@ -18,4 +18,6 @@ export default function Footer() {
       <span>v{__APP_VERSION__}</span>
     </footer>
   );
-}
+};
+
+export default Footer;

@@ -24,12 +24,12 @@ const registry = JSON.parse(
 const rewriteImports = (source) =>
   source
     .replaceAll(
-      /from\s+"@ultimate-ts-starter\/ui\/lib\/utils"/g,
+      /from\s+"@ultimate-ts-starter\/ui\/lib\/utils"/gu,
       'from "@/lib/utils"'
     )
-    .replaceAll(/from\s+"\.\/button"/g, 'from "@/components/ui/button"')
-    .replaceAll(/from\s+"\.\/card"/g, 'from "@/components/ui/card"')
-    .replaceAll(/from\s+"\.\/skeleton"/g, 'from "@/components/ui/skeleton"');
+    .replaceAll(/from\s+"\.\/button"/gu, 'from "@/components/ui/button"')
+    .replaceAll(/from\s+"\.\/card"/gu, 'from "@/components/ui/card"')
+    .replaceAll(/from\s+"\.\/skeleton"/gu, 'from "@/components/ui/skeleton"');
 
 mkdirSync(OUTPUT, { recursive: true });
 

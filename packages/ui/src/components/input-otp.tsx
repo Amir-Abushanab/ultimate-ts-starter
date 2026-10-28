@@ -70,6 +70,7 @@ const InputOTPSeparator = ({ ...props }: React.ComponentProps<"div">) => (
   <div
     data-slot="input-otp-separator"
     className="flex items-center [&_svg:not([class*='size-'])]:size-4"
+    // eslint-disable-next-line jsx-a11y/prefer-tag-over-role -- <hr> is a void element and can't hold the icon
     role="separator"
     {...props}
   >
