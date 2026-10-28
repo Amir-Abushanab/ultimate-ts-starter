@@ -18,9 +18,9 @@
  */
 export interface FlagsSnapshot {
   /** True if the flag is enabled; undefined if the flag isn't defined remotely. */
-  isEnabled(key: string): boolean | undefined;
+  isEnabled: (key: string) => boolean | undefined;
   /** Multivariate flag value (string), boolean flag value, or undefined when unset. */
-  getFlag(key: string): string | boolean | undefined;
+  getFlag: (key: string) => string | boolean | undefined;
 }
 
 export interface CaptureOptions {
@@ -37,16 +37,19 @@ export interface CaptureOptions {
 }
 
 export interface AnalyticsClient {
-  track(
+  track: (
     event: string,
     properties?: Record<string, unknown>,
     options?: CaptureOptions
-  ): void;
-  identify(userId: string, traits?: Record<string, unknown>): void;
-  page(name?: string, properties?: Record<string, unknown>): void;
-  group(type: string, id: string, traits?: Record<string, unknown>): void;
-  reset(): void;
-  captureException(error: Error, properties?: Record<string, unknown>): void;
+  ) => void;
+  identify: (userId: string, traits?: Record<string, unknown>) => void;
+  page: (name?: string, properties?: Record<string, unknown>) => void;
+  group: (type: string, id: string, traits?: Record<string, unknown>) => void;
+  reset: () => void;
+  captureException: (
+    error: Error,
+    properties?: Record<string, unknown>
+  ) => void;
   /**
    * Evaluate all feature flags for a user and return a reusable snapshot.
    *
@@ -58,7 +61,7 @@ export interface AnalyticsClient {
    * snapshot is a thin sync wrapper and `distinctId` is ignored (the SDK
    * tracks it implicitly via `identify`).
    */
-  getFlagsSnapshot(distinctId?: string): Promise<FlagsSnapshot>;
+  getFlagsSnapshot: (distinctId?: string) => Promise<FlagsSnapshot>;
 }
 
 /**

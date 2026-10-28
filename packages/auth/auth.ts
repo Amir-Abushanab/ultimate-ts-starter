@@ -3,6 +3,7 @@
  * Mirrors the real config's plugins but without runtime dependencies
  * (no Cloudflare env, no DB connection, no Polar client).
  */
+import { sso } from "@better-auth/sso";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import {
@@ -29,6 +30,7 @@ export const auth = betterAuth({
     admin(),
     organization(),
     twoFactor(),
+    sso(),
   ],
   socialProviders: {
     google: { clientId: "cli", clientSecret: "cli" },

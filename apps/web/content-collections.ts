@@ -26,7 +26,7 @@ const posts = defineCollection({
       remarkPlugins: [remarkGfm],
     });
 
-    const wordCount = document.content.split(/\s+/g).length;
+    const wordCount = document.content.split(/\s+/gu).length;
     const readingTime = Math.max(1, Math.round(wordCount / WORDS_PER_MINUTE));
     const slug = document._meta.path;
 

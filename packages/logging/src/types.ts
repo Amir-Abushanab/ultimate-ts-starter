@@ -29,7 +29,7 @@ export interface WideEvent {
 }
 
 export interface Exporter {
-  emit(event: WideEvent): void | Promise<void>;
+  emit: (event: WideEvent) => void | Promise<void>;
 }
 
 export interface SamplingConfig {

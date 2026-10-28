@@ -63,6 +63,19 @@ export default defineConfig({
             },
           },
           {
+            // Build-time and test code (scripts, configs, e2e setup) may block on
+            // sync I/O; no-sync stays on for runtime code (Workers, apps, packages)
+            files: [
+              "scripts/**",
+              "**/e2e/**",
+              "**/*.config.{ts,mts,js,mjs,cjs}",
+              "**/*.{test,spec}.{ts,tsx,js,jsx}",
+            ],
+            rules: {
+              "node/no-sync": "off",
+            },
+          },
+          {
             // Generated files — can't control style or naming
             files: ["**/*.gen.*"],
             rules: {
@@ -180,10 +193,6 @@ export default defineConfig({
           "node",
           "promise",
         ],
-        // Rules tagged "oxlint 1.8x" started firing with the oxlint that Vite+ 1.x
-        // bundles (new rules, or newly placed in the categories enabled above).
-        // They conflict with this codebase's existing conventions, so they stay
-        // off for now; revisit them one at a time.
         rules: {
           "arrow-body-style": ["error", "as-needed"],
           "capitalized-comments": "off",
@@ -229,40 +238,43 @@ export default defineConfig({
           "no-magic-numbers": "off",
           "no-ternary": "off",
           "no-undefined": "off",
-          // oxlint 1.8x
-          "no-underscore-dangle": "off",
+          // Allow names owned by other tools: content-collections' document
+          // metadata and the Vite `define` global.
+          "no-underscore-dangle": [
+            "error",
+            { allow: ["_meta", "__APP_VERSION__"] },
+          ],
           "no-void": ["error", { allowAsStatement: true }],
           // Starter template uses TODO comments as intentional guidance markers for fork users
           "no-warning-comments": "off",
-          // oxlint 1.8x
+          // Fires on Hono middleware's `await next()`, which must run code after next()
           "node/callback-return": "off",
           "node/no-process-env": "off",
-          // oxlint 1.8x
-          "node/no-sync": "off",
-          // oxlint 1.8x
+          "node/no-sync": "error",
+          // Entry points (db seed, Bun TUI) await at top level; nothing here is require()d
           "node/no-top-level-await": "off",
-          // oxlint 1.8x
-          "one-var": "off",
+          // One declaration per statement (the default "always" would merge them)
+          "one-var": ["error", "never"],
           "oxc/no-async-await": "off",
           "oxc/no-map-spread": "off",
           "oxc/no-optional-chaining": "off",
           "oxc/no-rest-spread-properties": "off",
-          // oxlint 1.8x
-          "prefer-named-capture-group": "off",
+          "prefer-named-capture-group": "error",
           "promise/always-return": "off",
           "promise/catch-or-return": "off",
           // oRPC interceptors and similar framework APIs use callback patterns that can't be promisified
           "promise/prefer-await-to-callbacks": "off",
-          // oxlint 1.8x
-          "require-unicode-regexp": "off",
+          "require-unicode-regexp": "error",
           // Conflicts with the formatter's experimentalSortImports which sorts by path
           "sort-imports": "off",
           "typescript/explicit-function-return-type": "off",
-          // oxlint 1.8x
-          "typescript/explicit-member-accessibility": "off",
+          // Members are public by default; only private/protected are spelled out
+          "typescript/explicit-member-accessibility": [
+            "error",
+            { accessibility: "no-public" },
+          ],
           "typescript/explicit-module-boundary-types": "off",
-          // oxlint 1.8x
-          "typescript/method-signature-style": "off",
+          "typescript/method-signature-style": "error",
           "typescript/no-explicit-any": "error",
           // Fires on async event handlers in React which are standard practice
           "typescript/no-misused-promises": "off",
@@ -278,10 +290,10 @@ export default defineConfig({
           "typescript/promise-function-async": "off",
           "typescript/require-await": "off",
           "unicorn/explicit-length-check": "off",
-          // oxlint 1.8x
+          // Wants `import path from "node:path"`; the codebase imports named members
           "unicorn/import-style": "off",
-          // oxlint 1.8x
-          "unicorn/max-nested-calls": "off",
+          // 4, not 3: useForm/defineCollection validators nest z.object(z.string().length(m.msg()))
+          "unicorn/max-nested-calls": ["error", { max: 4 }],
           "unicorn/no-array-callback-reference": "off",
           "unicorn/no-null": "off",
           "unicorn/no-process-exit": "off",
@@ -297,34 +309,40 @@ export default defineConfig({
       // React rules (was ultracite/oxlint react)
       {
         plugins: ["react", "react-perf", "jsx-a11y"],
-        // See the "oxlint 1.8x" note on the core rules above.
         rules: {
           // Label component spreads ...props (including htmlFor) — association is dynamic, not statically detectable
           "jsx-a11y/label-has-associated-control": "off",
           "jsx-a11y/no-autofocus": "off",
-          // oxlint 1.8x
-          "jsx-a11y/prefer-tag-over-role": "off",
+          "jsx-a11y/prefer-tag-over-role": "error",
           "react-perf/jsx-no-jsx-as-prop": "off",
           "react-perf/jsx-no-new-array-as-prop": "off",
           // Memoizing every event handler is impractical; React Compiler optimizes this automatically
           "react-perf/jsx-no-new-function-as-prop": "off",
           "react-perf/jsx-no-new-object-as-prop": "off",
-          // oxlint 1.8x
+          // Forbids className/style on components, which Tailwind + shadcn rely on
           "react/forbid-component-props": "off",
-          // oxlint 1.8x
-          "react/function-component-definition": "off",
+          "react/function-component-definition": [
+            "error",
+            {
+              namedComponents: "arrow-function",
+              unnamedComponents: "arrow-function",
+            },
+          ],
           "react/jsx-boolean-value": "off",
           "react/jsx-filename-extension": "off",
           "react/jsx-max-depth": "off",
-          // oxlint 1.8x
+          // UI copy is literal JSX; web i18n goes through Paraglide `m.*()` by convention
           "react/jsx-no-literals": "off",
           "react/jsx-props-no-spreading": "off",
           "react/no-multi-comp": "off",
           // Children.map is the correct API for staggered animation wrappers
           "react/no-react-children": "off",
           "react/no-unknown-property": "off",
-          // oxlint 1.8x
-          "react/no-unstable-nested-components": "off",
+          // allowAsProps: render props like Expo Router's tabBarIcon / drawerIcon
+          "react/no-unstable-nested-components": [
+            "error",
+            { allowAsProps: true },
+          ],
           "react/only-export-components": "off",
           "react/react-in-jsx-scope": "off",
         },

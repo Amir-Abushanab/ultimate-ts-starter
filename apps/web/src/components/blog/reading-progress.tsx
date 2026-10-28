@@ -20,6 +20,7 @@ export const ReadingProgress = () => {
   return (
     <div
       className="fixed inset-x-0 top-0 z-50 h-1"
+      // eslint-disable-next-line jsx-a11y/prefer-tag-over-role -- <progress> can't hold the styled gradient fill
       role="progressbar"
       aria-valuenow={Math.round(progress)}
       aria-valuemin={0}

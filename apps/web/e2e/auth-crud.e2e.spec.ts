@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 
 const EMAIL = "amir@example.com";
 const SERVER_LOG = new URL(".server.log", import.meta.url);
-const OTP_RE = /\[auth\] OTP for (.+?): (\d{6})/g;
+const OTP_RE = /\[auth\] OTP for (?<email>.+?): (?<otp>\d{6})/gu;
 
 // The dev server logs OTPs to stdout (workerd has no filesystem, so there's no
 // other dev sink); playwright.e2e.config.ts tees that stdout to .server.log.
@@ -12,8 +12,8 @@ const OTP_RE = /\[auth\] OTP for (.+?): (\d{6})/g;
 const otpsFor = (email: string): string[] => {
   try {
     return [...readFileSync(SERVER_LOG, "utf-8").matchAll(OTP_RE)]
-      .filter((match) => match[1] === email)
-      .map((match) => match[2]);
+      .filter((match) => match.groups?.email === email)
+      .map((match) => match.groups?.otp ?? "");
   } catch {
     return [];
   }
@@ -32,10 +32,10 @@ test.describe("examples: email-OTP login → CRUD + filter/sort/paginate", () =>
       .toBeGreaterThan(otpsBefore);
     const otp = otpsFor(EMAIL).at(-1) ?? "";
 
-    await expect(page.getByText(/check your email/i)).toBeVisible();
+    await expect(page.getByText(/check your email/iu)).toBeVisible();
     await page.getByRole("textbox").fill(otp);
     await page.getByRole("button", { exact: true, name: "Verify" }).click();
-    await page.waitForURL(/\/dashboard/);
+    await page.waitForURL(/\/dashboard/u);
 
     // ── 2. Examples page: 50 mock items, paginated 8 per page ──
     await page.goto("/examples");
@@ -72,7 +72,7 @@ test.describe("examples: email-OTP login → CRUD + filter/sort/paginate", () =>
 
     // ── 7. Sort: "Item 10" only lands on page 1 once title-sorted ──
     await expect(page.getByText("Item 10", { exact: true })).toHaveCount(0);
-    await page.getByRole("button", { name: /^Title/ }).click();
+    await page.getByRole("button", { name: /^Title/u }).click();
     await expect(page.getByText("Item 10", { exact: true })).toBeVisible();
 
     // ── 8. Paginate ──

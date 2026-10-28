@@ -23,11 +23,11 @@ uniwindConfig.resolver.resolveRequest = (context, moduleName, platform) => {
   const resolve = upstreamResolveRequest ?? context.resolveRequest;
   if (
     typeof moduleName === "string" &&
-    /^\.\.?\//.test(moduleName) &&
+    /^\.\.?\//u.test(moduleName) &&
     moduleName.endsWith(".js")
   ) {
     try {
-      return resolve(context, moduleName.replace(/\.js$/, ""), platform);
+      return resolve(context, moduleName.replace(/\.js$/u, ""), platform);
     } catch {
       return resolve(context, moduleName, platform);
     }

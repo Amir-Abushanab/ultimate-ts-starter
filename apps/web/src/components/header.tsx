@@ -5,7 +5,7 @@ import LocaleSwitcher from "./locale-switcher";
 import ThemeToggle from "./theme-toggle";
 import UserMenu from "./user-menu";
 
-export default function Header() {
+const Header = () => {
   const links = [
     { label: m.nav_home(), to: "/" },
     { label: m.nav_blog(), to: "/blog" },
@@ -34,4 +34,6 @@ export default function Header() {
       <hr />
     </div>
   );
-}
+};
+
+export default Header;

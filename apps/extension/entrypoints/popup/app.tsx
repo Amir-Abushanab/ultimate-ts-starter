@@ -12,9 +12,9 @@ type Screen = "loading" | "login" | "otp" | "home";
 declare const chrome: {
   storage: {
     local: {
-      get(key: string): Promise<Record<string, unknown>>;
-      set(items: Record<string, unknown>): Promise<void>;
-      remove(key: string): Promise<void>;
+      get: (key: string) => Promise<Record<string, unknown>>;
+      set: (items: Record<string, unknown>) => Promise<void>;
+      remove: (key: string) => Promise<void>;
     };
   };
 };
@@ -207,7 +207,7 @@ const App = () => {
             inputMode="numeric"
             value={otp}
             onChange={(e) => {
-              setOtp(e.target.value.replaceAll(/\D/g, "").slice(0, 6));
+              setOtp(e.target.value.replaceAll(/\D/gu, "").slice(0, 6));
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {

@@ -33,8 +33,8 @@ const SKIP_DIRS = new Set(["node_modules", "dist", ".expo", "build", "styles"]);
 const ALLOW = "token-allow";
 
 // 3/6/8-digit hex color, or a raw CSS color function.
-const HEX = /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/;
-const COLOR_FN = /\b(?:rgb|rgba|hsl|hsla|oklch|oklab)\(/i;
+const HEX = /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/u;
+const COLOR_FN = /\b(?:rgb|rgba|hsl|hsla|oklch|oklab)\(/iu;
 
 const walk = (dir) => {
   const out = [];

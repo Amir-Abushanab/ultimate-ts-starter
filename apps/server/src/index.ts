@@ -193,7 +193,7 @@ app.post("/api/upload", async (c) => {
   const file = formData.get("file") as unknown as {
     name: string;
     type: string;
-    stream(): ReadableStream;
+    stream: () => ReadableStream;
   } | null;
   if (file?.name === undefined) {
     return c.json({ error: "No file provided" }, 400);

@@ -4,7 +4,7 @@ import type {
   RealtimeEvents,
 } from "@ultimate-ts-starter/events";
 import { decodeEvent } from "@ultimate-ts-starter/events";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 
 type ConnectionStatus = "connecting" | "connected" | "disconnected";
 
@@ -47,9 +47,14 @@ export const useRealtime = ({
   onEvent,
 }: UseRealtimeOptions) => {
   const [status, setStatus] = useState<ConnectionStatus>("disconnected");
-  const handlersRef = useRef(onEvent);
-  // eslint-disable-next-line react/refs -- latest-callback ref: handlers swap without reconnecting the socket
-  handlersRef.current = onEvent;
+  // An effect event always sees the latest `onEvent`, so swapping handlers
+  // doesn't reconnect the socket.
+  const dispatch = useEffectEvent((event: RealtimeEventName, data: unknown) => {
+    const handler = onEvent?.[event];
+    if (handler !== undefined) {
+      (handler as (payload: unknown) => void)(data);
+    }
+  });
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
@@ -76,10 +81,7 @@ export const useRealtime = ({
           return;
         }
 
-        const handler = handlersRef.current?.[msg.event];
-        if (handler !== undefined) {
-          (handler as (data: unknown) => void)(msg.data);
-        }
+        dispatch(msg.event, msg.data);
       });
 
       ws.addEventListener("close", () => {
