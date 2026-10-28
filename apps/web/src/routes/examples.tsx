@@ -218,8 +218,11 @@ const ExampleManager = () => {
                   <p className="text-sm font-medium">{item.title}</p>
                   <p className="text-xs text-muted-foreground">{item.id}</p>
                 </Link>
+                {/* Until a row's last write is persisted, the server may not
+                    have it yet, so an edit/delete could race ahead of it. */}
                 <div className="flex gap-2">
                   <AnimatedButton
+                    disabled={item.$hasPendingWrites}
                     size="sm"
                     variant="outline"
                     onClick={() => {
@@ -230,6 +233,7 @@ const ExampleManager = () => {
                     Edit
                   </AnimatedButton>
                   <AnimatedButton
+                    disabled={item.$hasPendingWrites}
                     size="sm"
                     variant="destructive"
                     onClick={() => {

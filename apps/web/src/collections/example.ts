@@ -15,6 +15,11 @@ export interface ExampleItem {
 // reconcile the optimistic state with server truth. This is the on-ramp to
 // local-first: swap queryCollectionOptions for an Electric/synced collection
 // later without touching the components that read or mutate it.
+//
+// Inserts send their client-generated id to the server. If the server minted
+// its own, the refetch would swap the optimistic row for a differently keyed
+// one: React remounts it (closing an open edit), and an edit or delete made in
+// that window targets an id the server never had.
 export const exampleCollection = createCollection(
   queryCollectionOptions({
     getKey: (item: ExampleItem) => item.id,
@@ -28,7 +33,10 @@ export const exampleCollection = createCollection(
     onInsert: async ({ transaction }) => {
       await Promise.all(
         transaction.mutations.map((mutation) =>
-          client.example.create({ title: mutation.modified.title })
+          client.example.create({
+            id: mutation.modified.id,
+            title: mutation.modified.title,
+          })
         )
       );
     },

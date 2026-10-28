@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 
 import { expect, test } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 const EMAIL = "amir@example.com";
 const SERVER_LOG = new URL(".server.log", import.meta.url);
@@ -18,6 +19,18 @@ const otpsFor = (email: string): string[] => {
     return [];
   }
 };
+
+// Optimistic writes render before the server answers, and a failed write rolls
+// back quietly, so a visible change alone doesn't prove it persisted. Start
+// waiting before the action, then check the oRPC call's HTTP status.
+const rpcStatus = (page: Page, procedure: string) =>
+  page
+    .waitForResponse(
+      (response) =>
+        response.request().method() === "POST" &&
+        new URL(response.url()).pathname === `/rpc/${procedure}`
+    )
+    .then((response) => response.status());
 
 test.describe("examples: email-OTP login → CRUD + filter/sort/paginate", () => {
   test("full flow over the mock data", async ({ page }) => {
@@ -47,9 +60,11 @@ test.describe("examples: email-OTP login → CRUD + filter/sort/paginate", () =>
     // ── 3. Create (optimistic insert → top, since default sort is date desc) ──
     const title = `E2E item ${Date.now()}`;
     await page.getByRole("textbox", { name: "New item title" }).fill(title);
+    const created = rpcStatus(page, "example/create");
     await page.getByRole("button", { exact: true, name: "Add" }).click();
     await expect(page.getByText(title, { exact: true })).toBeVisible();
     await expect(count).toHaveText("51 items");
+    expect(await created).toBe(200);
 
     // ── 4. Filter down to the new item ──
     await page
@@ -58,15 +73,21 @@ test.describe("examples: email-OTP login → CRUD + filter/sort/paginate", () =>
     await expect(count).toHaveText("1 items");
 
     // ── 5. Edit (optimistic update) ──
+    // Edit/Delete stay disabled until the row's insert is persisted; click()
+    // waits for that.
     await page.getByRole("button", { exact: true, name: "Edit" }).click();
     const edited = `${title} (edited)`;
     await page.getByRole("textbox", { name: "Edit item title" }).fill(edited);
+    const updated = rpcStatus(page, "example/update");
     await page.getByRole("button", { exact: true, name: "Save" }).click();
     await expect(page.getByText(edited, { exact: true })).toBeVisible();
+    expect(await updated).toBe(200);
 
     // ── 6. Delete (optimistic) ──
+    const deleted = rpcStatus(page, "example/delete");
     await page.getByRole("button", { exact: true, name: "Delete" }).click();
     await expect(page.getByText(edited, { exact: true })).toHaveCount(0);
+    expect(await deleted).toBe(200);
     await page.getByRole("textbox", { name: "Filter items by title" }).fill("");
     await expect(count).toHaveText("50 items");
 
