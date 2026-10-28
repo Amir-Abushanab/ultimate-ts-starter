@@ -1,12 +1,12 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
-import { afterAll, afterEach, beforeAll } from "vitest";
+import { afterAll, afterEach, beforeAll } from "vite-plus/test";
 
 import { server } from "./mocks/server";
 
 // Start MSW before all tests
 beforeAll(() => {
-  server.listen({ onUnhandledRequest: "warn" });
+  server.listen({ onUnhandledFrame: "warn" });
 });
 
 // Reset handlers between tests (removes per-test overrides)

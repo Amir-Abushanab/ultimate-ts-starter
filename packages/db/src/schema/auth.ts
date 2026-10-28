@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { boolean, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  index,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   banExpires: timestamp("ban_expires"),
@@ -81,7 +88,10 @@ export const verification = pgTable(
 // ── Two-Factor plugin ───────────────────────────
 export const twoFactor = pgTable("twoFactor", {
   backupCodes: text("backup_codes").notNull(),
+  // Better Auth 1.7 two-factor lockout after repeated failed codes.
+  failedVerificationCount: integer("failed_verification_count").default(0),
   id: text("id").primaryKey(),
+  lockedUntil: timestamp("locked_until"),
   secret: text("secret").notNull(),
   userId: text("user_id")
     .notNull()

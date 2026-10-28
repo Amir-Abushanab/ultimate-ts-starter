@@ -16,7 +16,7 @@
     "@better-auth/expo": "catalog:",
     "@better-auth/sso": "catalog:",
     "@polar-sh/better-auth": "catalog:",
-    "@polar-sh/sdk": "^0.48.1",
+    "@polar-sh/sdk": "^0.49.0",
     "@ultimate-ts-starter/db": "workspace:*",
     "@ultimate-ts-starter/email": "workspace:*",
     "@ultimate-ts-starter/env": "workspace:*",
@@ -26,6 +26,6 @@
   },
   "devDependencies": {
     "@ultimate-ts-starter/config": "workspace:*",
-    "typescript": "^7"
+    "typescript": "^6.0.3"
   }
 }

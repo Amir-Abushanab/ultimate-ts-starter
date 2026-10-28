@@ -369,6 +369,9 @@ const ExamplesPage = () => (
 export const Route = createFileRoute("/examples")({
   component: ExamplesPage,
   loader: ({ context }) =>
-    context.queryClient.ensureQueryData(orpc.healthCheck.queryOptions()),
+    context.queryClient.query({
+      ...orpc.healthCheck.queryOptions(),
+      staleTime: "static",
+    }),
   validateSearch: z.object({ item: z.string().optional() }),
 });

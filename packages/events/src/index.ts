@@ -75,7 +75,7 @@ export const decodeEvent = (raw: string): RealtimeMessage | null => {
     ) {
       return null;
     }
-    const obj: Record<string, unknown> = parsed as Record<string, unknown>;
+    const obj: Record<string, unknown> = parsed;
     if (typeof obj.event !== "string") {
       return null;
     }

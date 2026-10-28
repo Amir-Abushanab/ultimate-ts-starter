@@ -162,6 +162,10 @@ const NativeShowcase = () => {
   );
 };
 
+const tap = () => {
+  void Haptics.selectionAsync();
+};
+
 const Home = () => {
   const healthCheck = useQuery(orpc.healthCheck.queryOptions());
   const privateData = useQuery(orpc.privateData.queryOptions());
@@ -179,10 +183,6 @@ const Home = () => {
   const dangerColor = useThemeColor("danger");
   const accentColor = useThemeColor("accent");
   const _foregroundColor = useThemeColor("foreground");
-
-  const tap = () => {
-    void Haptics.selectionAsync();
-  };
 
   return (
     <Container className="p-6">

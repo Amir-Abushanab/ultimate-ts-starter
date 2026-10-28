@@ -180,6 +180,10 @@ export default defineConfig({
           "node",
           "promise",
         ],
+        // Rules tagged "oxlint 1.8x" started firing with the oxlint that Vite+ 1.x
+        // bundles (new rules, or newly placed in the categories enabled above).
+        // They conflict with this codebase's existing conventions, so they stay
+        // off for now; revisit them one at a time.
         rules: {
           "arrow-body-style": ["error", "as-needed"],
           "capitalized-comments": "off",
@@ -225,22 +229,40 @@ export default defineConfig({
           "no-magic-numbers": "off",
           "no-ternary": "off",
           "no-undefined": "off",
+          // oxlint 1.8x
+          "no-underscore-dangle": "off",
           "no-void": ["error", { allowAsStatement: true }],
           // Starter template uses TODO comments as intentional guidance markers for fork users
           "no-warning-comments": "off",
+          // oxlint 1.8x
+          "node/callback-return": "off",
           "node/no-process-env": "off",
+          // oxlint 1.8x
+          "node/no-sync": "off",
+          // oxlint 1.8x
+          "node/no-top-level-await": "off",
+          // oxlint 1.8x
+          "one-var": "off",
           "oxc/no-async-await": "off",
           "oxc/no-map-spread": "off",
           "oxc/no-optional-chaining": "off",
           "oxc/no-rest-spread-properties": "off",
+          // oxlint 1.8x
+          "prefer-named-capture-group": "off",
           "promise/always-return": "off",
           "promise/catch-or-return": "off",
           // oRPC interceptors and similar framework APIs use callback patterns that can't be promisified
           "promise/prefer-await-to-callbacks": "off",
+          // oxlint 1.8x
+          "require-unicode-regexp": "off",
           // Conflicts with the formatter's experimentalSortImports which sorts by path
           "sort-imports": "off",
           "typescript/explicit-function-return-type": "off",
+          // oxlint 1.8x
+          "typescript/explicit-member-accessibility": "off",
           "typescript/explicit-module-boundary-types": "off",
+          // oxlint 1.8x
+          "typescript/method-signature-style": "off",
           "typescript/no-explicit-any": "error",
           // Fires on async event handlers in React which are standard practice
           "typescript/no-misused-promises": "off",
@@ -256,6 +278,10 @@ export default defineConfig({
           "typescript/promise-function-async": "off",
           "typescript/require-await": "off",
           "unicorn/explicit-length-check": "off",
+          // oxlint 1.8x
+          "unicorn/import-style": "off",
+          // oxlint 1.8x
+          "unicorn/max-nested-calls": "off",
           "unicorn/no-array-callback-reference": "off",
           "unicorn/no-null": "off",
           "unicorn/no-process-exit": "off",
@@ -271,23 +297,34 @@ export default defineConfig({
       // React rules (was ultracite/oxlint react)
       {
         plugins: ["react", "react-perf", "jsx-a11y"],
+        // See the "oxlint 1.8x" note on the core rules above.
         rules: {
           // Label component spreads ...props (including htmlFor) — association is dynamic, not statically detectable
           "jsx-a11y/label-has-associated-control": "off",
           "jsx-a11y/no-autofocus": "off",
+          // oxlint 1.8x
+          "jsx-a11y/prefer-tag-over-role": "off",
           "react-perf/jsx-no-jsx-as-prop": "off",
           "react-perf/jsx-no-new-array-as-prop": "off",
           // Memoizing every event handler is impractical; React Compiler optimizes this automatically
           "react-perf/jsx-no-new-function-as-prop": "off",
           "react-perf/jsx-no-new-object-as-prop": "off",
+          // oxlint 1.8x
+          "react/forbid-component-props": "off",
+          // oxlint 1.8x
+          "react/function-component-definition": "off",
           "react/jsx-boolean-value": "off",
           "react/jsx-filename-extension": "off",
           "react/jsx-max-depth": "off",
+          // oxlint 1.8x
+          "react/jsx-no-literals": "off",
           "react/jsx-props-no-spreading": "off",
           "react/no-multi-comp": "off",
           // Children.map is the correct API for staggered animation wrappers
           "react/no-react-children": "off",
           "react/no-unknown-property": "off",
+          // oxlint 1.8x
+          "react/no-unstable-nested-components": "off",
           "react/only-export-components": "off",
           "react/react-in-jsx-scope": "off",
         },
@@ -307,5 +344,12 @@ export default defineConfig({
   },
   staged: {
     "*": "vp check --fix",
+  },
+  test: {
+    // Vitest v4 compatibility: preserve mock call history.
+    // Remove after tests no longer rely on calls from setup or earlier tests.
+    // https://viteplus.dev/guide/vitest-v5#remove-unneeded-compatibility-settings
+    // https://vitest.dev/guide/migration/#clearmocks-is-enabled-by-default
+    clearMocks: false,
   },
 });

@@ -2,28 +2,29 @@ packages:
   - apps/*
   - packages/*
 catalog:
-  "@better-auth/expo": 1.6.11
-  "@better-auth/sso": 1.6.11
-  "@cloudflare/workers-types": ^4.20260415.1
-  "@orpc/client": ^1.12.2
-  "@orpc/openapi": ^1.12.2
-  "@orpc/server": ^1.12.2
-  "@orpc/tanstack-query": ^1.13.6
-  "@orpc/zod": ^1.12.2
-  "@polar-sh/better-auth": ^1.8.3
-  "@tanstack/react-form": ^1.28.0
+  "@better-auth/expo": 1.7.12
+  "@better-auth/sso": 1.7.12
+  "@cloudflare/workers-types": ^5.20261021.1
+  "@orpc/client": ^1.16.0
+  "@orpc/openapi": ^1.16.0
+  "@orpc/server": ^1.16.0
+  "@orpc/tanstack-query": ^1.16.0
+  "@orpc/zod": ^1.16.0
+  "@polar-sh/better-auth": ^1.8.4
+  "@tanstack/react-form": ^1.33.5
   "@types/react-dom": ^19.2.3
-  "@typescript/native-preview": 7.0.0-dev.20260415.1
-  better-auth: 1.6.11
-  dotenv: ^17.4.2
-  hono: ^4.8.2
-  lucide-react: ^0.546.0
+  "@typescript/native-preview": 7.0.0-dev.20260707.2
+  "@vitest/coverage-v8": 5.0.5
+  better-auth: 1.7.12
+  dotenv: ^18.0.8
+  hono: ^4.13.13
+  lucide-react: ^1.61.0
   next-themes: ^0.4.6
-  sonner: ^2.0.5
-  vite: npm:@voidzero-dev/vite-plus-core@latest
-  vite-plus: ^0.1.18
-  vitest: npm:@voidzero-dev/vite-plus-test@latest
-  zod: ^4.3.6
+  sonner: ^2.0.8
+  vite: npm:@voidzero-dev/vite-plus-core@1.3.0
+  vite-plus: 1.3.0
+  vitest: 5.0.5
+  zod: ^4.6.7
 overrides:
   vite: "catalog:"
   vitest: "catalog:"
@@ -33,7 +34,7 @@ overrides:
   # RN plugins with it — breaking Metro's transform (WorkletsBabelPluginError:
   # "Requires Babel ^7.0.0-0, but was loaded with 8.0.1"). @rolldown/plugin-babel
   # accepts "^7.29.0 || ^8", so pinning Babel 7 is safe for the web tooling too.
-  "@babel/core": "7.29.0"
+  "@babel/core": "7.29.7"
 peerDependencyRules:
   allowAny:
     - vite
@@ -87,18 +88,6 @@ minimumReleaseAgeExclude:
   # drizzle ships frequent patch releases; trusted publisher.
   - drizzle-orm
   - drizzle-kit
-  # ─────────────────────────────────────────────────────────────────────────
-  # TEMPORARY (added 2026-07-01): Expo SDK 57 shipped ~2026-06-30, still inside
-  # the 7-day cooldown. Exclude the Expo/RN toolchain so `expo install` can pull
-  # 57 now. REMOVE THIS BLOCK once 57 clears the cooldown (~2026-07-08) and
-  # re-run `pnpm install` to re-assert the gate. TODO: remove after 2026-07-08.
-  - expo
-  - "@expo/*"
-  - "expo-*"
-  - babel-preset-expo
-  - react-native
-  - "@react-native/*"
-  # ─────────────────────────────────────────────────────────────────────────
 # pnpm 11+ requires explicit per-package approval for install scripts.
 # Anything not listed here will silently skip its postinstall — fine for
 # analytics-only scripts, breaking for things that compile native bindings

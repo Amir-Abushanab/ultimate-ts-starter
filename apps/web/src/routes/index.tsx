@@ -56,5 +56,8 @@ export const Route = createFileRoute("/")({
   // Load health status at the route level; a failed check throws to
   // errorComponent (Suspense + Error Boundary, not isLoading/isError).
   loader: ({ context }) =>
-    context.queryClient.ensureQueryData(orpc.healthCheck.queryOptions()),
+    context.queryClient.query({
+      ...orpc.healthCheck.queryOptions(),
+      staleTime: "static",
+    }),
 });

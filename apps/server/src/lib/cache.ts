@@ -27,8 +27,9 @@ export const cache = {
     if (kv) {
       const cached = await kv.get(key, "text");
       if (cached !== null) {
-        // eslint-disable-next-line typescript/no-unsafe-type-assertion -- JSON.parse returns any; cached value was serialized from T
-        return JSON.parse(cached) as unknown as T;
+        const parsed: unknown = JSON.parse(cached);
+        // eslint-disable-next-line typescript/no-unsafe-type-assertion -- cached value was serialized from T
+        return parsed as T;
       }
     }
 

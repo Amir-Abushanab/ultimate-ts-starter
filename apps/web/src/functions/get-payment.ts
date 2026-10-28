@@ -12,8 +12,7 @@ export const getPayment = createServerFn({ method: "GET" })
     if (!context.session) {
       return null;
     }
-    // eslint-disable-next-line typescript/no-unsafe-type-assertion -- getRequestHeaders() type unresolved in lint env
-    const requestHeaders: HeadersInit = getRequestHeaders() as HeadersInit;
+    const requestHeaders: HeadersInit = getRequestHeaders();
     try {
       const { data: customerState } = await authClient.customer.state({
         fetchOptions: {
